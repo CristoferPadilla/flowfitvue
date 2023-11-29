@@ -32,19 +32,20 @@ export default {
 };
 </script>
  
-<style scoped>
-.app-navbar {
-  position: fixed;
+<style scoped>.app-navbar {
+  /* position: fixed; */
   left: 0;
+  position: relative;
   top: 0;
-  height: 100%;
-  width: 15%; /* Ajusta el ancho según tus necesidades */
+  height: 110%;
+  width: 35%; /* Ajusta el ancho según tus necesidades */
   display: flex;
   flex-direction: column;
   background-color: #070611;
   padding: 20px;
   color: white;
 }
+
  
 .nav-title {
   font-size: 28px; /* Ajusta el tamaño del título según tus necesidades */

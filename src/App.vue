@@ -1,14 +1,20 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div  class="app-container">
+    <Navbar/>
+    <Header></Header>
+  </div>
+
 </template>
 
 <script>
-import HelloWorld from './components/CustomNav.vue'
+import Navbar from './components/CustomNav.vue'
+import Header from './components/header.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Navbar,
+    Header
   }
 }
 </script>
@@ -21,8 +27,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
+  flex-direction: row 
 }
 body{
   background-color: #0E0F13;  
+}
+.app-container{
+  display: flex;
+  flex-direction: row 
 }
 </style>
