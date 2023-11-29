@@ -1,0 +1,101 @@
+<template>
+  <div class="container">
+      <div class="row">
+          <div class="card" style="background-color: #641b1b;">
+              <div class="icon-container">
+                <svg  xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" fill="currentColor" class="bi bi-clock-fill" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+                </svg>        
+                            </div>
+              <div class="card-content">
+                <p class="card-number">2</p>
+                <p class="card-label">Por vencer</p>
+              </div>
+          </div>
+          <div class="card" style="background-color: #1b6464;">
+              <div class="icon-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                  <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                </svg> 
+              </div>
+              <div class="card-content">
+                <p class="card-number">30</p>
+                <p class="card-label">Miembros</p>
+              </div>
+          </div>
+          <div class="card" style="background-color: #64641b;">
+              <div class="icon-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" fill="currentColor" class="bi bi-person-up" viewBox="0 0 16 16">
+                  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.354-5.854 1.5 1.5a.5.5 0 0 1-.708.708L13 11.707V14.5a.5.5 0 0 1-1 0v-2.793l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                </svg>
+              </div>
+              <div class="card-content">
+                <p class="card-number">3</p>
+                <p class="card-label">Miembros nuevos</p>
+              </div>
+          </div>
+      </div>
+  </div>
+</template>
+
+<script>
+export default {
+name: 'CardApp',
+};
+</script>
+
+<style>
+.container {
+  width: 100vh;
+  display: flex;
+  padding-left: 35%;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ajusta este valor según tus necesidades */
+}
+
+.row {
+  display: flex;
+  justify-content: space-around; /* Esto distribuirá tus tarjetas uniformemente a lo largo del eje horizontal */
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  width: 80%; /* Ajusta este valor según tus necesidades */
+  margin: 0 auto; /* Esto centrará tu fila en el contenedor */
+}
+
+.card {
+color: #ffffff;
+width: 250px; /* Ajusta este valor según tus necesidades */
+height: 140px; /* Ajusta este valor según tus necesidades */
+border-radius: 5px; /* Ajusta este valor según tus necesidades */
+display: flex;
+align-items: left;
+justify-content: center;
+flex-direction: column;
+padding: 13px;
+margin: 10px;
+}
+
+.icon-container {
+width: 20px; /* Ajusta este valor según tus necesidades */
+height: 20px; /* Ajusta este valor según tus necesidades */
+}
+
+
+
+.card-content {
+text-align: center;
+align-items: center;
+}
+
+.card-number {
+font-size: 24px; /* Ajusta este valor según tus necesidades */
+font-weight: bold;
+}
+
+.card-label {
+font-size: 16px; /* Ajusta este valor según tus necesidades */
+}
+</style>

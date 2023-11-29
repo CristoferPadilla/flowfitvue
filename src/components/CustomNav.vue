@@ -20,7 +20,7 @@
       Suscripciones
     </router-link>
     <router-link to="/login" class="nav-link">
-      <img src="../assets/door-open-fill.svg" alt="Cerrar sesion icon" class="nav-log-out" />
+      <img src="../assets/door-open-fill.svg" alt="Cerrar sesion icon" class="nav-log-out"/>
       Cerrar sesión
     </router-link>
   </div>
@@ -32,14 +32,12 @@ export default {
 };
 </script>
  
-<style scoped>.app-navbar {
-  /* position: fixed; */
-  left: 0;
-  position: relative;
-  top: 0;
-  height: 110%;
-  width: 35%; /* Ajusta el ancho según tus necesidades */
+<style scoped>
+.app-navbar {
+  height: 100vh; /* Cambia este valor */
+  width: 100%; /* Ajusta el ancho según tus necesidades */
   display: flex;
+  position: relative;
   flex-direction: column;
   background-color: #070611;
   padding: 20px;
@@ -48,7 +46,7 @@ export default {
 
  
 .nav-title {
-  font-size: 28px; /* Ajusta el tamaño del título según tus necesidades */
+  font-size: 25px; /* Ajusta el tamaño del título según tus necesidades */
   font-weight: bold;
   justify-content: center; /* Esto centra horizontalmente el contenido */
   margin-bottom: 30px; /* Ajusta el espacio entre el título y los enlaces según tus necesidades */
@@ -61,7 +59,7 @@ export default {
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: 10px; /* Ajusta el tamaño de la letra según tus necesidades */
+  font-size: 15px; /* Ajusta el tamaño de la letra según tus necesidades */
   cursor: pointer;
 }
  
@@ -71,7 +69,7 @@ export default {
   color: #ffffff;
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
-  font-size: 10px;
+  font-size: 15px;
   font-weight: bold;
   padding: 10px
 }
