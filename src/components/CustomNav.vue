@@ -1,7 +1,9 @@
 <template>
   <div class="app-navbar">
     <div class="nav-title">Administador</div>
-    <div class="user-picture"></div>
+    <div class="user-picture">
+      <img src="../assets/dani.jpg" alt="" class="user-picture">
+    </div>
     <div class="nav-user-name">Daniela Santoyo</div>
     <router-link to="/menu" class="nav-link">
       <img src="../assets/house-fill.svg" alt="Ejercicio Icon" class="nav-icon" />
