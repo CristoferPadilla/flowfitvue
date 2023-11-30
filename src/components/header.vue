@@ -15,7 +15,7 @@ export default {
     display: flex;
     align-items: flex-start;
     justify-content: start;
-    padding-left: 5%;
+    padding-left: 0;
     flex: 1;
 }
 .header-datetime{
@@ -31,6 +31,6 @@ export default {
     padding-top: 10px;
     padding-left: 10px;
     filter: brightness(0) invert(1); /* Cambia el color a blanco */
-    height: 25px;
+    height: 40px;
 }
 </style>

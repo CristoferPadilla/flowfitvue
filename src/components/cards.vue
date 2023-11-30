@@ -47,11 +47,12 @@ name: 'CardApp',
 
 <style>
 .container {
-  width: 100vh;
-  display: flex;
-  padding-left: 35%;
+  width: 100vw;
+  display:flex;
+  
   justify-content: center;
   align-items: center;
+
   height: 100vh; /* Ajusta este valor según tus necesidades */
 }
 

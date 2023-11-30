@@ -19,7 +19,7 @@
       <img src="" alt="Suscripciones Icon" class="nav-icon" />
       Suscripciones
     </router-link>
-    <router-link to="/login" class="nav-link">
+    <router-link to="/" class="nav-link">
       <img src="../assets/door-open-fill.svg" alt="Cerrar sesion icon" class="nav-log-out"/>
       Cerrar sesión
     </router-link>
@@ -106,10 +106,10 @@ export default {
 }
 
 .nav-log-out{
-  width: 24px; /* Ajusta el tamaño del icono según tus necesidades */
+  width: 24px; 
   height: 24px;
   padding-right: 5px;
-  margin-right: 10px; /* Ajusta el espacio entre el icono y el texto según tus necesidades */
+  margin-right: 10px; 
   filter: brightness(0) invert(1); 
   align-self: flex-end;
   align-items: self-end;

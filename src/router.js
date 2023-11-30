@@ -1,25 +1,16 @@
-// router.js
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from './views/Contratos/contratos.vue';
-import MembershipView from './views/Contratos/ContratosLista.vue';
-import MembersViev from './views/Contratos/NuevoContrato.vue';
 
 const routes = [
   {
-    path: '/contratos',
-    component: ContratosView,
-    children: [
-      {
-        path: '',
-        component: MembershipView,
-      },
-      {
-        path: 'nuevo',
-        component: MembersViev,
-      },
-    ],
+    path: '/',
+    name: 'LoginApp',
+    component: ()=> import(/* webpackChunk*/'./view/Login.vue')
   },
-  // Otras rutas...
+  {
+    path: '/menu',
+    name: 'MenuApp',
+    component: ()=> import(/* webpackChunk*/'./view/menu.vue')
+  },
 ];
 
 const router = createRouter({
