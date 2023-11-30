@@ -5,7 +5,16 @@ src-
     |
     |- components
     |           |- CustomNav.vue
+		|- Header.vue
+		|- Cards.vue
     |
     |
     |-view
           |- Login.vue
+	  |- menu.vue
+	
+    |
+    |
+    |-router.js
+    |-main.js
+    |-app.vue
