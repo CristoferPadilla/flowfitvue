@@ -40,63 +40,10 @@
 </template>
 
 <script>
+import '@/css/style.css'
+
 export default {
 name: 'CardApp',
 };
 </script>
 
-<style>
-.container {
-  width: 100vw;
-  display:flex;
-  
-  justify-content: center;
-  align-items: center;
-
-  height: 100vh; /* Ajusta este valor según tus necesidades */
-}
-
-.row {
-  display: flex;
-  justify-content: space-around; /* Esto distribuirá tus tarjetas uniformemente a lo largo del eje horizontal */
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 10px;
-  width: 80%; /* Ajusta este valor según tus necesidades */
-  margin: 0 auto; /* Esto centrará tu fila en el contenedor */
-}
-
-.card {
-color: #ffffff;
-width: 250px; /* Ajusta este valor según tus necesidades */
-height: 140px; /* Ajusta este valor según tus necesidades */
-border-radius: 5px; /* Ajusta este valor según tus necesidades */
-display: flex;
-align-items: left;
-justify-content: center;
-flex-direction: column;
-padding: 13px;
-margin: 10px;
-}
-
-.icon-container {
-width: 20px; /* Ajusta este valor según tus necesidades */
-height: 20px; /* Ajusta este valor según tus necesidades */
-}
-
-
-
-.card-content {
-text-align: center;
-align-items: center;
-}
-
-.card-number {
-font-size: 24px; /* Ajusta este valor según tus necesidades */
-font-weight: bold;
-}
-
-.card-label {
-font-size: 16px; /* Ajusta este valor según tus necesidades */
-}
-</style>

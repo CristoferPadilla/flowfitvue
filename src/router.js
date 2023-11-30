@@ -9,8 +9,14 @@ const routes = [
   {
     path: '/menu',
     name: 'MenuApp',
-    component: ()=> import(/* webpackChunk*/'./view/menu.vue')
+    component: ()=> import(/* webpackChunk*/'./view/menu.vue'),
+
   },
+  {
+    path: '/members',
+    name: 'MembersView',
+    component: ()=> import(/* webpackChunk*/'./view/members.vue'),
+  }
 ];
 
 const router = createRouter({
