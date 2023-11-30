@@ -3,6 +3,10 @@
     <div class="nav-title">Administador</div>
     <div class="user-picture"></div>
     <div class="nav-user-name">Daniela Santoyo</div>
+    <router-link to="/menu" class="nav-link">
+      <img src="../assets/house-fill.svg" alt="Ejercicio Icon" class="nav-icon" />
+      Menu 
+    </router-link>
     <router-link to="/membership" class="nav-link">
       <img
         src="../assets/person-vcard-fill.svg"
@@ -18,13 +22,6 @@
         class="nav-icon"
       />
       Miembros
-    </router-link>
-    <router-link to="/Suscripciones" class="nav-link">
-      <img src="" alt="Suscripciones Icon" class="nav-icon" />
-    </router-link>
-    <router-link to="/" class="nav-link">
-      <img src="" alt="Ejercicio Icon" class="nav-icon" />
-      Suscripciones
     </router-link>
     <router-link to="/" class="nav-link">
       <img

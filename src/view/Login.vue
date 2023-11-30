@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <form @submit.prevent="iniciarSesion" class="bg-white p-4 rounded-lg" style="background: white; margin: 140px auto; padding: 20px; border-radius: 50px; width: 50%; text-align: center; display: grid; place-items: center;">
+    <form @submit.prevent="iniciarSesion" class="bg-white p-4 rounded-lg" style="background-color: black; margin: 140px auto; padding: 20px; border-radius: 50px; width: 50%; text-align: center; display: grid; place-items: center;">
       <div class="text-center mb-4">
         <h1 class="text-dark font-fantasy" style="color: black; text-align: center; font-family: fantasy; padding-bottom: 30px; font-size: 80px;">FLOWFIT</h1>
       </div>
@@ -53,4 +53,9 @@ export default {
   }
 };
 </script>
+<style>
+body{
+  background-color: black;
+}
+</style>
 
