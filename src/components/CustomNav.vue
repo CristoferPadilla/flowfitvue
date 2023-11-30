@@ -7,7 +7,7 @@
     <div class="nav-user-name">
       Daniela Santoyo
     </div>
-    <router-link to="/Membresias" class="nav-link">
+    <router-link to="/membership" class="nav-link">
       <img src="../assets/person-vcard-fill.svg" alt="Membresias Icon" class="nav-icon" />
       Membresias
     </router-link>
@@ -15,8 +15,8 @@
       <img src="../assets/people-fill.svg" alt="Miembros Icon" class="nav-icon" />
       Miembros
     </router-link>
-    <router-link to="/Suscripciones" class="nav-link">
-      <img src="" alt="Suscripciones Icon" class="nav-icon" />
+    <router-link to="/" class="nav-link">
+      <img src="" alt="Ejercicio Icon" class="nav-icon" />
       Suscripciones
     </router-link>
     <router-link to="/" class="nav-link">

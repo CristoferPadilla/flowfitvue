@@ -18,7 +18,7 @@ import '@/css/style.css'
 
 
 export default {
-name: 'membersScreen',
+name: 'membersshipScreen',
 components: {
   Navbar,
   Header,
