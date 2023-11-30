@@ -6,6 +6,8 @@ import Navbar from '@/components/CustomNav.vue';
         </div>
         <div id="content">
             <Header></Header>
+            <div class="Container-Cards"><MemCards></MemCards></div>
+
         </div>
     </div>
 
@@ -14,6 +16,7 @@ import Navbar from '@/components/CustomNav.vue';
 <script>
 import Navbar from '@/components/CustomNav.vue'
 import Header from '@/components/header.vue'
+import MemCards from '@/components/membershipCard.vue'
 import '@/css/style.css'
 
 
@@ -22,6 +25,18 @@ name: 'membersshipScreen',
 components: {
   Navbar,
   Header,
+  MemCards
 }
 }
 </script>
+<style>
+.Container-Cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  height: 70%;
+
+}
+
+
+</style>
