@@ -16,7 +16,7 @@
       Miembros
     </router-link>
     <router-link to="/Suscripciones" class="nav-link">
-      <img src="" alt="Suscripciones Icon" class="nav-icon" />
+      <img src="" alt="Suscripciones Icon" class="nav-icon" /> 
       Suscripciones
     </router-link>
     <router-link to="/" class="nav-link">
