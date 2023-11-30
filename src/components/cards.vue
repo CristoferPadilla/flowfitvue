@@ -1,5 +1,7 @@
 <template>
-  <div class="container">
+<div class="container">
+  <div class="container-column">
+    <h1 class="title">Hoy en el gimnasio</h1>
       <div class="row">
           <div class="card" style="background-color: #641b1b;">
               <div class="icon-container">
@@ -37,6 +39,7 @@
           </div>
       </div>
   </div>
+</div>  
 </template>
 
 <script>
