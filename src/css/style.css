@@ -50,12 +50,11 @@ body {
     height: 40px;
 }
 .container {
+    padding-top: 10%;
     width: 100vw;
-    display:flex;
-    
+    display:table-column;
     justify-content: center;
     align-items: center;
-  
     height: 100vh; /* Ajusta este valor según tus necesidades */
   }
   
@@ -87,7 +86,14 @@ body {
   height: 20px; /* Ajusta este valor según tus necesidades */
   }
   
-  
+  .title{
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    align-items:center;
+    justify-content: center;
+
+  }
   
   .card-content {
   text-align: center;

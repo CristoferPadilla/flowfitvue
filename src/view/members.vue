@@ -4,7 +4,7 @@
       <Navbar />
     </div>
     <div id="content">
-      <Header />
+      <Header/>
       <div class="d-flex justify-content-center align-items-center flex-column">
         <h2>Lista de Usuarios</h2>
 
