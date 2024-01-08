@@ -3,14 +3,20 @@
       <div id="content">
         <div class="d-flex justify-content-center align-items-center flex-column">
           <h2 class="title">Miembros</h2>
-          <button @click="toggleForm"  id="bton" class="btn btn-success mb-3">
-            <i class="bi bi-plus"></i> Agregar
-          </button>
+          <div class="d-row">
+            <div class="search-bar">
+                <div class="search-icon">🔍</div> 
+                <input type="text" placeholder="">
+            </div>
+            <button @click="toggleForm"  id="bton" class="btn btn-success mb-3">
+              <i class="bi bi-plus"></i> Agregar
+            </button>
+        </div>
           <!-- Tabla de usuarios -->
           <table class="table-crud">
             <thead>
               <tr>
-                <th style="font-size: 70%">INE</th>
+                <th style="font-size: 70%">ID</th>
                 <th style="font-size: 70%">Nombre</th>
                 <th style="font-size: 70%">Email</th>
                 <th style="font-size: 70%">Celular</th>
@@ -21,8 +27,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in users" :key="user.ine">
-                <td>{{ user.ine }}</td>
+              <tr v-for="user in users" :key="user.id">
+                <td>{{ user.id }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.phone }}</td>
@@ -31,7 +37,7 @@
                 <td >{{ user.fechaFinalizacion }}</td>
                 <td>
                   <button @click="editUser(user)" class="btn btn-warning btn-sm">Editar</button>
-                  <button @click="deleteUser(user.ine)" class="btn btn-danger btn-sm">Eliminar</button>
+                  <button @click="deleteUser(user.id)" class="btn btn-danger btn-sm">Eliminar</button>
                 </td>
               </tr>
             </tbody>
@@ -60,7 +66,7 @@
         ineMaxLength: 16,
         users: [
           {
-            ine: "1234567890123450",
+            id: "1234567890123450",
             name: "Usuario 1",
             email: "usuario1@example.com",
             phone: "123-456-7890",
@@ -70,7 +76,7 @@
           },
           
             {
-            ine: "1234567890123451",
+            id: "1234567890123451",
             name: "Usuario 2",
             email: "usuario2@example.com",
             phone: "123-456-7890",
@@ -79,7 +85,7 @@
             fechaFinalizacion: "2023-02-01",
           },
           {
-            ine: "1234567890123452",
+            id: "1234567890123452",
             name: "Usuario 3",
             email: "usuario3@example.com",
             phone: "123-456-7890",
@@ -88,7 +94,7 @@
             fechaFinalizacion: "2023-02-01",
           },
           {
-            ine: "1234567890123453",
+            id: "1234567890123453",
             name: "Usuario 4",
             email: "usuario4@example.com",
             phone: "123-456-7890",
@@ -97,7 +103,7 @@
             fechaFinalizacion: "2023-02-01",
           },
           {
-            ine: "1234567890123457",
+            id: "1234567890123457",
             name: "Usuario 3",
             email: "usuario3@example.com",
             phone: "123-456-7890",
@@ -107,7 +113,7 @@
           },
         ],
         newUser: {
-          ine: "",
+          id: "",
           name: "",
           email: "",
           phone: "",
@@ -128,7 +134,7 @@
       },
       addUser() {
         // Verificar la longitud del INE
-        if (this.newUser.ine.length !== this.ineMaxLength) {
+        if (this.newUser.id.length !== this.ineMaxLength) {
           alert(`La longitud del INE debe ser de ${this.ineMaxLength} caracteres.`);
           return;
         }
@@ -171,7 +177,7 @@
   
         if (this.selectedUser) {
           // Editar usuario existente
-          const index = this.users.findIndex((user) => user.ine === this.selectedUser.ine);
+          const index = this.users.findIndex((user) => user.id === this.selectedUser.id);
           if (index !== -1) {
             this.users.splice(index, 1, { ...this.newUser });
           }
@@ -183,12 +189,12 @@
         this.resetForm();
         this.showForm = false;
       },
-      deleteUser(ine) {
-        this.users = this.users.filter((user) => user.ine !== ine);
+      deleteUser(id) {
+        this.users = this.users.filter((user) => user.id !== id);
       },
       resetForm() {
         this.newUser = {
-          ine: "",
+          id: "",
           name: "",
           email: "",
           phone: "",
@@ -204,7 +210,7 @@
   
   <style>
   #bton{
-    margin-left: 85%;
+    margin-left: 123%;
   }
 .table-crud{
   width: 95%;
@@ -229,6 +235,14 @@
   background-color: #4CAF50;
   color: white;
   
+}
+.d-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+  margin-right: 45%;
+  margin-bottom: 20px;
 }
 
   </style>
