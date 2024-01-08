@@ -25,6 +25,14 @@
       />
       Miembros
     </router-link>
+    <router-link to="/inventory" class="nav-link">
+      <img
+        src="../assets/list-check.svg"
+        alt="inventario icon"
+        class="nav-log-out"
+      />
+      Inventario
+    </router-link>
     <router-link to="/shop" class="nav-link">
       <img
         src="../assets/shop.svg"
@@ -48,6 +56,9 @@
 import "@/css/style.css";
 export default {
   name: "AppNavbar",
+  methods:{
+    
+  }
 };
 </script>
 

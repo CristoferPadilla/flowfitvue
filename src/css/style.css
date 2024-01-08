@@ -134,7 +134,7 @@ body {
     display: flex;
     align-items: center;
     font-weight: bold;
-    font-size: 15px; /* Ajusta el tamaño de la letra según tus necesidades */
+    font-size: 10px; /* Ajusta el tamaño de la letra según tus necesidades */
     cursor: pointer;
   }
    
@@ -144,14 +144,16 @@ body {
     color: #ffffff;
     border-top-right-radius: 50px;
     border-bottom-right-radius: 50px;
-    font-size: 15px;
+    font-size: 10px;
     font-weight: bold;
-    padding: 10px
+    padding: 5px;
+    text-decoration: none;
+
   }
    
   .nav-icon {
-    width: 24px; /* Ajusta el tamaño del icono según tus necesidades */
-    height: 24px;
+    width: 20px; /* Ajusta el tamaño del icono según tus necesidades */
+    height: 20px;
     padding-right: 5px;
     margin-right: 10px; /* Ajusta el espacio entre el icono y el texto según tus necesidades */
     filter: brightness(0) invert(1); /* Cambia el color a blanco */
