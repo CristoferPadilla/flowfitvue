@@ -3,13 +3,11 @@
       <div id="content">
         <div class="d-flex justify-content-center align-items-center flex-column">
           <h2 class="title">Miembros</h2>
-          <div class="d-flex justify-content-end">
-            <button @click="toggleForm" class="btn btn-success mb-3">
-              <i class="bi bi-plus"></i> Agregar
-            </button>
-          </div>
+          <button @click="toggleForm"  id="bton" class="btn btn-success mb-3">
+            <i class="bi bi-plus"></i> Agregar
+          </button>
           <!-- Tabla de usuarios -->
-          <table class="table table-responsive">
+          <table class="table-crud">
             <thead>
               <tr>
                 <th style="font-size: 70%">INE</th>
@@ -24,13 +22,13 @@
             </thead>
             <tbody>
               <tr v-for="user in users" :key="user.ine">
-                <td style="font-size: 75%;">{{ user.ine }}</td>
-                <td style="font-size: 75%;">{{ user.name }}</td>
-                <td style="font-size: 75%;">{{ user.email }}</td>
-                <td style="font-size: 75%;">{{ user.phone }}</td>
-                <td style="font-size: 75%;">{{ user.registrationDate }}</td>
-                <td style="font-size: 75%;">{{ user.membresiaAsignada }}</td>
-                <td style="font-size: 75%;">{{ user.fechaFinalizacion }}</td>
+                <td>{{ user.ine }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.registrationDate }}</td>
+                <td>{{ user.membresiaAsignada }}</td>
+                <td >{{ user.fechaFinalizacion }}</td>
                 <td>
                   <button @click="editUser(user)" class="btn btn-warning btn-sm">Editar</button>
                   <button @click="deleteUser(user.ine)" class="btn btn-danger btn-sm">Eliminar</button>
@@ -39,12 +37,9 @@
             </tbody>
           </table>
   
-          <!-- Botón para mostrar/ocultar el formulario de agregar -->
 
   
-          <!-- Formulario de agregar/editar, inicialmente oculto -->
           <form v-if="showForm" @submit.prevent="saveUser" class="mb-3">
-            <!-- ... -->
           </form>
         </div>
       </div>
@@ -65,7 +60,7 @@
         ineMaxLength: 16,
         users: [
           {
-            ine: "1234567890123456",
+            ine: "1234567890123450",
             name: "Usuario 1",
             email: "usuario1@example.com",
             phone: "123-456-7890",
@@ -73,7 +68,43 @@
             membresiaAsignada: "pareja",
             fechaFinalizacion: "2023-02-01",
           },
-          // ...otros usuarios
+          
+            {
+            ine: "1234567890123451",
+            name: "Usuario 2",
+            email: "usuario2@example.com",
+            phone: "123-456-7890",
+            registrationDate: "2023-01-01",
+            membresiaAsignada: "pareja",
+            fechaFinalizacion: "2023-02-01",
+          },
+          {
+            ine: "1234567890123452",
+            name: "Usuario 3",
+            email: "usuario3@example.com",
+            phone: "123-456-7890",
+            registrationDate: "2023-01-01",
+            membresiaAsignada: "pareja",
+            fechaFinalizacion: "2023-02-01",
+          },
+          {
+            ine: "1234567890123453",
+            name: "Usuario 4",
+            email: "usuario4@example.com",
+            phone: "123-456-7890",
+            registrationDate: "2023-01-01",
+            membresiaAsignada: "pareja",
+            fechaFinalizacion: "2023-02-01",
+          },
+          {
+            ine: "1234567890123457",
+            name: "Usuario 3",
+            email: "usuario3@example.com",
+            phone: "123-456-7890",
+            registrationDate: "2023-01-01",
+            membresiaAsignada: "pareja",
+            fechaFinalizacion: "2023-02-01",
+          },
         ],
         newUser: {
           ine: "",
@@ -84,6 +115,7 @@
           membresiaAsignada: "",
           fechaFinalizacion: "",
         },
+        
         selectedUser: null,
       };
     },
@@ -171,5 +203,32 @@
   </script>
   
   <style>
+  #bton{
+    margin-left: 85%;
+  }
+.table-crud{
+  width: 95%;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  font-size: 75%;
+  font-family: Arial, Helvetica, sans-serif;
+  }
   
+  .table-crud th, .table-crud td {
+  text-align: left;
+  padding: 8px;
+  color:beige;
+  font-size: 75%;
+  font-family: Arial, Helvetica, sans-serif;
+
+  }
+  
+  .table-crud tr:nth-child(even){background-color: transparent !important}
+  
+  .table-crud th {
+  background-color: #4CAF50;
+  color: white;
+  
+}
+
   </style>
