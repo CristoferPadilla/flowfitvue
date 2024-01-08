@@ -8,7 +8,7 @@
         </div>
 
         </router-link>
-        <router-link to="/punto-de-venta" class="card-shop" style="width: 18rem; background-color: rgb(9, 30, 60);">
+        <router-link to="/historial-de-ventas" class="card-shop" style="width: 18rem; background-color: rgb(9, 30, 60);">
             <div class="card-body-shop">
               <h5 class="card-title-shop">Historial de ventas</h5>
             </div>
