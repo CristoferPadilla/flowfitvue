@@ -2,7 +2,7 @@
   <div>
     <button @click="showForm" class="btn btn-success">Agregar</button>
 
-    <div class="container" style="background-color: #000000; padding-bottom: 10%;">
+    <div class="container-card" style="background-color: #000000; padding-bottom: 10%;">
       <div v-for="(item, index) in items" :key="index" class="card">
         <div class="card-label" style="color: black;">
           <p>{{ item.title }}</p>
@@ -75,7 +75,7 @@ export default {
 </script>
 
 <style>
-.container {
+.container-card {
   max-height: 60vh;
   width: 60vw;
   overflow: scroll;
@@ -84,18 +84,6 @@ export default {
   flex-wrap: wrap;
 }
 
-.card {
-  color: #ffffff;
-  width: 150px;
-  height: 120px;
-  border-radius: 5px;
-  display: flex;
-  align-items: left;
-  justify-content: center;
-  flex-direction: column;
-  padding: 13px;
-  margin: 10px;
-}
 
 .card-number {
   font-size: 14px;

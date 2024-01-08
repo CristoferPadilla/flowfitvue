@@ -6,7 +6,7 @@ import Navbar from '@/components/CustomNav.vue';
         </div>
         <div id="content">
             <Header></Header>
-            <div class="Container-Cards"><MemCards></MemCards></div>
+            <div class="Container-Cards-membership"><MemCards></MemCards></div>
 
         </div>
     </div>
@@ -30,7 +30,7 @@ components: {
 }
 </script>
 <style>
-.Container-Cards {
+.Container-Cards-membership {
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;

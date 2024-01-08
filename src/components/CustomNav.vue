@@ -25,6 +25,14 @@
       />
       Miembros
     </router-link>
+    <router-link to="/shop" class="nav-link">
+      <img
+        src="../assets/shop.svg"
+        alt="carrito icon"
+        class="nav-log-out"
+      />
+      Venta
+    </router-link>
     <router-link to="/" class="nav-link">
       <img
         src="../assets/door-open-fill.svg"
