@@ -15,7 +15,7 @@
           </div>
           <button @click="clearCart">Limpiar Carrito</button>
         </div>
-        <ProductList :products="filteredProducts" @addToCart="addToCart" />
+        <ProductList :productsItems="filteredProducts" @addToCart="addToCart" />
         <router-view></router-view>
       </div>
     </div>
@@ -28,6 +28,7 @@
   import "@/css/style.css";
   
   export default {
+    name: "ProductsItem",
     components: {
       Navbar,
       Header,
@@ -35,7 +36,7 @@
     },
     data() {
       return {
-        products: [
+        productsItems: [
           // ... tus productos
         ],
         cartItems: [],
@@ -45,7 +46,7 @@
     },
     computed: {
       filteredProducts() {
-        return this.products.filter((product) =>
+        return this.productsItems.filter((product) =>
           product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
       },
@@ -71,6 +72,5 @@
   </script>
   
   <style scoped>
-  /* Estilos específicos si es necesario */
   </style>
   

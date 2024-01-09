@@ -14,6 +14,7 @@
 
 <script>
 export default {
+  name: "CarItem",
   props: ['cartItems', 'total'],
   methods: {
     removeFromCart(index) {

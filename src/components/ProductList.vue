@@ -13,6 +13,7 @@
 
 <script>
 export default {
+  name: "ProductItem",
   props: ['products'],
   methods: {
     addToCart(product) {
