@@ -7,13 +7,11 @@
           <div class="search-icon">🔍</div>
           <input type="text" placeholder="">
         </div>
-        <router-link to="/addMember">
-          <div class="bton">
-            <button @click="showForm = true" class=" bi-plus">Agregar</button>
-          </div>
-        </router-link>
+        <div class="bton">
+          <button @click="toggleForm" class="bi-plus">Agregar</button>
+        </div>
+
       </div>
-      <!-- Tabla de usuarios -->
       <table class="table-crud">
         <thead>
           <tr>
@@ -44,13 +42,56 @@
         </tbody>
       </table>
 
+      <div v-if="showForm" class="modal-overlay">
+      <div class="modal">
+        <h3>{{ selectedUser ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}</h3>
+        <form @submit.prevent="saveUser">
+          <div class="form-group">
+            <label for="id">ID</label>
+            <input v-model="newUser.id" type="text" id="id" :maxlength="ineMaxLength" placeholder="ID (16 dígitos)" required>
+          </div>
 
+          <div class="form-group">
+            <label for="name">Nombre</label>
+            <input v-model="newUser.name" type="text" id="name" placeholder="Nombre" required>
+          </div>
 
-      <form v-if="showForm" @submit.prevent="saveUser" class="mb-3">
-      </form>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input v-model="newUser.email" type="email" id="email" placeholder="Email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Celular</label>
+            <input v-model="newUser.phone" type="tel" id="phone" placeholder="Celular" required>
+          </div>
+
+          <div class="form-group">
+            <label for="registrationDate">Fecha de Registro</label>
+            <flat-pickr v-model="newUser.registrationDate" :config="datePickerConfig"></flat-pickr>
+          </div>
+
+          <div class="form-group">
+            <label for="membresiaAsignada">Membresía Asignada</label>
+            <select v-model="newUser.membresiaAsignada" id="membresiaAsignada">
+              <option value="individual">Individual</option>
+              <option value="pareja">Pareja</option>
+              <option value="familiar">Familiar</option>
+              <option value="visita">Visita</option>
+            </select>
+          </div>
+
+          <div class="button-container">
+            <button type="button" @click="toggleForm">Cancelar</button>
+            <button type="submit">{{ selectedUser ? 'Actualizar' : 'Agregar' }}</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
+  </div>
 </template>
+
   
   
 <script>
@@ -273,4 +314,57 @@ export default {
 
 .search-icon {
   padding-left: 10px;
-}</style>
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-container button {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1100;
+  /* Asegúrate de que sea un valor mayor que el de .modal-overlay */
+}
+
+
+.button-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-container button {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  /* Puedes ajustar el valor según sea necesario */
+}
+</style>
