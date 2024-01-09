@@ -58,7 +58,8 @@
       name: 'addProductView',
       component: ()=> import(/* webpackChunk*/ './view/addProduct.vue'), //AQUI VA EL NOMBRE DE TU pantalla
 
-    }
+    },
+   
   ];
 
   const router = createRouter({
