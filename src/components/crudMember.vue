@@ -18,8 +18,8 @@
             <th style="font-size: 70%">Nombre</th>
             <th style="font-size: 70%">Email</th>
             <th style="font-size: 70%">Celular</th>
-            <th style="font-size: 70%">Fecha de Registro</th>
             <th style="font-size: 70%">Membresía Asignada</th>
+            <th style="font-size: 70%">Fecha de Registro</th>
             <th style="font-size: 70%">Fecha de Finalización</th>
             <th style="font-size: 70%">Acciones</th>
           </tr>
@@ -30,8 +30,8 @@
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.phone }}</td>
-            <td>{{ user.registrationDate }}</td>
             <td>{{ user.membresiaAsignada }}</td>
+            <td>{{ user.registrationDate }}</td>
             <td>{{ user.fechaFinalizacion }}</td>
             <td>
               <button @click="editUser(user)" class="btn btn-warning btn-sm">Editar</button>
@@ -41,13 +41,9 @@
         </tbody>
       </table>
 
-      <div v-show="showForm" class="add-form" style="width: 60%">
-          <h3>{{ selectedUser ? 'Editar Miembro' : 'Agregar Miembro' }}</h3>
-          <form @submit.prevent="saveUser">
-            <div class="form-group">
-              <label for="id">ID:</label>
-              <input v-model="newUser.id" type="text" class="form-control" required />
-            </div>
+      <div v-show="showForm" class="add-form" style="width: 70%">
+          <h3>{{ selectedUser ? 'Editar miembro' : 'Agregar miembro' }}</h3>
+          <form @submit.prevent="saveUser" class="form-container">
             <div class="form-group">
               <label for="name">Nombre:</label>
               <input v-model="newUser.name" type="text" class="form-control" required />
@@ -61,16 +57,13 @@
               <input v-model="newUser.phone" type="text" class="form-control" required />
             </div>
             <div class="form-group">
-              <label for="registrationDate">Fecha de Registro:</label>
-              <input v-model="newUser.registrationDate" type="date" class="form-control" required />
-            </div>
-            <div class="form-group">
               <label for="membresiaAsignada">Membresía Asignada:</label>
-              <input v-model="newUser.membresiaAsignada" type="text" class="form-control" required />
-            </div>
-            <div class="form-group">
-              <label for="fechaFinalizacion">Fecha de Finalización:</label>
-              <input v-model="newUser.fechaFinalizacion" type="date" class="form-control" required />
+              <select v-model="newUser.membresiaAsignada" class="form-control" required>
+                <option value="" disabled selected>Selecciona una membresía</option>
+                <option value="Individual">Individual</option>
+                <option value="Pareja">Pareja</option>
+                <option value="Familiar">Estudiantil</option>
+              </select>
             </div>
             <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
             <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
@@ -95,8 +88,8 @@ export default {
           name: "Usuario 1",
           email: "usuario1@example.com",
           phone: "123-456-7890",
-          registrationDate: "2023-01-01",
           membresiaAsignada: "pareja",
+          registrationDate: "2023-01-01",
           fechaFinalizacion: "2023-02-01",
         },
       ],
@@ -121,16 +114,27 @@ export default {
     this.resetForm(); 
     },
     saveUser() {
-      if (this.selectedUser) {
-        const index = this.users.findIndex((user) => user.id === this.selectedUser.id);
-        if (index !== -1) {
-          this.users.splice(index, 1, { ...this.newUser });
-        }
-      } else {
-        this.users.push({ ...this.newUser });
-      }
-      this.showForm = false;
-    },
+  if (this.selectedUser) {
+    const index = this.users.findIndex((user) => user.id === this.selectedUser.id);
+    if (index !== -1) {
+      this.users.splice(index, 1, { ...this.newUser });
+    }
+  } else {
+    const nextId = this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
+    this.newUser.id = nextId;
+
+    const currentDate = new Date();
+    this.newUser.registrationDate = currentDate.toISOString().split('T')[0];
+
+    const endDate = new Date(currentDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    this.newUser.fechaFinalizacion = endDate.toISOString().split('T')[0];
+
+    this.users.push({ ...this.newUser });
+  }
+  this.showForm = false;
+  this.resetForm();
+},
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
@@ -145,8 +149,8 @@ export default {
         name: "",
         email: "",
         phone: "",
-        registrationDate: "",
         membresiaAsignada: "",
+        registrationDate: "",
         fechaFinalizacion: "",
       };
       this.selectedUser = null;
@@ -243,6 +247,44 @@ export default {
   margin-left: 10px;
   cursor: pointer;
 }
+.add-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+.form-group {
+  margin-bottom: 1rem;
+}
 
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
 
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
 </style>
