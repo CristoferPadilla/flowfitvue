@@ -14,23 +14,9 @@
         </div>
           <button @click="clearCart">Limpiar Carrito</button>
         </div>
-        <form v-if="showForm" @submit.prevent="addNewProduct">
-          <label>
-            Nombre:
-            <input v-model="newProduct.name" required />
-          </label>
-          <label>
-            Precio:
-            <input v-model="newProduct.price" type="number" required />
-          </label>
-          <label>
-            Imagen (URL):
-            <input v-model="newProduct.image" type="url" required />
-          </label>
-          <button type="submit">Agregar Producto</button>
-        </form>
         <ProductList :products="filteredProducts" @addToCart="addToCart" />
-        <div class="cart"><!--EL CARRITO CON LA SUMA TOTAL DEBERÍA ESTAR EN OTRA PARTE, SINO SE VE UN POCO RARO, DE PREFERENCIA HAZLO COMO LA PANTALLA DE ARTICARE DE COMPRA-->
+        <div class="cart">
+          <h2>Carrito de Compras</h2>
           <ul>
             <li v-for="(item, index) in cartItems" :key="index">
               {{ item.name }} - {{ item.price }} MX
@@ -64,15 +50,13 @@
             id: 1,
             name: "Conjunto deportivo",
             price: 100,
-            image:
-              "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
+            image: "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
           },
           {
             id: 2,
             name: "Proteina",
             price: 200,
-            image:
-              "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&format=jpeg",
+            image: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&format=jpeg",
           },
           {
             id: 3,
@@ -83,13 +67,6 @@
         ],
         cartItems: [],
         searchTerm: "",
-        total: 0,
-        showForm: false,
-        newProduct: {
-          name: "",
-          price: null,
-          image: "",
-        },
       };
     },
     computed: {
@@ -102,11 +79,6 @@
     methods: {
       addToCart(product) {
         this.cartItems.push(product);
-        this.calculateTotal();
-      },
-      removeFromCart(index) {
-        this.cartItems.splice(index, 1);
-        this.calculateTotal();
       },
       clearCart() {
         this.cartItems = [];
@@ -121,6 +93,9 @@
       pagar() {
         alert(`Total a pagar: ${this.total} MXN. Gracias por tu compra.`);
         this.clearCart();
+      },
+      toggleForm() {
+        this.showForm = !this.showForm;
       },
       addNewProduct() {
         if (!this.newProduct.name || !this.newProduct.price || !this.newProduct.image) {
@@ -151,28 +126,19 @@
   
   <style scoped>
   /* Agrega estilos específicos si es necesario */
-  .cart {
-    margin-top: 20px;
-  }
-  
-  .cart h2 {
-    color: #007bff;
-  }
-  
   .controls {
     display: flex;
+    justify-content: space-between;
     margin-bottom: 20px;
-    align-items: center;
-    margin-left: 7%;
-    min-height: 60px;
+    align-items: baseline;
   }
   
   .controls input {
-    width: 200px; 
+    width: 100%;
   }
   
   ul {
-    list-style: none;
+    list-style: circle;
     padding: 0;
   }
   
@@ -181,7 +147,7 @@
   }
   
   button {
-    background-color: #ff0000; /* Puedes cambiar el color según tu preferencia */
+    background-color: #ff0000;
     color: #fff;
     padding: 5px 8px;
     cursor: pointer;
@@ -190,26 +156,5 @@
     font-size: 12px;
     margin-left: 10px;
   }
-  .search-bar {
-    width: 300px;
-    height: 40px;
-    background-color: white;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-}
-.search-bar input {
-    border:none; 
-    outline:none; 
-    background:none; 
-    width:auto; 
-    color:black; 
-    font-size :18px; 
-    line-height :40px; 
-    padding :0 10px ;
-}
-.search-icon{
-    padding-left :10px ;
-}
   </style>
   
