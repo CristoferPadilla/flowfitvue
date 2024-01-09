@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/shopcar',
     name: 'shopcar',
-    component: ()=> import(/* webpackChunk*/ './view/.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+    component: ()=> import(/* webpackChunk*/ './view/checkout.vue'), //AQUI VA EL NOMBRE DE TU pantalla
 
   }
 ];
