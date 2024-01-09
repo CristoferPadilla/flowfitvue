@@ -5,10 +5,14 @@
       </div>
       <div id="content">
         <Header />
+        <h2 class="title">Carrito de Compras</h2>
+        <br>
         <div class="controls">
-          <input v-model="searchTerm" placeholder="Buscar producto" />
+          <div class="search-bar">
+            <div class="search-icon">🔍</div> 
+            <input v-model="searchTerm" placeholder="Buscar producto">
+        </div>
           <button @click="clearCart">Limpiar Carrito</button>
-          <button @click="toggleForm">Agregar Producto</button>
         </div>
         <form v-if="showForm" @submit.prevent="addNewProduct">
           <label>
@@ -26,8 +30,7 @@
           <button type="submit">Agregar Producto</button>
         </form>
         <ProductList :products="filteredProducts" @addToCart="addToCart" />
-        <div class="cart">
-          <h2>Carrito de Compras</h2>
+        <div class="cart"><!--EL CARRITO CON LA SUMA TOTAL DEBERÍA ESTAR EN OTRA PARTE, SINO SE VE UN POCO RARO, DE PREFERENCIA HAZLO COMO LA PANTALLA DE ARTICARE DE COMPRA-->
           <ul>
             <li v-for="(item, index) in cartItems" :key="index">
               {{ item.name }} - {{ item.price }} MX
@@ -119,9 +122,6 @@
         alert(`Total a pagar: ${this.total} MXN. Gracias por tu compra.`);
         this.clearCart();
       },
-      toggleForm() {
-        this.showForm = !this.showForm;
-      },
       addNewProduct() {
         if (!this.newProduct.name || !this.newProduct.price || !this.newProduct.image) {
           alert("Completa todos los campos para agregar un producto.");
@@ -161,13 +161,14 @@
   
   .controls {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 20px;
-    align-items: baseline;
+    align-items: center;
+    margin-left: 7%;
+    min-height: 60px;
   }
   
   .controls input {
-    width: 100%;
+    width: 200px; 
   }
   
   ul {
@@ -189,5 +190,26 @@
     font-size: 12px;
     margin-left: 10px;
   }
+  .search-bar {
+    width: 300px;
+    height: 40px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+}
+.search-bar input {
+    border:none; 
+    outline:none; 
+    background:none; 
+    width:auto; 
+    color:black; 
+    font-size :18px; 
+    line-height :40px; 
+    padding :0 10px ;
+}
+.search-icon{
+    padding-left :10px ;
+}
   </style>
   
