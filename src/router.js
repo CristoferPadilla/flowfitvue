@@ -40,6 +40,12 @@ const routes = [
     name: 'productsView',
     component: ()=> import(/* webpackChunk*/ './view/products.vue'),
 
+  },
+  {
+    path: '/shopcar',
+    name: 'shopcar',
+    component: ()=> import(/* webpackChunk*/ './view/.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+
   }
 ];
 
