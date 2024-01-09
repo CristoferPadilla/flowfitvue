@@ -46,6 +46,18 @@
       name: 'shopcar',
       component: ()=> import(/* webpackChunk*/ './view/checkout.vue'), //AQUI VA EL NOMBRE DE TU pantalla
 
+    },
+    {
+      path: '/addMember',
+      name: 'addMemberView',
+      component: ()=> import(/* webpackChunk*/ './view/addMember.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+
+    },
+    {
+      path: '/addProduct',
+      name: 'addProductView',
+      component: ()=> import(/* webpackChunk*/ './view/addProduct.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+
     }
   ];
 
