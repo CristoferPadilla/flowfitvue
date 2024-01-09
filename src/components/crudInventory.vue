@@ -8,9 +8,9 @@
                     <input type="text" placeholder="">
                 </div>
                 <div class="bton">
-                  <button @click="showAddForm" class="btn btn-success">Ver proveedores</button>
+                  <button class="btn btn-success" style="background-color:blue;">Ver proveedores</button>
                 </div>
-                <button @click="toggleForm"  class="btn btn-success mb-3">
+                <button @click="showAddProductForm" class="btn btn-success mb-3">
                   <i class="bi bi-plus"></i> Nuevo producto
                 </button>
             </div>
@@ -33,7 +33,7 @@
               <td>{{ product.id }}</td>
               <td>{{ product.name }}</td>
               <td>{{ product.description }}</td>
-              <td>{{ product.price }}</td>
+              <td>${{ product.price }} MX</td>
               <td>{{ product.quantify }}</td>
               <td>{{ product.category }}</td>
               <td>{{ product.provider }}</td>
@@ -47,61 +47,140 @@
         <form v-if="showForm" @submit.prevent="saveProduct" class="mb-3">
         </form>
       </div>
+
+      <div class="add-form-container" v-show="showForm">
+        <div class="add-form">
+          <h3>{{ selectedProduct ? 'Editar producto' : 'Agregar producto' }}</h3>
+          <form @submit.prevent="saveProduct" class="form-container">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="name">Nombre:</label>
+                  <input v-model="newProduct.name" type="text" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="description">Descripción:</label>
+                  <input v-model="newProduct.description" type="text" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="price">Precio:</label>
+                  <input v-model="newProduct.price" type="text" class="form-control" required />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="quantify">Cantidad:</label>
+                  <input v-model="newProduct.quantify" type="text" class="form-control" required />
+                </div>
+                <div class="form-group">
+                  <label for="category">Categoría:</label>
+                  <select v-model="newProduct.category" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    <option value="Ropa">Ropa</option>
+                    <option value="Bebidas">Bebidas</option>
+                    <option value="Suplementos">Suplementos</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="provider">Proveedor:</label>
+                  <input v-model="newProduct.provider" type="text" class="form-control" required />
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <button type="submit" class="btn btn-primary">{{ selectedProduct ? 'Guardar' : 'Agregar' }}</button>
+              <button type="button" class="btn btn-secondary" @click="hideForm">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 </template>
 
 <script>
-import "@/css/style.css";
 export default {
   name: "CrudProducts",
-  components: {
-  },
   data() {
-  return {
-    showForm: false,
-    products: [
-      {
-        id: "1234567890123450",
-        name: "Calcetines",
-        description: "Descripción del producto 1",
-        price: "100.00",
-        quantify: "20",
+    return {
+      showForm: false,
+      products: [
+        {
+          id: "1",
+        name: "Camiseta",
+        description: "Playera deportiva",
+        price: "125",
+        quantify: "2",
         category: "Ropa",
-        provider: "Proveedor 1",
-      },
-      {
-        id: "1234567890123451",
-        name: "Proteina",
-        description: "Descripción del producto 2",
-        price: "200.00",
-        quantify: "10",
-        category: "Suplemento",
-        provider: "Proveedor 2",
-      },
-    ],
-    newProduct: {
-      id: "",
-      name: "",
-      description: "",
-      price: "",
-      quantify: "",
-      category: "",
-      provider: "",
-    },
-    selectedProduct: null,
-  };
-},
+        provider: "Manuel Inc.",
+        }
 
+      ],
+      newProduct: {
+        id: "",
+        name: "",
+        description: "",
+        price: "",
+        quantify: "",
+        category: "",
+        provider: "",
+      },
+      selectedProduct: null,
+    };
+  },
   methods: {
-    toggleForm() {
-      this.showForm = !this.showForm;
+    showAddProductForm() {
+      this.showForm = true;
+      this.selectedProduct = null;
+      this.clearProductForm();
     },
+    hideForm() {
+      this.showForm = false;
+      this.clearProductForm();
+    },
+    clearProductForm() {
+      this.newProduct = {
+        id: "",
+        name: "",
+        description: "",
+        price: "",
+        quantify: "",
+        category: "",
+        provider: "",
+      };
+    },
+    saveProduct() {
+      if (this.selectedProduct) {
+        const index = this.products.findIndex(
+          (product) => product.id === this.selectedProduct.id
+        );
+        if (index !== -1) {
+          this.products.splice(index, 1, this.newProduct);
+        }
+      } else {
+        this.newProduct.id = Date.now().toString(); 
+        this.products.push(this.newProduct);
+      }
 
+      this.hideForm();
+    },
+    editProduct(product) {
+      this.selectedProduct = product;
+      this.newProduct = { ...product }; 
+      this.showForm = true;
+    },
+    deleteProduct(productId) {
+      const index = this.products.findIndex((product) => product.id === productId);
+      if (index !== -1) {
+        this.products.splice(index, 1);
+      }
+    },
   },
 };
+
 </script>
 
-<style>
+<style scoped >
 
 .search-bar {
     width: 300px;
@@ -243,44 +322,37 @@ color: white;
   margin-left: 10px;
   cursor: pointer;
 }
-.add-form {
+.add-form-container {
   position: fixed;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 10%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+}
+
+.add-form {
   background-color: #ffffff;
   padding: 20px;
   border-radius: 5px;
-  text-align: center;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 600px;
 }
-.form-group {
+
+.row {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-.form-control {
-  display: block;
-  width: 100%;
-  padding: 0.375rem 0.75rem;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #495057;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ced4da;
-  border-radius: 0.25rem;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+.col-md-6 {
+  width: 48%;
 }
 
-.form-control:focus {
-  color: #495057;
-  background-color: #fff;
-  border-color: #80bdff;
-  outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-label {
-  display: inline-block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
+.text-center {
+  text-align: center;
 }
 </style>

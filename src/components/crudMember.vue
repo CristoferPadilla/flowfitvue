@@ -159,7 +159,7 @@ export default {
 };
 </script>
   
-<style >
+<style scoped >
 .bton {
   margin-left: 120%;
   padding: auto;
