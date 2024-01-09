@@ -2,7 +2,7 @@
    <div class="cards-title-container">
     <h2 class="title">Tienda</h2>
     <div class="cards-shop-container">
-        <router-link to="/punto-de-venta" class="card-shop" style="width: 18rem; background-color: rgb(9, 60, 9);">
+        <router-link to="/products" class="card-shop" style="width: 18rem; background-color: rgb(9, 60, 9);">
           <div class="card-body-shop">
             <h5 class="card-title-shop">Punto de venta</h5>
         

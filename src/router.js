@@ -26,7 +26,7 @@ const routes = [
   {
     path: '/shop',
     name: 'shopView',
-    component: ()=> import(/* webpackChunk*/ './view/products.vue'),
+    component: ()=> import(/* webpackChunk*/ './view/shop.vue'),
 
   },
   {
@@ -36,8 +36,8 @@ const routes = [
 
   },
   {
-    path: '/punto-de-venta',
-    name: 'Tienda',
+    path: '/products',
+    name: 'productsView',
     component: ()=> import(/* webpackChunk*/ './view/products.vue'),
 
   }

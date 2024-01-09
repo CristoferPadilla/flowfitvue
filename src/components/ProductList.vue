@@ -12,12 +12,11 @@
   </template>
   
   <script>
-  import ProductItem from './ProductItem.vue';  // Asegúrate de importar el componente ProductItem
   
   export default {
+    name: 'ProductList',
     props: ['products'],
     components: {
-      ProductItem,
     },
     data() {
       return {
@@ -43,6 +42,5 @@
   </script>
   
   <style scoped>
-  /* Estilos específicos del componente ProductList.vue */
   </style>
   
