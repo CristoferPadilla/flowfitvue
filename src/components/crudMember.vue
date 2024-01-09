@@ -8,9 +8,8 @@
           <input type="text" placeholder="">
         </div>
         <div class="bton">
-          <button @click="toggleForm" class="bi-plus">Agregar</button>
+          <button @click="showAddForm" class="btn btn-success">Nuevo miembro</button>
         </div>
-
       </div>
       <table class="table-crud">
         <thead>
@@ -42,112 +41,59 @@
         </tbody>
       </table>
 
-      <div v-if="showForm" class="modal-overlay">
-      <div class="modal">
-        <h3>{{ selectedUser ? 'Editar Usuario' : 'Agregar Nuevo Usuario' }}</h3>
-        <form @submit.prevent="saveUser">
-          <div class="form-group">
-            <label for="id">ID</label>
-            <input v-model="newUser.id" type="text" id="id" :maxlength="ineMaxLength" placeholder="ID (16 dígitos)" required>
-          </div>
-
-          <div class="form-group">
-            <label for="name">Nombre</label>
-            <input v-model="newUser.name" type="text" id="name" placeholder="Nombre" required>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input v-model="newUser.email" type="email" id="email" placeholder="Email" required>
-          </div>
-
-          <div class="form-group">
-            <label for="phone">Celular</label>
-            <input v-model="newUser.phone" type="tel" id="phone" placeholder="Celular" required>
-          </div>
-
-          <div class="form-group">
-            <label for="registrationDate">Fecha de Registro</label>
-            <flat-pickr v-model="newUser.registrationDate" :config="datePickerConfig"></flat-pickr>
-          </div>
-
-          <div class="form-group">
-            <label for="membresiaAsignada">Membresía Asignada</label>
-            <select v-model="newUser.membresiaAsignada" id="membresiaAsignada">
-              <option value="individual">Individual</option>
-              <option value="pareja">Pareja</option>
-              <option value="familiar">Familiar</option>
-              <option value="visita">Visita</option>
-            </select>
-          </div>
-
-          <div class="button-container">
-            <button type="button" @click="toggleForm">Cancelar</button>
-            <button type="submit">{{ selectedUser ? 'Actualizar' : 'Agregar' }}</button>
-          </div>
-        </form>
+      <div v-show="showForm" class="add-form" style="width: 60%">
+          <h3>{{ selectedUser ? 'Editar Miembro' : 'Agregar Miembro' }}</h3>
+          <form @submit.prevent="saveUser">
+            <div class="form-group">
+              <label for="id">ID:</label>
+              <input v-model="newUser.id" type="text" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="name">Nombre:</label>
+              <input v-model="newUser.name" type="text" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input v-model="newUser.email" type="email" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="phone">Celular:</label>
+              <input v-model="newUser.phone" type="text" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="registrationDate">Fecha de Registro:</label>
+              <input v-model="newUser.registrationDate" type="date" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="membresiaAsignada">Membresía Asignada:</label>
+              <input v-model="newUser.membresiaAsignada" type="text" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="fechaFinalizacion">Fecha de Finalización:</label>
+              <input v-model="newUser.fechaFinalizacion" type="date" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
+            <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
 </template>
 
-  
-  
 <script>
-
 import "@/css/style.css";
 
 export default {
   name: "addMembers",
-  components: {
-  },
+  components: {},
   data() {
     return {
       showForm: false,
-      ineMaxLength: 16,
       users: [
         {
           id: "1234567890123450",
           name: "Usuario 1",
           email: "usuario1@example.com",
-          phone: "123-456-7890",
-          registrationDate: "2023-01-01",
-          membresiaAsignada: "pareja",
-          fechaFinalizacion: "2023-02-01",
-        },
-
-        {
-          id: "1234567890123451",
-          name: "Usuario 2",
-          email: "usuario2@example.com",
-          phone: "123-456-7890",
-          registrationDate: "2023-01-01",
-          membresiaAsignada: "pareja",
-          fechaFinalizacion: "2023-02-01",
-        },
-        {
-          id: "1234567890123452",
-          name: "Usuario 3",
-          email: "usuario3@example.com",
-          phone: "123-456-7890",
-          registrationDate: "2023-01-01",
-          membresiaAsignada: "pareja",
-          fechaFinalizacion: "2023-02-01",
-        },
-        {
-          id: "1234567890123453",
-          name: "Usuario 4",
-          email: "usuario4@example.com",
-          phone: "123-456-7890",
-          registrationDate: "2023-01-01",
-          membresiaAsignada: "pareja",
-          fechaFinalizacion: "2023-02-01",
-        },
-        {
-          id: "1234567890123457",
-          name: "Usuario 3",
-          email: "usuario3@example.com",
           phone: "123-456-7890",
           registrationDate: "2023-01-01",
           membresiaAsignada: "pareja",
@@ -163,73 +109,32 @@ export default {
         membresiaAsignada: "",
         fechaFinalizacion: "",
       },
-
       selectedUser: null,
     };
   },
   methods: {
-    toggleForm() {
-      this.showForm = !this.showForm;
-      if (!this.showForm) {
-        this.resetForm();
-      }
-    },
-    addUser() {
-      // Verificar la longitud del INE
-      if (this.newUser.id.length !== this.ineMaxLength) {
-        alert(`La longitud del INE debe ser de ${this.ineMaxLength} caracteres.`);
-        return;
-      }
-
-      // Calcular fecha de finalización
-      const registrationDate = new Date(this.newUser.registrationDate);
-      const nextMonth = new Date(registrationDate);
-      nextMonth.setMonth(nextMonth.getMonth() + 1);
-
-      if (this.newUser.membresiaAsignada === "visita") {
-        // Si la membresía es "visita", establecer la fecha de finalización como el mismo día
-        this.newUser.fechaFinalizacion = registrationDate.toISOString().split("T")[0];
-      } else {
-        // Para otras membresías, establecer la fecha de finalización como un mes después
-        this.newUser.fechaFinalizacion = nextMonth.toISOString().split("T")[0];
-      }
-
-      this.users.push({ ...this.newUser });
-      this.resetForm();
-      this.showForm = false;
-    },
-    editUser(user) {
-      this.selectedUser = user;
-      this.newUser = { ...user };
+    showAddForm() {
       this.showForm = true;
     },
+    hideForm() {
+    this.showForm = false;
+    this.resetForm(); 
+    },
     saveUser() {
-      // Calcular fecha de finalización
-      const registrationDate = new Date(this.newUser.registrationDate);
-      const nextMonth = new Date(registrationDate);
-      nextMonth.setMonth(nextMonth.getMonth() + 1);
-
-      if (this.newUser.membresiaAsignada === "visita") {
-        // Si la membresía es "visita", establecer la fecha de finalización como el mismo día
-        this.newUser.fechaFinalizacion = registrationDate.toISOString().split("T")[0];
-      } else {
-        // Para otras membresías, establecer la fecha de finalización como un mes después
-        this.newUser.fechaFinalizacion = nextMonth.toISOString().split("T")[0];
-      }
-
       if (this.selectedUser) {
-        // Editar usuario existente
         const index = this.users.findIndex((user) => user.id === this.selectedUser.id);
         if (index !== -1) {
           this.users.splice(index, 1, { ...this.newUser });
         }
       } else {
-        // Crear nuevo usuario
         this.users.push({ ...this.newUser });
       }
-
-      this.resetForm();
       this.showForm = false;
+    },
+    editUser(user) {
+      this.selectedUser = user;
+      this.newUser = { ...user };
+      this.showAddForm();
     },
     deleteUser(id) {
       this.users = this.users.filter((user) => user.id !== id);
@@ -250,9 +155,16 @@ export default {
 };
 </script>
   
-<style>
-#bton {
-  margin-left: 123%;
+<style >
+.bton {
+  margin-left: 120%;
+  padding: auto;
+}
+.btn{
+  font-size: 75%;
+  margin: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+
 }
 
 .table-crud {
@@ -316,32 +228,10 @@ export default {
   padding-left: 10px;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .button-container button {
   margin-left: 10px;
   cursor: pointer;
 }
-
-.modal {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1100;
-  /* Asegúrate de que sea un valor mayor que el de .modal-overlay */
-}
-
 
 .button-container {
   margin-top: 10px;
@@ -354,17 +244,5 @@ export default {
   cursor: pointer;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  /* Puedes ajustar el valor según sea necesario */
-}
+
 </style>
