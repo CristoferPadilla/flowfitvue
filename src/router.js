@@ -49,7 +49,7 @@
     },
     {
       path: '/addMember',
-      name: 'addMemberView',
+      name: 'addMember',
       component: ()=> import(/* webpackChunk*/ './view/addMember.vue'), //AQUI VA EL NOMBRE DE TU pantalla
 
     },
