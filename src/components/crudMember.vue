@@ -7,9 +7,11 @@
           <div class="search-icon">🔍</div>
           <input type="text" placeholder="">
         </div>
-        <div id="bton">
-          <button @click="showForm = true">Agregar</button>
-        </div>
+        <router-link to="/addMember">
+          <div class="bton">
+            <button @click="showForm = true" class=" bi-plus">Agregar</button>
+          </div>
+        </router-link>
       </div>
       <!-- Tabla de usuarios -->
       <table class="table-crud">
