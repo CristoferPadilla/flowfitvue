@@ -26,13 +26,19 @@ const routes = [
   {
     path: '/shop',
     name: 'shopView',
-    component: ()=> import(/* webpackChunk*/ './view/shop.vue'),
+    component: ()=> import(/* webpackChunk*/ './view/products.vue'),
 
   },
   {
     path: '/inventory',
     name: 'inventoryView',
     component: ()=> import(/* webpackChunk*/ './view/inventory.vue'),
+
+  },
+  {
+    path: '/punto-de-venta',
+    name: 'Tienda',
+    component: ()=> import(/* webpackChunk*/ './view/products.vue'),
 
   }
 ];
