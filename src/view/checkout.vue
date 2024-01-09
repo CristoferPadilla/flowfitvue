@@ -1,3 +1,5 @@
+<!-- checkout.vue -->
+
 <template>
   <div>
     <h2>Carrito de Compras</h2>
@@ -14,7 +16,7 @@
 
 <script>
 export default {
-  name: "CarItem",
+  name: "CheckoutView",
   props: ['cartItems', 'total'],
   methods: {
     removeFromCart(index) {
