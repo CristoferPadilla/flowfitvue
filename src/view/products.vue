@@ -14,7 +14,38 @@
         </div>
       </div>
       <ProductList :products="filteredProducts" @addToCart="addToCart" />
-      <router-link to="/shopcar" class="checkout-link">Ir al Carrito</router-link>
+      <router-link to="/shopcar" class="checkout-link" @click="openModal">Ir al Carrito</router-link>
+
+      <!-- Modal -->
+      <div class="modal" v-if="isModalOpen">
+        <div class="modal-content">
+          <span class="close" @click="closeModal">&times;</span>
+          <h2>Resumen del Carrito</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in cartItems" :key="index">
+                <td>{{ item.name }}</td>
+                <td>{{ formatCurrency(item.price) }}</td>
+                <td>
+                  <button @click="removeFromCart(index)" class="button">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div>Total a pagar: {{ formatCurrency(cartTotal) }}</div>
+          <div>
+            <button @click="clearCart" class="button">Vaciar Carrito</button>
+            <button @click="checkout" class="button">Pagar Carrito</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +88,7 @@ export default {
       ],
       cartItems: [],
       searchTerm: "",
+      isModalOpen: false,
     };
   },
   computed: {
@@ -65,65 +97,80 @@ export default {
         product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
+    cartTotal() {
+      return this.cartItems.reduce((total, item) => total + item.price, 0);
+    },
   },
   methods: {
     addToCart(product) {
       this.cartItems.push(product);
     },
-    // ... otros métodos ...
+    removeFromCart(index) {
+      this.cartItems.splice(index, 1);
+    },
+    clearCart() {
+      this.cartItems = [];
+      this.closeModal();
+    },
+    checkout() {
+      // Lógica de pago, aquí puedes realizar acciones como procesar el pago, actualizar inventario, etc.
+      // Después de realizar el pago, puedes cerrar la ventana modal y limpiar el carrito.
+      alert("Pago exitoso. Gracias por su compra.");
+      this.clearCart();
+    },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    formatCurrency(value) {
+      // Función para formatear el precio como moneda
+      return `$${value.toFixed(2)}`;
+    },
+    // ... (otros métodos)
   },
 };
 </script>
 
 <style scoped>
 /* Estilos específicos si es necesario */
-.controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  align-items: baseline;
-}
+/* ... (resto de estilos) ... */
 
-.controls input {
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
   width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
-.button {
-  background-color: #ff0000;
-  color: #fff;
-  padding: 5px 8px;
-  cursor: pointer;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  margin-left: 10px;
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
 }
 
-.checkout-link {
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
   text-decoration: none;
-  color: #007bff;
-  font-size: 14px;
-  margin-left: 10px;
+  cursor: pointer;
 }
-.search-bar {
-  width: 300px;
-  height: 40px;
-  background-color: white;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-}
-.search-bar input {
-  border:none; 
-  outline:none; 
-  background:none; 
-  width:auto; 
-  color:black; 
-  font-size :18px; 
-  line-height :40px; 
-  padding :0 10px ;
-}
-.search-icon{
-  padding-left :10px ;
-}
+
+/* ... (resto de estilos) ... */
 </style>
