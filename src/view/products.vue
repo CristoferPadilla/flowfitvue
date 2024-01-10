@@ -134,8 +134,55 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos específicos si es necesario */
-/* ... (resto de estilos) ... */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  align-items: baseline;
+}
+
+.controls input {
+  width: 100%;
+}
+
+.button {
+  background-color: #ff0000;
+  color: #fff;
+  padding: 5px 8px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.checkout-link {
+  text-decoration: none;
+  color: #007bff;
+  font-size: 14px;
+  margin-left: 10px;
+}
+.search-bar {
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+.search-bar input {
+  border:none; 
+  outline:none; 
+  background:none; 
+  width:auto; 
+  color:black; 
+  font-size :18px; 
+  line-height :40px; 
+  padding :0 10px ;
+}
+.search-icon{
+  padding-left :10px ;
+}
 
 .modal {
   display: none;
@@ -154,7 +201,7 @@ export default {
   background-color: #fefefe;
   margin: 10% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #ff7575;
   width: 80%;
 }
 

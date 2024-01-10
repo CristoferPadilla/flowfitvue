@@ -31,7 +31,7 @@ export default {
 }
 
 .product-card {
-  background-color: #566372;
+  background-color: #55a5ff;
   padding: 10px;
   margin: 10px;
   width: 200px; /* Ajusta este valor según tus necesidades */
