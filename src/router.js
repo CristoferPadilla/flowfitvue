@@ -48,15 +48,9 @@
 
     },
     {
-      path: '/addMember',
-      name: 'addMember',
-      component: ()=> import(/* webpackChunk*/ './view/addMember.vue'), //AQUI VA EL NOMBRE DE TU pantalla
-
-    },
-    {
-      path: '/addProduct',
-      name: 'addProductView',
-      component: ()=> import(/* webpackChunk*/ './view/addProduct.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+      path: '/provider',
+      name: 'providerView',
+      component: ()=> import(/* webpackChunk*/ './view/provider.vue'), //AQUI VA EL NOMBRE DE TU pantalla
 
     },
    

@@ -105,4 +105,25 @@ export default {
   font-size: 14px;
   margin-left: 10px;
 }
+.search-bar {
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+}
+.search-bar input {
+  border:none; 
+  outline:none; 
+  background:none; 
+  width:auto; 
+  color:black; 
+  font-size :18px; 
+  line-height :40px; 
+  padding :0 10px ;
+}
+.search-icon{
+  padding-left :10px ;
+}
 </style>

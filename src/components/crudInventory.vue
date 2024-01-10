@@ -7,9 +7,9 @@
                     <div class="search-icon">🔍</div> 
                     <input type="text" placeholder="">
                 </div>
-                <div class="bton">
-                  <button class="btn btn-success" style="background-color:blue;">Ver proveedores</button>
-                </div>
+                <router-link  class="bton-link " to="/provider">
+                    <button class="btn btn-success" style="background-color:blue;" >Ver proveedores</button>
+                </router-link>
                 <button @click="showAddProductForm" class="btn btn-success mb-3">
                   <i class="bi bi-plus"></i> Nuevo producto
                 </button>
@@ -354,5 +354,8 @@ color: white;
 
 .text-center {
   text-align: center;
+}
+.bton-link{
+  margin-left: 100%;
 }
 </style>
