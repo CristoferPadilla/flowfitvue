@@ -1,53 +1,17 @@
-<!-- membersView.vue -->
 
 <template>
   <div id="app">
     <div class="app">
-      <Navbar :cartItems="cartItems" />
+      <Navbar />
     </div>
     <div id="content">
       <Header />
-      <h2 class="title">Productos</h2>
-      <div class="controls">
-        <div class="search-bar">
-          <input v-model="searchTerm" placeholder="Buscar producto" />
-        </div>
-      </div>
-      <ProductList :products="filteredProducts" @addToCart="addToCart" />
-      <router-link to="/shopcar" class="checkout-link" @click="openModal">Ir al Carrito</router-link>
-
-      <!-- Modal -->
-      <div class="modal" v-if="isModalOpen">
-        <div class="modal-content">
-          <span class="close" @click="closeModal">&times;</span>
-          <h2>Resumen del Carrito</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(item, index) in cartItems" :key="index">
-                <td>{{ item.name }}</td>
-                <td>{{ formatCurrency(item.price) }}</td>
-                <td>
-                  <button @click="removeFromCart(index)" class="button">Eliminar</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div>Total a pagar: {{ formatCurrency(cartTotal) }}</div>
-          <div>
-            <button @click="clearCart" class="button">Vaciar Carrito</button>
-            <button @click="checkout" class="button">Pagar Carrito</button>
-          </div>
-        </div>
-      </div>
+        <ProductList></ProductList>
     </div>
-  </div>
+  </div> 
+
+ 
+
 </template>
 
 <script>
@@ -62,77 +26,9 @@ export default {
     Navbar,
     Header,
     ProductList,
-  },
-  data() {
-    return {
-      products: [
-        {
-          id: 1,
-          name: "Conjunto deportivo",
-          price: 100,
-          image: "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
-        },
-        {
-          id: 2,
-          name: "Proteina",
-          price: 200,
-          image: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&format=jpeg",
-        },
-        {
-          id: 3,
-          name: "Guantes Gym",
-          price: 150,
-          image: "https://http2.mlstatic.com/D_NQ_NP_2X_875091-MLM72146633751_102023-F.webp",
-        },
-        // Agrega más productos si es necesario
-      ],
-      cartItems: [],
-      searchTerm: "",
-      isModalOpen: false,
-    };
-  },
-  computed: {
-    filteredProducts() {
-      return this.products.filter((product) =>
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    },
-    cartTotal() {
-      return this.cartItems.reduce((total, item) => total + item.price, 0);
-    },
-  },
-  methods: {
-    addToCart(product) {
-      this.cartItems.push(product);
-    },
-    removeFromCart(index) {
-      this.cartItems.splice(index, 1);
-    },
-    clearCart() {
-      this.cartItems = [];
-      this.closeModal();
-    },
-    checkout() {
-      // Lógica de pago, aquí puedes realizar acciones como procesar el pago, actualizar inventario, etc.
-      // Después de realizar el pago, puedes cerrar la ventana modal y limpiar el carrito.
-      alert("Pago exitoso. Gracias por su compra.");
-      this.clearCart();
-    },
-    openModal() {
-      this.isModalOpen = true;
-    },
-    closeModal() {
-      this.isModalOpen = false;
-    },
-    formatCurrency(value) {
-      // Función para formatear el precio como moneda
-      return `$${value.toFixed(2)}`;
-    },
-    // ... (otros métodos)
-  },
-};
+  }
+}
 </script>
-
 <style scoped>
 .controls {
   display: flex;
@@ -220,4 +116,4 @@ export default {
 }
 
 /* ... (resto de estilos) ... */
-</style>
+ </style>

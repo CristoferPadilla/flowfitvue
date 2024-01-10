@@ -21,9 +21,8 @@ body {
   #content {
     display: flex;
     flex-direction: column;
-  
     flex-grow: 1; 
-    height: 100vh;
+    height: 80vh;;
   }
   .header-container{
     display: flex;
@@ -94,7 +93,16 @@ body {
     justify-content: center;
 
   }
-  
+  .search-bar {
+    width: 300px;
+    height: 40px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    margin-left:20px ;
+    
+  }
   .card-content {
   text-align: center;
   align-items: center;
@@ -109,7 +117,7 @@ body {
   font-size: 16px; /* Ajusta este valor según tus necesidades */
   }
   .app-navbar {
-    height: 100%; /* Cambia este valor */
+    min-height: 100vh; /* Cambia este valor */
     width: 100%; /* Ajusta el ancho según tus necesidades */
     display: flex;
     position: relative;
@@ -117,7 +125,7 @@ body {
     background-color: #070611;
     padding: 20px;
     color: white;
-  }
+}
   
    
   .nav-title {
