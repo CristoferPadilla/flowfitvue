@@ -18,7 +18,6 @@
           <button @click="removeItem(index)" class="btn btn-danger">Eliminar</button>
         </div>
       </div>
-
     </div>
 
     <!-- Formulario de agregar -->
@@ -45,6 +44,31 @@
         <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
       </form>
     </div>
+
+    <!-- Formulario de editar -->
+    <div v-if="showEditForm" class="add-form">
+      <h3>Editar Membresía</h3>
+      <form @submit.prevent="updateItem">
+        <div class="form-group">
+          <label for="title">Título:</label>
+          <input v-model="editItemData.Titulo" type="text" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción:</label>
+          <input v-model="editItemData.Descripcion" type="text" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="price">Precio:</label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input v-model="editItemData.Precio" type="text" class="form-control" required />
+            <span class="input-group-text">MXN</span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button @click="cancelEdit" class="btn btn-secondary">Cancelar</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -58,11 +82,18 @@ export default {
         { title: 'Normal', description: 'Descripción normal', price: '$200 MXN' },
       ],
       showAddForm: false,
+      showEditForm: false,
       newItem: {
         Titulo: '',
         Descripcion: '',
         Precio: '',
       },
+      editItemData: {
+        Titulo: '',
+        Descripcion: '',
+        Precio: '',
+      },
+      editItemIndex: null,
       searchTerm: "",
     };
   },
@@ -82,6 +113,7 @@ export default {
     },
     hideForm() {
       this.showAddForm = false;
+      this.newItem = { Titulo: '', Descripcion: '', Precio: '' };
     },
     addItem() {
       const formattedPrice = `$${this.newItem.Precio} MXN`;
@@ -93,12 +125,25 @@ export default {
       this.newItem = { Titulo: '', Descripcion: '', Precio: '' };
       this.hideForm();
     },
-
     editItem(index) {
-      this.newItem = { ... this.items[index] };
-      //muestra el formulario para editar 
-      this.showAddForm = true
-    }
+      this.editItemData = { ...this.items[index] };
+      this.editItemIndex = index;
+      this.showEditForm = true;
+    },
+    cancelEdit() {
+      this.showEditForm = false;
+      this.editItemData = { Titulo: '', Descripcion: '', Precio: '' };
+      this.editItemIndex = null;
+    },
+    updateItem() {
+      const formattedPrice = `$${this.editItemData.Precio} MXN`;
+      this.items[this.editItemIndex] = {
+        title: this.editItemData.Titulo,
+        description: this.editItemData.Descripcion,
+        price: formattedPrice,
+      };
+      this.cancelEdit();
+    },
   },
 };
 </script>
