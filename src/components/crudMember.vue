@@ -1,3 +1,8 @@
+
+Aquí tienes el código completo con la funcionalidad de búsqueda:
+
+html
+Copy code
 <template>
   <div id="content">
     <div class="d-flex justify-content-center align-items-center flex-column">
@@ -5,7 +10,7 @@
       <div class="d-row">
         <div class="search-bar">
           <div class="search-icon">🔍</div>
-          <input type="text" placeholder="">
+          <input v-model="searchTerm" @input="filterUsers" type="text" placeholder="Buscar por nombre" />
         </div>
         <div class="bton">
           <button @click="showAddForm" class="btn btn-success">Nuevo miembro</button>
@@ -25,52 +30,52 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.id }}</td>
-            <td>{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.phone }}</td>
-            <td>{{ user.membresiaAsignada }}</td>
-            <td>{{ user.registrationDate }}</td>
-            <td>{{ user.fechaFinalizacion }}</td>
+          <tr v-for="user in filteredUsers" :key="user.ID">
+            <td>{{ user.ID }}</td>
+            <td>{{ user.Nombre }}</td>
+            <td>{{ user.Email }}</td>
+            <td>{{ user.Celular }}</td>
+            <td>{{ user.MebresiaAsignada }}</td>
+            <td>{{ user.FechaRegistro }}</td>
+            <td>{{ user.FechaFinalizacion }}</td>
             <td>
               <button @click="editUser(user)" class="btn btn-warning btn-sm">Editar</button>
-              <button @click="deleteUser(user.id)" class="btn btn-danger btn-sm">Eliminar</button>
+              <button @click="deleteUser(user.ID)" class="btn btn-danger btn-sm">Eliminar</button>
             </td>
           </tr>
         </tbody>
       </table>
 
       <div v-show="showForm" class="add-form" style="width: 70%">
-          <h3>{{ selectedUser ? 'Editar miembro' : 'Agregar miembro' }}</h3>
-          <form @submit.prevent="saveUser" class="form-container">
-            <div class="form-group">
-              <label for="name">Nombre:</label>
-              <input v-model="newUser.name" type="text" class="form-control" required />
-            </div>
-            <div class="form-group">
-              <label for="email">Email:</label>
-              <input v-model="newUser.email" type="email" class="form-control" required />
-            </div>
-            <div class="form-group">
-              <label for="phone">Celular:</label>
-              <input v-model="newUser.phone" type="text" class="form-control" required />
-            </div>
-            <div class="form-group">
-              <label for="membresiaAsignada">Membresía Asignada:</label>
-              <select v-model="newUser.membresiaAsignada" class="form-control" required>
-                <option value="" disabled selected>Selecciona una membresía</option>
-                <option value="Individual">Individual</option>
-                <option value="Pareja">Pareja</option>
-                <option value="Familiar">Estudiantil</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
-            <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
-          </form>
-        </div>
+        <h3>{{ selectedUser ? 'Editar miembro' : 'Agregar miembro' }}</h3>
+        <form @submit.prevent="saveUser" class="form-container">
+          <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input v-model="newUser.Nombre" type="text" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input v-model="newUser.Email" type="email" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Celular:</label>
+            <input v-model="newUser.Celular" type="text" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="membresiaAsignada">Membresía Asignada:</label>
+            <select v-model="newUser.MebresiaAsignada" class="form-control" required>
+              <option value="" disabled selected>Selecciona una membresía</option>
+              <option value="Individual">Individual</option>
+              <option value="Pareja">Pareja</option>
+              <option value="Familiar">Familiar</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
+          <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
+        </form>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -84,76 +89,88 @@ export default {
       showForm: false,
       users: [
         {
-          id: "1234567890123450",
-          name: "Usuario 1",
-          email: "usuario1@example.com",
-          phone: "123-456-7890",
-          membresiaAsignada: "pareja",
-          registrationDate: "2023-01-01",
-          fechaFinalizacion: "2023-02-01",
+          ID: "1234567890123450",
+          Nombre: "Usuario 1",
+          Email: "usuario1@example.com",
+          Celular: "123-456-7890",
+          MebresiaAsignada: "Pareja",
+          FechaRegistro: "2023-01-01",
+          FechaFinalizacion: "2023-02-01",
         },
+        // ... otros usuarios ...
       ],
       newUser: {
-        id: "",
-        name: "",
-        email: "",
-        phone: "",
-        registrationDate: "",
-        membresiaAsignada: "",
-        fechaFinalizacion: "",
+        ID: "",
+        Nombre: "",
+        Email: "",
+        Celular: "",
+        MebresiaAsignada: "",
+        FechaRegistro: "",
+        FechaFinalizacion: "",
       },
       selectedUser: null,
+      searchTerm: "",
     };
+  },
+  computed: {
+    filteredUsers() {
+      return this.users.filter((user) =>
+        user.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    },
   },
   methods: {
     showAddForm() {
       this.showForm = true;
     },
     hideForm() {
-    this.showForm = false;
-    this.resetForm(); 
+      this.showForm = false;
+      this.resetForm();
     },
     saveUser() {
-  if (this.selectedUser) {
-    const index = this.users.findIndex((user) => user.id === this.selectedUser.id);
-    if (index !== -1) {
-      this.users.splice(index, 1, { ...this.newUser });
-    }
-  } else {
-    const nextId = this.users.length > 0 ? this.users[this.users.length - 1].id + 1 : 1;
-    this.newUser.id = nextId;
+      if (this.selectedUser) {
+        const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
+        if (index !== -1) {
+          this.users.splice(index, 1, { ...this.newUser });
+        }
+      } else {
+        const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
+        this.newUser.ID = nextId;
 
-    const currentDate = new Date();
-    this.newUser.registrationDate = currentDate.toISOString().split('T')[0];
+        const currentDate = new Date();
+        this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
 
-    const endDate = new Date(currentDate);
-    endDate.setMonth(endDate.getMonth() + 1);
-    this.newUser.fechaFinalizacion = endDate.toISOString().split('T')[0];
+        const endDate = new Date(currentDate);
+        endDate.setMonth(endDate.getMonth() + 1);
+        this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
 
-    this.users.push({ ...this.newUser });
-  }
-  this.showForm = false;
-  this.resetForm();
-},
+        this.users.push({ ...this.newUser });
+      }
+      this.showForm = false;
+      this.resetForm();
+    },
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
       this.showAddForm();
     },
     deleteUser(id) {
-      this.users = this.users.filter((user) => user.id !== id);
+      this.users = this.users.filter((user) => user.ID !== id);
     },
     resetForm() {
       this.newUser = {
-        id: "",
-        name: "",
-        email: "",
-        phone: "",
-        membresiaAsignada: "",
-        registrationDate: "",
-        fechaFinalizacion: "",
+        ID: "",
+        Nombre: "",
+        Email: "",
+        Celular: "",
+        MebresiaAsignada: "",
+        FechaRegistro: "",
+        FechaFinalizacion: "",
       };
       this.selectedUser = null;
+    },
+    filterUsers() {
+      // Este método se ejecutará cada vez que el usuario escriba en el campo de búsqueda
     },
   },
 };

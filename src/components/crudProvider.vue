@@ -1,107 +1,112 @@
 <template>
-    <div id="content">
-      <div class="d-flex justify-content-center align-items-center flex-column">
-        <h2 class="title">Proveedores</h2>
-        <div class="d-row">
-          <div class="search-bar">
-            <div class="search-icon">🔍</div>
-            <input type="text" placeholder="">
-          </div>
-          <div class="bton">
-            <button @click="showAddForm" class="btn btn-success">Nuevo proveedor</button>
+  <div id="content">
+    <div class="d-flex justify-content-center align-items-center flex-column">
+      <h2 class="title">Proveedores</h2>
+      <div class="d-row">
+        <div class="search-bar">
+          <div class="search-icon">🔍</div>
+          <input v-model="searchTerm" @input="filterProveedores" type="text" placeholder="Buscar por nombre" />
         </div>
+        <div class="bton">
+          <button @click="showAddForm" class="btn btn-success">Nuevo proveedor</button>
         </div>
-        <table class="table-crud">
-          <thead>
-            <tr>
-              <th style="font-size: 70%">INE</th>
-              <th style="font-size: 70%">Nombre</th>
-              <th style="font-size: 70%">Email</th>
-              <th style="font-size: 70%">Celular</th>
-              <th style="font-size: 70%">Dirección</th>
-              <th style="font-size: 70%">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="provider in providers" :key="provider.id">
-              <td>{{ provider.ine }}</td>
-              <td>{{ provider.name }}</td>
-              <td>{{ provider.email }}</td>
-              <td>{{ provider.cellphone }}</td>
-              <td>{{ provider.direction }}</td>
-              <td>
-                <button @click="editProvider(provider)" class="btn btn-warning btn-sm">Editar</button>
-                <button @click="deleteProvider(provider.id)" class="btn btn-danger btn-sm">Eliminar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
-      <div class="add-form-container" v-show="showForm">
-
-        <div v-show="showForm" class="add-form" style="width: 70%">
-            <h3>{{ selectedProvider ? 'Editar miembro' : 'Agregar miembro' }}</h3>
-            <form @submit.prevent="saveProvider" class="form-container">
-              <div class="form-group">
-                <label for="ine">INE:</label>
-                <input v-model="newProvider.ine" type="text" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label for="name">Nombre:</label>
-                <input v-model="newProvider.name" type="text" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label for="email">Email:</label>
-                <input v-model="newProvider.email" type="email" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label for="phone">Celular:</label>
-                <input v-model="newProvider.cellphone" type="text" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label for="direction">Dirección:</label>
-                <input v-model="newProvider.direction" type="text" class="form-control" required />
-              </div>
-              <button type="submit" class="btn btn-primary">{{ selectedProvider ? 'Guardar' : 'Agregar' }}</button>
-              <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
-            </form>
-        </div>
-          </div>
+      <table class="table-crud">
+        <thead>
+          <tr>
+            <th style="font-size: 70%">INE</th>
+            <th style="font-size: 70%">Nombre</th>
+            <th style="font-size: 70%">Email</th>
+            <th style="font-size: 70%">Celular</th>
+            <th style="font-size: 70%">Dirección</th>
+            <th style="font-size: 70%">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="proveedor in filteredProveedores" :key="proveedor.ID">
+            <td>{{ proveedor.INE }}</td>
+            <td>{{ proveedor.Nombre }}</td>
+            <td>{{ proveedor.Email }}</td>
+            <td>{{ proveedor.Celular }}</td>
+            <td>{{ proveedor.Direccion }}</td>
+            <td>
+              <button @click="editProveedor(proveedor)" class="btn btn-warning btn-sm">Editar</button>
+              <button @click="deleteProveedor(proveedor.ID)" class="btn btn-danger btn-sm">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-        </template>
-        
-        <script>
-        import "@/css/style.css";
-        
-        export default {
+    <div class="add-form-container" v-show="showForm">
+      <div v-show="showForm" class="add-form" style="width: 70%">
+        <h3>{{ selectedProveedor ? 'Editar proveedor' : 'Agregar proveedor' }}</h3>
+        <form @submit.prevent="saveProveedor" class="form-container">
+          <div class="form-group">
+            <label for="ine">INE:</label>
+            <input v-model="newProveedor.INE" type="text" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input v-model="newProveedor.Nombre" type="text" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input v-model="newProveedor.Email" type="email" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Celular:</label>
+            <input v-model="newProveedor.Celular" type="text" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="direction">Dirección:</label>
+            <input v-model="newProveedor.Direccion" type="text" class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-primary">{{ selectedProveedor ? 'Guardar' : 'Agregar' }}</button>
+          <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
   data() {
     return {
-      providers: [
+      proveedores: [
         {
-          id: 1,
-          ine: "123456789",
-          name: "Juan Perez",
-          email: "cacac@gmail.com",
-          cellphone: "1234567890",
-          direction: "Calle 12, avenida tutancamon",
+          ID: 1,
+          INE: "123456789",
+          Nombre: "Juan Perez",
+          Email: "cacac@gmail.com",
+          Celular: "1234567890",
+          Direccion: "Calle 12, avenida tutancamon",
         }
       ],
       showForm: false,
-      selectedProvider: null,
-      newProvider: {
-        id: "", 
-        ine: "",
-        name: "",
-        email: "",
-        cellphone: "",
-        direction: "",
+      selectedProveedor: null,
+      newProveedor: {
+        ID: "",
+        INE: "",
+        Nombre: "",
+        Email: "",
+        Celular: "",
+        Direccion: "",
       },
+      searchTerm: "",
     };
+  },
+  computed: {
+    filteredProveedores() {
+      return this.proveedores.filter((proveedor) =>
+        proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    },
   },
   methods: {
     showAddForm() {
       this.showForm = true;
-      this.selectedProvider = null;
+      this.selectedProveedor = null;
       this.clearForm();
     },
     hideForm() {
@@ -109,42 +114,44 @@
       this.clearForm();
     },
     clearForm() {
-      this.newProvider = {
-        id: "",
-        ine: "",
-        name: "",
-        email: "",
-        cellphone: "",
-        direction: "",
+      this.newProveedor = {
+        ID: "",
+        INE: "",
+        Nombre: "",
+        Email: "",
+        Celular: "",
+        Direccion: "",
       };
     },
-    saveProvider() {
-      if (this.selectedProvider) {
-        const index = this.providers.findIndex(provider => provider.id === this.selectedProvider.id);
+    saveProveedor() {
+      if (this.selectedProveedor) {
+        const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
         if (index !== -1) {
-          this.providers[index] = { ...this.selectedProvider };
+          this.proveedores[index] = { ...this.selectedProveedor };
         }
       } else {
-        this.newProvider.id = this.providers.length + 1;
-        this.providers.push({ ...this.newProvider });
+        this.newProveedor.ID = this.proveedores.length + 1;
+        this.proveedores.push({ ...this.newProveedor });
       }
       this.hideForm();
     },
-
-    editProvider(provider) {
-      this.selectedProvider = { ...provider };
-      this.newProvider = { ...provider };
+    editProveedor(proveedor) {
+      this.selectedProveedor = { ...proveedor };
+      this.newProveedor = { ...proveedor };
       this.showForm = true;
     },
-
-    deleteProvider(providerId) {
-      const index = this.providers.findIndex(provider => provider.id === providerId);
+    deleteProveedor(proveedorId) {
+      const index = this.proveedores.findIndex(proveedor => proveedor.ID === proveedorId);
       if (index !== -1) {
-        this.providers.splice(index, 1);
-      
-  }
-}}};
-        </script>
+        this.proveedores.splice(index, 1);
+      }
+    },
+    filterProveedores() {
+      // Puedes implementar lógica adicional para filtrar si es necesario
+    },
+  },
+};
+</script> 
     
   <style scoped>
   

@@ -6,11 +6,11 @@
     </div>
   </div>
   <div class="product-list">
-    <div class="product-card" v-for="product in filteredProducts" :key="product.id">
-      <img :src="product.image" alt="Product Image" class="product-image" />
+    <div class="product-card" v-for="product in filteredProducts" :key="product.ID">
+      <img :src="product.Imagen" alt="Product Image" class="product-image" />
       <div class="product-details">
-        <h3 class="product-name">{{ product.name }}</h3>
-        <p class="product-price">{{ product.price }} MX</p>
+        <h3 class="product-Nombre">{{ product.Nombre }}</h3>
+        <p class="product-Precio">{{ product.Precio }} MX</p>
         <button @click="openModal(product)" class="btn">Comprar</button>
       </div>
     </div>
@@ -18,8 +18,8 @@
 
   <div v-if="isModalOpen" class="modal">
     <div class="modal-content">
-      <h2>{{ selectedProduct.name }}</h2>
-      <p>Precio: {{ formatCurrency(selectedProduct.price) }} MX</p>
+      <h2>{{ selectedProduct.Nombre }}</h2>
+      <p>Precio: {{ formatCurrency(selectedProduct.Precio) }} MX</p>
       <div class="modal-buttons">
         <button @click="closeModal">Cancelar</button>
         <button @click="checkout">Confirmar pago</button>
@@ -30,45 +30,45 @@
 
 <script>
 export default {
-  name: "ProductList",
+  Nombre: "ProductList",
   data() {
     return {
       products: [
         {
-          id: 1,
-          name: "Conjunto deportivo",
-          price: 100,
-          image: "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
+          ID: 2,
+          Nombre: "Proteina",
+          Precio: 200,
+          Imagen: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&wIDth=&format=jpeg",
         },
+
         {
-          id: 2,
-          name: "Proteina",
-          price: 200,
-          image: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&format=jpeg",
-        },
+          ID: 3,
+          Nombre: "Guantes Gym",
+          Precio: 150,
+          Imagen: "https://http2.mlstatic.com/D_NQ_NP_2X_875091-MLM72146633751_102023-F.webp",
+        },   
+        
         {
-          id: 3,
-          name: "Guantes Gym",
-          price: 150,
-          image: "https://http2.mlstatic.com/D_NQ_NP_2X_875091-MLM72146633751_102023-F.webp",
-        },   {
-          id: 4,
-          name: "Calcetines",
-          price: 10,
-          image: "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
+          ID: 4,
+          Nombre: "Calcetines",
+          Precio: 10,
+          Imagen: "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
         },
+
         {
-          id: 5,
-          name: "Muñequeras",
-          price: 300,
-          image: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&format=jpeg",
+          ID: 5,
+          Nombre: "Muñequeras",
+          Precio: 300,
+          Imagen: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&wIDth=&format=jpeg",
         },
+
         {
-          id: 6,
-          name: "Paquete de proteina",
-          price: 800,
-          image: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&width=&format=jpeg",
+          ID: 6,
+          Nombre: "Paquete de proteina",
+          Precio: 800,
+          Imagen: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&wIDth=&format=jpeg",
         },
+
       ],
       searchTerm: "",
       isModalOpen: false,
@@ -78,7 +78,7 @@ export default {
   computed: {
     filteredProducts() {
       return this.products.filter((product) =>
-        product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+        product.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
   },
@@ -110,7 +110,7 @@ export default {
   z-index: 999;
   top: 0;
   left: 0;
-  width: 100%;
+  wIDth: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -135,11 +135,11 @@ export default {
 .product-card {
   background-color: #55a5ff;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solID #ccc;
   border-radius: 5px;
   margin: 10px;
   padding: 10px;
-  width: 200px;
+  wIDth: 200px;
 }
 
 .product-details {
@@ -147,7 +147,7 @@ export default {
 }
 
 .product-image {
-  width: 100%;
+  wIDth: 100%;
   height: auto;
   border-radius: 5px;
 }
@@ -184,7 +184,7 @@ button {
   border: none;
   outline: none;
   background: none;
-  width: auto;
+  wIDth: auto;
   color: black;
   font-size: 18px;
   line-height: 40px;
@@ -201,13 +201,13 @@ button {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-.product-name {
+.product-Nombre {
   font-size: 1.2em;
   margin-bottom: 5px;
   color: #ffffff;
 }
 
-.product-price {
+.product-Precio {
   font-size: 1em;
   color: #01ae3b;
 }

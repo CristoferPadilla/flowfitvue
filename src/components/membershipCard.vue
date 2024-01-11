@@ -1,20 +1,24 @@
 <template>
   <div>
     <div class="search-bar">
+      <div class="search-icon">🔍</div>
       <input v-model="searchTerm" placeholder="Buscar membresía" />
     </div>
 
     <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
 
     <div class="container-card">
+      <!-- Dentro del bucle v-for para cada card -->
       <div v-for="(item, index) in filteredItems" :key="index" class="card">
         <div class="card-body">
           <h5 style="color: #000000" class="card-title">{{ item.title }}</h5>
           <p style="color: #000000" class="card-text">{{ item.description }}</p>
           <p style="color: #000000" class="card-number">{{ item.price }}</p>
+          <button @click="editItem(index)" class="btn btn-warning">Editar</button>
           <button @click="removeItem(index)" class="btn btn-danger">Eliminar</button>
         </div>
       </div>
+
     </div>
 
     <!-- Formulario de agregar -->
@@ -23,17 +27,17 @@
       <form @submit.prevent="addItem">
         <div class="form-group">
           <label for="title">Título:</label>
-          <input v-model="newItem.title" type="text" class="form-control" required />
+          <input v-model="newItem.Titulo" type="text" class="form-control" required />
         </div>
         <div class="form-group">
           <label for="description">Descripción:</label>
-          <input v-model="newItem.description" type="text" class="form-control" required />
+          <input v-model="newItem.Descripcion" type="text" class="form-control" required />
         </div>
         <div class="form-group">
           <label for="price">Precio:</label>
           <div class="input-group">
             <span class="input-group-text">$</span>
-            <input v-model="newItem.price" type="text" class="form-control" required />
+            <input v-model="newItem.Precio" type="text" class="form-control" required />
             <span class="input-group-text">MXN</span>
           </div>
         </div>
@@ -55,9 +59,9 @@ export default {
       ],
       showAddForm: false,
       newItem: {
-        title: '',
-        description: '',
-        price: '',
+        Titulo: '',
+        Descripcion: '',
+        Precio: '',
       },
       searchTerm: "",
     };
@@ -80,15 +84,21 @@ export default {
       this.showAddForm = false;
     },
     addItem() {
-      const formattedPrice = `$${this.newItem.price} MXN`;
+      const formattedPrice = `$${this.newItem.Precio} MXN`;
       this.items.push({
-        title: this.newItem.title,
-        description: this.newItem.description,
+        title: this.newItem.Titulo,
+        description: this.newItem.Descripcion,
         price: formattedPrice,
       });
-      this.newItem = { title: '', description: '', price: '' };
+      this.newItem = { Titulo: '', Descripcion: '', Precio: '' };
       this.hideForm();
     },
+
+    editItem(index) {
+      this.newItem = { ... this.items[index] };
+      //muestra el formulario para editar 
+      this.showAddForm = true
+    }
   },
 };
 </script>
@@ -101,13 +111,14 @@ export default {
 
 .card {
   width: 180px;
-  height: 190px;
+  height: 290px;
   margin: 10px;
   background: linear-gradient(to bottom, #ffffff, #7a7e85);
 }
 
 .card-body {
-  padding: 25px 20px; /* Ajusta el espacio entre el contenido y el borde superior */
+  padding: 25px 20px;
+  /* Ajusta el espacio entre el contenido y el borde superior */
   height: 220px;
 }
 
@@ -129,7 +140,8 @@ export default {
 
 .card-title {
   text-align: center;
-  margin-bottom: 10px; /* Ajusta el margen inferior del título */
+  margin-bottom: 10px;
+  /* Ajusta el margen inferior del título */
 }
 
 .card-text {
