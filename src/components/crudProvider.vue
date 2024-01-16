@@ -14,7 +14,7 @@
       <table class="table-crud">
         <thead>
           <tr>
-            <th style="font-size: 70%">INE</th>
+            <th style="font-size: 70%">ID</th>
             <th style="font-size: 70%">Nombre</th>
             <th style="font-size: 70%">Email</th>
             <th style="font-size: 70%">Celular</th>
@@ -24,7 +24,7 @@
         </thead>
         <tbody>
           <tr v-for="proveedor in filteredProveedores" :key="proveedor.ID">
-            <td>{{ proveedor.INE }}</td>
+            <td>{{ proveedor.ID }}</td>
             <td>{{ proveedor.Nombre }}</td>
             <td>{{ proveedor.Email }}</td>
             <td>{{ proveedor.Celular }}</td>
@@ -42,8 +42,8 @@
         <h3>{{ selectedProveedor ? 'Editar proveedor' : 'Agregar proveedor' }}</h3>
         <form @submit.prevent="saveProveedor" class="form-container">
           <div class="form-group">
-            <label for="ine">INE:</label>
-            <input v-model="newProveedor.INE" type="text" class="form-control" required />
+            <label for="ine">ID:</label>
+            <input v-model="newProveedor.ID" type="text" class="form-control" required />
           </div>
           <div class="form-group">
             <label for="name">Nombre:</label>
@@ -77,7 +77,6 @@ export default {
       proveedores: [
         {
           ID: 1,
-          INE: "123456789",
           Nombre: "Juan Perez",
           Email: "cacac@gmail.com",
           Celular: "1234567890",
@@ -88,7 +87,6 @@ export default {
       selectedProveedor: null,
       newProveedor: {
         ID: "",
-        INE: "",
         Nombre: "",
         Email: "",
         Celular: "",
@@ -117,7 +115,6 @@ export default {
     clearForm() {
       this.newProveedor = {
         ID: "",
-        INE: "",
         Nombre: "",
         Email: "",
         Celular: "",

@@ -8,17 +8,15 @@
     <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
 
     <div class="container-card">
-      <!-- Dentro del bucle v-for para cada card -->
-      <div v-for="(item, index) in filteredItems" :key="index" class="card">
+      <div v-for="item in filteredItems" :key="item.ID" class="card">
         <div class="card-body">
-          <h5 style="color: #000000" class="card-title">{{ item.title }}</h5>
-          <p style="color: #000000" class="card-text">{{ item.description }}</p>
-          <p style="color: #000000" class="card-number">{{ item.price }}</p>
+          <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
+          <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
+          <p style="color: #000000" class="card-number">{{ item.Precio }}</p>
           <button @click="editItem(index)" class="btn btn-warning">Editar</button>
           <button @click="removeItem(index)" class="btn btn-danger">Eliminar</button>
         </div>
       </div>
-
     </div>
 
     <!-- Formulario de agregar -->
@@ -26,7 +24,7 @@
       <h3>Agregar Membresía</h3>
       <form @submit.prevent="addItem">
         <div class="form-group">
-          <label for="title">Título:</label>
+          <label for="Titulo">Título:</label>
           <input v-model="newItem.Titulo" type="text" class="form-control" required />
         </div>
         <div class="form-group">
@@ -49,20 +47,19 @@
 </template>
 
 <script>
-  import axios from "axios";
+import axios from "axios";
+
 export default {
-  name: "membershipCards",
+  name: "membershipCard",
   data() {
     return {
-      items: [
-        { title: 'Estudiante', description: 'Hecho para estudihambres', price: '$100 MXN' },
-        { title: 'Normal', description: 'Descripción normal', price: '$200 MXN' },
-      ],
+      items: [],
       showAddForm: false,
       newItem: {
-        Titulo: '',
-        Descripcion: '',
-        Precio: '',
+        ID: "",
+        Titulo: "",
+        Descripcion: "",
+        Precio: "",
       },
       searchTerm: "",
     };
@@ -70,7 +67,7 @@ export default {
   computed: {
     filteredItems() {
       return this.items.filter((item) =>
-        item.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+        item.Titulo && item.Titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
@@ -85,37 +82,38 @@ export default {
       this.showAddForm = false;
     },
     addItem() {
-      const formattedPrice = `$${this.newItem.Precio} MXN`;
-      this.items.push({
-        title: this.newItem.Titulo,
-        description: this.newItem.Descripcion,
-        price: formattedPrice,
-      });
-      this.newItem = { Titulo: '', Descripcion: '', Precio: '' };
-      this.hideForm();
-    },
-
-    editItem(index) {
-      this.newItem = { ... this.items[index] };
-      this.showAddForm = true
-    },
-    fetchProducts() {
-  axios.get('https://api-5iey.onrender.com/memberships')
-    .then(response => {
-      console.log(response.data);  
-      this.items = response.data;
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  const formattedPrice = `$${this.newItem.Precio} MXN`;
+  this.items.push({
+    ID: this.items.length + 1,
+    Titulo: this.newItem.Titulo,
+    Descripcion: this.newItem.Descripcion,
+    Precio: formattedPrice,
+  });
+  this.newItem = { ID: "", Titulo: "", Descripcion: "", Precio: "" };
+  this.hideForm();
 },
+    editItem(index) {
+      this.newItem = { ...this.items[index] };
+      this.showAddForm = true;
+    },
+    fetchMemberships() {
+      axios
+        .get("https://api-5iey.onrender.com/memberships")
+        .then((response) => {
+          console.log(response.data);
+          this.items = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
   mounted() {
-    this.fetchProducts();
-  
+    this.fetchMemberships();
   },
 };
 </script>
+
 <style scoped>
 .container-card {
   display: flex;
@@ -132,7 +130,6 @@ export default {
 
 .card-body {
   padding: 25px 20px;
-  /* Ajusta el espacio entre el contenido y el borde superior */
   height: 220px;
 }
 
@@ -152,9 +149,10 @@ export default {
   text-align: center;
 }
 
-.card-title {
+.card-Titulo {
   text-align: center;
   margin-bottom: 10px;
+  color:black;
   /* Ajusta el margen inferior del título */
 }
 
@@ -184,4 +182,3 @@ export default {
   padding: 0 10px;
 }
 </style>
-

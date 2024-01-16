@@ -104,15 +104,6 @@ export default {
     return {
       showForm: false,
       products: [
-        {
-          ID: "1",
-          Nombre: "Camiseta",
-          Descripcion: "Playera deportiva",
-          Precio: "125",
-          Cantidad: "2",
-          Categoria: "Ropa",
-          Proveedor: "Manuel Inc.",
-        }
       ],
       newProduct: {
         ID: "",
@@ -190,7 +181,7 @@ export default {
       this.products = response.data;
     })
     .catch(error => {
-      console.error(error);
+      console.error('Error al obtener datos de la API:', error);
     });
 },
   },

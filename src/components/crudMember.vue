@@ -25,7 +25,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.ID">
+          <tr v-for="user in filteredUsers" :key="user.ID">
             <td>{{ user.ID }}</td>
             <td>{{ user.Nombre }}</td>
             <td>{{ user.Email }}</td>
@@ -114,7 +114,7 @@ export default {
       if (this.selectedUser) {
         const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
         if (index !== -1) {
-          this.users.splice(index, 1, { ...this.newUser });
+          this.$set(this.users, index, { ...this.newUser });
         }
       } else {
         const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
@@ -152,23 +152,20 @@ export default {
       };
       this.selectedUser = null;
     },
-    filterUsers() {
-    },
     fetchMembers() {
       axios.get('https://api-5iey.onrender.com/members')
         .then(response => {
           this.users = response.data;
         })
         .catch(error => {
-  console.error(error);
-});
+          console.error(error);
+        });
     },
   },
   mounted() {
     this.fetchMembers();
   },
 };
-
 </script>
 
 <style scoped >
