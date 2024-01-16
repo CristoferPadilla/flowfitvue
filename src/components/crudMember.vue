@@ -1,8 +1,3 @@
-
-Aquí tienes el código completo con la funcionalidad de búsqueda:
-
-html
-Copy code
 <template>
   <div id="content">
     <div class="d-flex justify-content-center align-items-center flex-column">
@@ -30,12 +25,12 @@ Copy code
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in filteredUsers" :key="user.ID">
+          <tr v-for="user in users" :key="user.ID">
             <td>{{ user.ID }}</td>
             <td>{{ user.Nombre }}</td>
             <td>{{ user.Email }}</td>
             <td>{{ user.Celular }}</td>
-            <td>{{ user.MebresiaAsignada }}</td>
+            <td>{{ user.MembresiaAsignada }}</td>
             <td>{{ user.FechaRegistro }}</td>
             <td>{{ user.FechaFinalizacion }}</td>
             <td>
@@ -63,7 +58,7 @@ Copy code
           </div>
           <div class="form-group">
             <label for="membresiaAsignada">Membresía Asignada:</label>
-            <select v-model="newUser.MebresiaAsignada" class="form-control" required>
+            <select v-model="newUser.MembresiaAsignada" class="form-control" required>
               <option value="" disabled selected>Selecciona una membresía</option>
               <option value="Individual">Individual</option>
               <option value="Pareja">Pareja</option>
@@ -79,32 +74,20 @@ Copy code
 </template>
 
 <script>
-import "@/css/style.css";
+import axios from 'axios';
 
 export default {
-  name: "addMembers",
-  components: {},
+  name: "crudMember",
   data() {
     return {
       showForm: false,
-      users: [
-        {
-          ID: "1234567890123450",
-          Nombre: "Usuario 1",
-          Email: "usuario1@example.com",
-          Celular: "123-456-7890",
-          MebresiaAsignada: "Pareja",
-          FechaRegistro: "2023-01-01",
-          FechaFinalizacion: "2023-02-01",
-        },
-        // ... otros usuarios ...
-      ],
+      users: [],
       newUser: {
         ID: "",
         Nombre: "",
         Email: "",
         Celular: "",
-        MebresiaAsignada: "",
+        MembresiaAsignada: "",
         FechaRegistro: "",
         FechaFinalizacion: "",
       },
@@ -163,19 +146,31 @@ export default {
         Nombre: "",
         Email: "",
         Celular: "",
-        MebresiaAsignada: "",
+        MembresiaAsignada: "",
         FechaRegistro: "",
         FechaFinalizacion: "",
       };
       this.selectedUser = null;
     },
     filterUsers() {
-      // Este método se ejecutará cada vez que el usuario escriba en el campo de búsqueda
+    },
+    fetchMembers() {
+      axios.get('https://api-5iey.onrender.com/members')
+        .then(response => {
+          this.users = response.data;
+        })
+        .catch(error => {
+  console.error(error);
+});
     },
   },
+  mounted() {
+    this.fetchMembers();
+  },
 };
+
 </script>
-  
+
 <style scoped >
 .bton {
   margin-left: 120%;

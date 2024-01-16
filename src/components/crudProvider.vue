@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -147,8 +148,21 @@ export default {
       }
     },
     filterProveedores() {
-      // Puedes implementar lógica adicional para filtrar si es necesario
     },
+    fetchProviders() {
+      axios.get('https://api-5iey.onrender.com/providers')
+        .then(response => {
+          console.log(response.data);  // Agrega esta línea para verificar la respuesta
+          this.proveedores = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchProviders();
+  
   },
 };
 </script> 

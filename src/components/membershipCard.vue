@@ -49,6 +49,7 @@
 </template>
 
 <script>
+  import axios from "axios";
 export default {
   name: "membershipCards",
   data() {
@@ -96,9 +97,22 @@ export default {
 
     editItem(index) {
       this.newItem = { ... this.items[index] };
-      //muestra el formulario para editar 
       this.showAddForm = true
-    }
+    },
+    fetchProducts() {
+  axios.get('https://api-5iey.onrender.com/memberships')
+    .then(response => {
+      console.log(response.data);  
+      this.items = response.data;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+},
+  },
+  mounted() {
+    this.fetchProducts();
+  
   },
 };
 </script>

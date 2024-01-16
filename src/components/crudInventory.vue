@@ -36,7 +36,7 @@
             <td>${{ product.Precio }} MXN</td>
             <td>{{ product.Cantidad }}</td>
             <td>{{ product.Categoria }}</td>
-            <td>{{ product.Provedor }}</td>
+            <td>{{ product.Proveedor }}</td>
             <td>
               <button @click="editProduct(product)" class="btn btn-warning btn-sm">Editar</button>
               <button @click="deleteProduct(product.ID)" class="btn btn-danger btn-sm">Eliminar</button>
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "CrudProducts",
   data() {
@@ -182,6 +183,20 @@ export default {
     filterProducts() {
       // Puedes implementar lógica adicional para filtrar si es necesario
     },
+    fetchProducts() {
+  axios.get('https://api-5iey.onrender.com/products')
+    .then(response => {
+      console.log(response.data);  
+      this.products = response.data;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+},
+  },
+  mounted() {
+    this.fetchProducts();
+  
   },
 };
 </script>

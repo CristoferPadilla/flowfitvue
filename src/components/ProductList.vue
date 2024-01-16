@@ -29,6 +29,7 @@
 </template>
 
 <script>
+ import axios from "axios";
 export default {
   Nombre: "ProductList",
   data() {
@@ -98,6 +99,20 @@ export default {
     formatCurrency(value) {
       return `$${value.toFixed(2)}`;
     },
+    fetchProducts() {
+  axios.get('https://api-5iey.onrender.com/products')
+    .then(response => {
+      console.log(response.data);  
+      this.products = response.data;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+},
+  },
+  mounted() {
+    this.fetchProducts();
+  
   }
 };
 </script>
