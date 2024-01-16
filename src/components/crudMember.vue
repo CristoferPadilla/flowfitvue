@@ -60,9 +60,7 @@
             <label for="membresiaAsignada">Membresía Asignada:</label>
             <select v-model="newUser.MembresiaAsignada" class="form-control" required>
               <option value="" disabled selected>Selecciona una membresía</option>
-              <option value="Individual">Individual</option>
-              <option value="Pareja">Pareja</option>
-              <option value="Familiar">Familiar</option>
+              <option v-for="membership in memberships" :key="membership.ID" :value="membership.Titulo">{{ membership.Titulo }}</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
@@ -93,6 +91,7 @@ export default {
       },
       selectedUser: null,
       searchTerm: "",
+      memberships: [],
     };
   },
   computed: {
@@ -111,27 +110,42 @@ export default {
       this.resetForm();
     },
     saveUser() {
-      if (this.selectedUser) {
-        const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
-        if (index !== -1) {
-          this.$set(this.users, index, { ...this.newUser });
-        }
-      } else {
-        const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
-        this.newUser.ID = nextId;
+  if (this.selectedUser) {
+    const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
+    if (index !== -1) {
+      this.$set(this.users, index, { ...this.newUser });
+      axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  } else {
+    const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
+    this.newUser.ID = nextId;
 
-        const currentDate = new Date();
-        this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
+    const currentDate = new Date();
+    this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
 
-        const endDate = new Date(currentDate);
-        endDate.setMonth(endDate.getMonth() + 1);
-        this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
+    const endDate = new Date(currentDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
 
-        this.users.push({ ...this.newUser });
-      }
-      this.showForm = false;
-      this.resetForm();
-    },
+    axios.post('https://api-5iey.onrender.com/members', this.newUser)
+      .then(response => {
+        console.log(response.data);
+        this.fetchMembers();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  this.showForm = false;
+  this.resetForm();
+},
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
@@ -161,9 +175,19 @@ export default {
           console.error(error);
         });
     },
+    fetchMemberships() {
+      axios.get('https://api-5iey.onrender.com/memberships')
+        .then(response => {
+          this.memberships = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
   },
   mounted() {
     this.fetchMembers();
+    this.fetchMemberships();
   },
 };
 </script>
@@ -193,7 +217,7 @@ export default {
   text-align: left;
   padding: 8px;
   color: beige;
-  font-size: 75%;
+  font-size: 70%;
   font-family: Arial, Helvetica, sans-serif;
 
 }

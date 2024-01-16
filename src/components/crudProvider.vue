@@ -42,8 +42,6 @@
         <h3>{{ selectedProveedor ? 'Editar proveedor' : 'Agregar proveedor' }}</h3>
         <form @submit.prevent="saveProveedor" class="form-container">
           <div class="form-group">
-            <label for="ine">ID:</label>
-            <input v-model="newProveedor.ID" type="text" class="form-control" required />
           </div>
           <div class="form-group">
             <label for="name">Nombre:</label>
@@ -74,15 +72,7 @@ import axios from "axios";
 export default {
   data() {
     return {
-      proveedores: [
-        {
-          ID: 1,
-          Nombre: "Juan Perez",
-          Email: "cacac@gmail.com",
-          Celular: "1234567890",
-          Direccion: "Calle 12, avenida tutancamon",
-        }
-      ],
+      proveedores: [],
       showForm: false,
       selectedProveedor: null,
       newProveedor: {
@@ -98,7 +88,7 @@ export default {
   computed: {
     filteredProveedores() {
       return this.proveedores.filter((proveedor) =>
-        proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+        proveedor.Nombre && proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
@@ -126,10 +116,26 @@ export default {
         const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
         if (index !== -1) {
           this.proveedores[index] = { ...this.selectedProveedor };
+          axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.selectedProveedor)
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
         }
       } else {
-        this.newProveedor.ID = this.proveedores.length + 1;
-        this.proveedores.push({ ...this.newProveedor });
+        const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].ID + 1 : 1;
+        this.newProveedor.ID = newId;
+
+        axios.post('https://api-5iey.onrender.com/providers', this.newProveedor)
+          .then(response => {
+            console.log(response.data);
+            this.proveedores.push(response.data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
       this.hideForm();
     },
@@ -142,6 +148,13 @@ export default {
       const index = this.proveedores.findIndex(proveedor => proveedor.ID === proveedorId);
       if (index !== -1) {
         this.proveedores.splice(index, 1);
+        axios.delete(`https://api-5iey.onrender.com/providers/${proveedorId}`)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
     },
     filterProveedores() {
@@ -149,7 +162,7 @@ export default {
     fetchProviders() {
       axios.get('https://api-5iey.onrender.com/providers')
         .then(response => {
-          console.log(response.data);  // Agrega esta línea para verificar la respuesta
+          console.log(response.data);
           this.proveedores = response.data;
         })
         .catch(error => {
@@ -159,12 +172,11 @@ export default {
   },
   mounted() {
     this.fetchProviders();
-  
   },
 };
-</script> 
-    
-  <style scoped>
+</script>
+
+<style scoped>
   
 .search-bar {
     width: 300px;
@@ -363,4 +375,3 @@ color: white;
 
 
   </style>
-  
