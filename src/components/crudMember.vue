@@ -9,7 +9,7 @@
         </div>
         <div class="bton">
           <button @click="showAddForm" class="btn btn-success">Nuevo miembro</button>
-        </div>x
+        </div>
       </div>
       <table class="table-crud">
         <thead>
