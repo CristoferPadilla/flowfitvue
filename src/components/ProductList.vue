@@ -1,8 +1,11 @@
 <template>
-  <h2 class="title">Productos</h2>
-  <div class="controls">
-    <div class="search-bar">
-      <input v-model="searchTerm" placeholder="Buscar producto" />
+  <div class="container-pt-fixed">
+    <h2 class="title">Productos</h2>
+    <div class="controls">
+      <div class="search-bar">
+        <div class="search-icon">🔍</div>
+        <input v-model="searchTerm" placeholder="Buscar producto" />
+      </div>
     </div>
   </div>
   <div class="product-list">
@@ -110,13 +113,15 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100vw;
 }
 
 .product-card {
-  background-color: #55a5ff;
+  background-color: #ffffff;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #908e8e;
   border-radius: 5px;
+  box-shadow: #0a0257;
   margin: 10px;
   width: 200px;
 }
@@ -141,7 +146,7 @@ export default {
   margin: 0 10px;
   padding: 10px 20px;
   cursor: pointer;
-  background-color: #3498db;
+  background-color: #0004ff;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -157,24 +162,30 @@ button {
   padding: 8px 16px;
   cursor: pointer;
 }
-
-.search-bar input {
-  border: none;
-  outline: none;
-  background: none;
-  width: auto;
-  color: black;
-  font-size: 18px;
-  line-height: 40px;
-  padding: 0 10px;
+.search-bar {
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
 }
-
-.search-icon {
-  padding-left: 10px;
+.search-bar input {
+  border:none; 
+  outline:none; 
+  background:none; 
+  width:auto; 
+  color:black; 
+  font-size :18px; 
+  line-height :40px; 
+  padding :0 10px ;
+}
+.search-icon{
+  padding-left :10px ;
 }
 
 .btn {
-  background-color: #3498db;
+  background-color: #0a0257;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -184,11 +195,22 @@ button {
 .product-Nombre {
   font-size: 1.2em;
   margin-bottom: 5px;
-  color: #ffffff;
+  color: #000000;
+  font-weight: bolder;
 }
 
 .product-Precio {
   font-size: 1em;
-  color: #01ae3b;
+  color: #000000;
+  font-weight: lighter;
+  font-family: Arial, Helvetica, sans-serif;
+
+}
+.container-pt-fixed{
+  padding-top: 5%;
+  display:table-column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
 }
 </style>

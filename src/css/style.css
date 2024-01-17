@@ -54,7 +54,7 @@ body {
     display:table-column;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ajusta este valor según tus necesidades */
+    height: 100vh; 
   }
   
   .row {

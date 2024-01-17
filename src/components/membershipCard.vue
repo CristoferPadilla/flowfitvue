@@ -1,11 +1,14 @@
 <template>
-  <div>
-    <div class="search-bar">
+  <div class="container-pt-fixed">
+    <h3 class="title">Membresias</h3>
+    <div class="Container-row">
+      <div class="search-bar">
       <div class="search-icon">🔍</div>
       <input v-model="searchTerm" placeholder="Buscar membresía" />
     </div>
-
     <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
+    </div>
+  </div>
 
     <div class="container-card">
       <div v-for="item in filteredItems" :key="item.ID" class="card">
@@ -19,7 +22,6 @@
       </div>
     </div>
 
-    <!-- Formulario de agregar -->
     <div v-if="showAddForm" class="add-form">
       <h3>{{ newItem.ID ? 'Editar Membresía' : 'Agregar Membresía' }}</h3>
       <form @submit.prevent="addItem">
@@ -45,7 +47,6 @@
         <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
       </form>
     </div>
-  </div>
 </template>
 
 <script>
@@ -132,6 +133,12 @@ export default {
 </script>
 
 <style scoped>
+.form-control{
+  margin-bottom: 30px;
+}
+.btn{
+  margin-right: 5%;
+}
 .container-card {
   display: flex;
   justify-content: space-around;
@@ -139,8 +146,8 @@ export default {
 }
 
 .card {
-  width: 180px;
-  height: 290px;
+  width: 250px;
+  height: 300px;
   margin: 10px;
   background: linear-gradient(to bottom, #ffffff, #7a7e85);
 }
@@ -164,13 +171,15 @@ export default {
   padding: 20px;
   border-radius: 5px;
   text-align: center;
+  width: 35%;
+  height: 70%;
+
 }
 
 .card-Titulo {
   text-align: center;
   margin-bottom: 10px;
   color: black;
-  /* Ajusta el margen inferior del título */
 }
 
 .card-text {
@@ -178,8 +187,6 @@ export default {
 }
 
 .search-bar {
-  margin-top: 20px;
-  margin-bottom: 20px;
   width: 300px;
   height: 40px;
   background-color: white;
@@ -187,15 +194,30 @@ export default {
   display: flex;
   align-items: center;
 }
-
 .search-bar input {
-  border: none;
-  outline: none;
-  background: none;
-  width: auto;
-  color: black;
-  font-size: 18px;
-  line-height: 40px;
-  padding: 0 10px;
+  border:none; 
+  outline:none; 
+  background:none; 
+  width:auto; 
+  color:black; 
+  font-size :18px; 
+  line-height :40px; 
+  padding :0 10px ;
+}
+.search-icon{
+  padding-left :10px ;
+}
+.Container-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.container-pt-fixed{
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
 }
 </style>
