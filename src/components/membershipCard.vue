@@ -8,7 +8,7 @@
     <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
 
     <div class="container-card">
-      <div v-for="item in filteredItems" :key="item.ID" class="card">
+      <div v-for="(item, index) in filteredItems" :key="index" class="card">
         <div class="card-body">
           <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
           <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
@@ -20,7 +20,7 @@
     </div>
 
     <div v-if="showAddForm" class="add-form">
-      <h3>{{ newItem.ID ? 'Editar Membresía' : 'Agregar Membresía' }}</h3>
+      <h3>Agregar Membresía</h3>
       <form @submit.prevent="addItem">
         <div class="form-group">
           <label for="Titulo">Título:</label>
@@ -42,6 +42,31 @@
         <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
       </form>
     </div>
+
+    <!-- Formulario de editar -->
+    <div v-if="showEditForm" class="add-form">
+      <h3>Editar Membresía</h3>
+      <form @submit.prevent="updateItem">
+        <div class="form-group">
+          <label for="title">Título:</label>
+          <input v-model="editItemData.Titulo" type="text" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Descripción:</label>
+          <input v-model="editItemData.Descripcion" type="text" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="price">Precio:</label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input v-model="editItemData.Precio" type="text" class="form-control" required />
+            <span class="input-group-text">MXN</span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <button @click="cancelEdit" class="btn btn-secondary">Cancelar</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -54,12 +79,19 @@ export default {
     return {
       items: [],
       showAddForm: false,
+      showEditForm: false,
       newItem: {
         ID: "",
         Titulo: "",
         Descripcion: "",
         Precio: "",
       },
+      editItemData: {
+        Titulo: '',
+        Descripcion: '',
+        Precio: '',
+      },
+      editItemIndex: null,
       searchTerm: "",
     };
   },
@@ -79,51 +111,75 @@ export default {
     },
     hideForm() {
       this.showAddForm = false;
+      this.newItem = { Titulo: '', Descripcion: '', Precio: '' };
     },
     addItem() {
-      if (this.newItem.ID) {
-        axios.put(`https://api-5iey.onrender.com/memberships/${this.newItem.ID}`, this.newItem)
-          .then(response => {
-            console.log('Membresía actualizada en el servidor:', response.data);
-            const index = this.items.findIndex(item => item.ID === this.newItem.ID);
-            if (index !== -1) {
-              this.$set(this.items, index, { ...this.newItem });
-            }
-            this.hideForm();
-          })
-          .catch(error => {
-            console.error('Error al actualizar membresía en el servidor:', error);
-          });
+  const formattedPrice = `$${this.newItem.Precio} MXN`;
+  this.items.push({
+    ID: this.items.length + 1,
+    Titulo: this.newItem.Titulo,
+    Descripcion: this.newItem.Descripcion,
+    Precio: formattedPrice,
+  });
+  this.newItem = { ID: "", Titulo: "", Descripcion: "", Precio: "" };
+  this.hideForm();
+},
+    editItem(index) {
+      this.editItemIndex = index;
+      this.editItemData = { ...this.items[index] };
+      // Muestra el formulario para editar
+      this.showEditForm = true;
+    },
+    cancelEdit() {
+      this.showEditForm = false;
+      this.editItemData = { Titulo: '', Descripcion: '', Precio: '' };
+    },
+    updateItem() {
+      const formattedPrice = `$${this.editItemData.Precio} MXN`;
+      this.$set(this.items, this.editItemIndex, {
+        title: this.editItemData.Titulo,
+        description: this.editItemData.Descripcion,
+        price: formattedPrice,
+      });
+      this.showEditForm = false;
+      this.editItemData = { Titulo: '', Descripcion: '', Precio: '' };
+    },
+    saveItem() {
+      // Si es una edición
+      if (this.showEditForm) {
+        // Implementa tu lógica de actualización aquí
+        // Puedes usar axios.put para realizar la solicitud PUT a tu API
       } else {
-        axios.post('https://api-5iey.onrender.com/memberships', this.newItem)
-          .then(response => {
-            console.log('Membresía agregada en el servidor:', response.data);
-            this.items.push({ ...this.newItem, ID: response.data.ID });
-            this.hideForm();
-          })
-          .catch(error => {
-            console.error('Error al agregar membresía en el servidor:', error);
-          });
+        // Es una nueva membresía
+        const formattedPrice = `$${this.newItem.Precio} MXN`;
+        axios.post('https://tu-api.com/membresias', {
+          Titulo: this.newItem.Titulo,
+          Descripcion: this.newItem.Descripcion,
+          Precio: formattedPrice,
+        })
+        .then(response => {
+          // Actualiza el estado local con la nueva membresía recibida del servidor
+          this.items.push(response.data);
+          this.hideForm();
+        })
+        .catch(error => {
+          console.error(error);
+        });
       }
     },
-    editItem(index) {
-      this.newItem = { ...this.items[index] };
-      this.showAddForm = true;
-    },
-    fetchMemberships() {
-      axios
-        .get("https://api-5iey.onrender.com/memberships")
-        .then((response) => {
-          console.log(response.data);
+
+    fetchItems() {
+      axios.get('https://tu-api.com/membresias')
+        .then(response => {
           this.items = response.data;
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
         });
     },
   },
   mounted() {
-    this.fetchMemberships();
+    this.fetchItems();
   },
 };
 </script>
@@ -166,7 +222,7 @@ export default {
 .card-Titulo {
   text-align: center;
   margin-bottom: 10px;
-  color:black;
+  color: black;
   /* Ajusta el margen inferior del título */
 }
 

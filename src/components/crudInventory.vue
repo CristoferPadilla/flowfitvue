@@ -18,14 +18,14 @@
       <table class="table-crud">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Categoría</th>
-            <th>Proveedor</th>
-            <th>Acciones</th>
+            <th style="font-size: 70%">ID</th>
+            <th style="font-size: 70%">Nombre</th>
+            <th style="font-size: 70%">Descripción</th>
+            <th style="font-size: 70%">Precio</th>
+            <th style="font-size: 70%">Cantidad</th>
+            <th style="font-size: 70%">Categoría</th>
+            <th style="font-size: 70%">Proveedor</th>
+            <th style="font-size: 70%">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -166,15 +166,8 @@ export default {
             });
         }
       } else {
-        this.newProduct.ID = (Math.random() * 100000).toFixed(0); 
+        this.newProduct.ID = (Math.random() * 100000).toFixed(0); // ID temporal, debes cambiar esto según tu lógica
         this.products.push({ ...this.newProduct });
-        axios.post('https://api-5iey.onrender.com/products', this.newProduct)
-          .then(response => {
-            console.log('Producto agregado en el servidor:', response.data);
-          })
-          .catch(error => {
-            console.error('Error al agregar producto en el servidor:', error);
-          });
       }
       this.hideForm();
     },
@@ -190,64 +183,96 @@ export default {
       }
     },
     filterProducts() {
+      // Puedes implementar lógica adicional para filtrar si es necesario
     },
     fetchProducts() {
-      axios.get('https://api-5iey.onrender.com/products')
-        .then(response => {
-          console.log(response.data);  
-          this.products = response.data;
-        })
-        .catch(error => {
-          console.error('Error al obtener datos de la API:', error);
-        });
-    },
-    fetchProviders() {
-      axios.get('https://api-5iey.onrender.com/providers')
-        .then(response => {
-          console.log(response.data);  
-          this.providers = response.data;
-        })
-        .catch(error => {
-          console.error('Error al obtener proveedores de la API:', error);
-        });
-    },
+  axios.get('https://api-5iey.onrender.com/products')
+    .then(response => {
+      console.log(response.data);  
+      this.products = response.data;
+    })
+    .catch(error => {
+      console.error('Error al obtener datos de la API:', error);
+    });
+},
   },
   mounted() {
     this.fetchProducts();
-    this.fetchProviders();
+  
   },
 };
 </script>
 
-<style scoped>
+<style scoped >
+
 .search-bar {
-  width: 300px;
-  height: 40px;
-  background-color: white;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
+    wIDth: 300px;
+    height: 40px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
 }
-
 .search-bar input {
-  border: none;
-  outline: none;
-  background: none;
-  width: auto;
-  color: black;
-  font-size: 18px;
-  line-height: 40px;
-  padding: 0 10px;
+    border:none; 
+    outline:none; 
+    background:none; 
+    wIDth:auto; 
+    color:black; 
+    font-size :18px; 
+    line-height :40px; 
+    padding :0 10px ;
+}
+.search-icon{
+    padding-left :10px ;
+}
+.table-crud{
+wIDth: 95%;
+border-collapse: collapse;
+border: 1px solID #ddd;
+font-size: 75%;
+font-family: Arial, Helvetica, sans-serif;
 }
 
-.search-icon {
-  padding-left: 10px;
+.table-crud th, .table-crud td {
+text-align: left;
+padding: 8px;
+color:beige;
+font-size: 75%;
+font-family: Arial, Helvetica, sans-serif;
+
+}
+
+.table-crud tr:nth-child(even){background-color: transparent !important}
+
+.table-crud th {
+background-color: #4CAF50;
+color: white;
+
+}
+.d-row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    wIDth: 50%;
+    margin-right: 45%;
+    margin-bottom: 20px;
+}
+
+.bton {
+  margin-left: 100%;
+}
+.btn{
+  font-size: 75%;
+  margin: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+
 }
 
 .table-crud {
-  width: 95%;
+  wIDth: 95%;
   border-collapse: collapse;
-  border: 1px solid #ddd;
+  border: 1px solID #ddd;
   font-size: 75%;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -259,15 +284,17 @@ export default {
   color: beige;
   font-size: 75%;
   font-family: Arial, Helvetica, sans-serif;
+
 }
 
 .table-crud tr:nth-child(even) {
-  background-color: transparent !important;
+  background-color: transparent !important
 }
 
 .table-crud th {
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
+
 }
 
 .d-row {
@@ -279,14 +306,44 @@ export default {
   margin-bottom: 20px;
 }
 
-.btn-link {
-  margin-left: 100%;
+.search-bar {
+  wIDth: 300px;
+  height: 40px;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
 }
 
-.btn {
-  font-size: 75%;
-  margin: 10px;
-  font-family: Arial, Helvetica, sans-serif;
+.search-bar input {
+  border: none;
+  outline: none;
+  background: none;
+  wIDth: auto;
+  color: black;
+  font-size: 18px;
+  line-height: 40px;
+  padding: 0 10px;
+}
+
+.search-icon {
+  padding-left: 10px;
+}
+
+.button-container button {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.button-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-container button {
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .add-form-container {
@@ -321,5 +378,8 @@ export default {
 
 .text-center {
   text-align: center;
+}
+.bton-link{
+  margin-left: 100%;
 }
 </style>
