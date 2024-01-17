@@ -8,12 +8,11 @@
     <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
 
     <div class="container-card">
-      <!-- Dentro del bucle v-for para cada card -->
       <div v-for="(item, index) in filteredItems" :key="index" class="card">
         <div class="card-body">
-          <h5 style="color: #000000" class="card-title">{{ item.title }}</h5>
-          <p style="color: #000000" class="card-text">{{ item.description }}</p>
-          <p style="color: #000000" class="card-number">{{ item.price }}</p>
+          <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
+          <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
+          <p style="color: #000000" class="card-number">{{ item.Precio }}</p>
           <button @click="editItem(index)" class="btn btn-warning">Editar</button>
           <button @click="removeItem(index)" class="btn btn-danger">Eliminar</button>
         </div>
@@ -23,9 +22,9 @@
     <!-- Formulario de agregar -->
     <div v-if="showAddForm" class="add-form">
       <h3>Agregar Membresía</h3>
-      <form @submit.prevent="addItem">
+      <form @submit.prevent="saveItem">
         <div class="form-group">
-          <label for="title">Título:</label>
+          <label for="Titulo">Título:</label>
           <input v-model="newItem.Titulo" type="text" class="form-control" required />
         </div>
         <div class="form-group">
@@ -73,20 +72,20 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: "membershipCards",
+  name: "membershipCard",
   data() {
     return {
-      items: [
-        { title: 'Estudiante', description: 'Hecho para estudihambres', price: '$100 MXN' },
-        { title: 'Normal', description: 'Descripción normal', price: '$200 MXN' },
-      ],
+      items: [],
       showAddForm: false,
       showEditForm: false,
       newItem: {
-        Titulo: '',
-        Descripcion: '',
-        Precio: '',
+        ID: "",
+        Titulo: "",
+        Descripcion: "",
+        Precio: "",
       },
       editItemData: {
         Titulo: '',
@@ -100,7 +99,7 @@ export default {
   computed: {
     filteredItems() {
       return this.items.filter((item) =>
-        item.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+        item.Titulo && item.Titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
@@ -125,28 +124,67 @@ export default {
       this.newItem = { Titulo: '', Descripcion: '', Precio: '' };
       this.hideForm();
     },
+
     editItem(index) {
-      this.editItemData = { ...this.items[index] };
       this.editItemIndex = index;
+      this.editItemData = { ...this.items[index] };
+      // Muestra el formulario para editar
       this.showEditForm = true;
     },
     cancelEdit() {
       this.showEditForm = false;
       this.editItemData = { Titulo: '', Descripcion: '', Precio: '' };
-      this.editItemIndex = null;
     },
     updateItem() {
       const formattedPrice = `$${this.editItemData.Precio} MXN`;
-      this.items[this.editItemIndex] = {
+      this.$set(this.items, this.editItemIndex, {
         title: this.editItemData.Titulo,
         description: this.editItemData.Descripcion,
         price: formattedPrice,
-      };
-      this.cancelEdit();
+      });
+      this.showEditForm = false;
+      this.editItemData = { Titulo: '', Descripcion: '', Precio: '' };
     },
+    saveItem() {
+      // Si es una edición
+      if (this.showEditForm) {
+        // Implementa tu lógica de actualización aquí
+        // Puedes usar axios.put para realizar la solicitud PUT a tu API
+      } else {
+        // Es una nueva membresía
+        const formattedPrice = `$${this.newItem.Precio} MXN`;
+        axios.post('https://tu-api.com/membresias', {
+          Titulo: this.newItem.Titulo,
+          Descripcion: this.newItem.Descripcion,
+          Precio: formattedPrice,
+        })
+        .then(response => {
+          // Actualiza el estado local con la nueva membresía recibida del servidor
+          this.items.push(response.data);
+          this.hideForm();
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      }
+    },
+
+    fetchItems() {
+      axios.get('https://tu-api.com/membresias')
+        .then(response => {
+          this.items = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchItems();
   },
 };
 </script>
+
 <style scoped>
 .container-card {
   display: flex;
@@ -163,7 +201,6 @@ export default {
 
 .card-body {
   padding: 25px 20px;
-  /* Ajusta el espacio entre el contenido y el borde superior */
   height: 220px;
 }
 
@@ -183,9 +220,10 @@ export default {
   text-align: center;
 }
 
-.card-title {
+.card-Titulo {
   text-align: center;
   margin-bottom: 10px;
+  color: black;
   /* Ajusta el margen inferior del título */
 }
 
@@ -215,4 +253,3 @@ export default {
   padding: 0 10px;
 }
 </style>
-

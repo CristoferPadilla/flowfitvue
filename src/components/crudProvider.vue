@@ -14,7 +14,7 @@
       <table class="table-crud">
         <thead>
           <tr>
-            <th style="font-size: 70%">INE</th>
+            <th style="font-size: 70%">ID</th>
             <th style="font-size: 70%">Nombre</th>
             <th style="font-size: 70%">Email</th>
             <th style="font-size: 70%">Celular</th>
@@ -24,7 +24,7 @@
         </thead>
         <tbody>
           <tr v-for="proveedor in filteredProveedores" :key="proveedor.ID">
-            <td>{{ proveedor.INE }}</td>
+            <td>{{ proveedor.ID }}</td>
             <td>{{ proveedor.Nombre }}</td>
             <td>{{ proveedor.Email }}</td>
             <td>{{ proveedor.Celular }}</td>
@@ -42,8 +42,6 @@
         <h3>{{ selectedProveedor ? 'Editar proveedor' : 'Agregar proveedor' }}</h3>
         <form @submit.prevent="saveProveedor" class="form-container">
           <div class="form-group">
-            <label for="ine">INE:</label>
-            <input v-model="newProveedor.INE" type="text" class="form-control" required />
           </div>
           <div class="form-group">
             <label for="name">Nombre:</label>
@@ -70,24 +68,15 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      proveedores: [
-        {
-          ID: 1,
-          INE: "123456789",
-          Nombre: "Juan Perez",
-          Email: "cacac@gmail.com",
-          Celular: "1234567890",
-          Direccion: "Calle 12, avenida tutancamon",
-        }
-      ],
+      proveedores: [],
       showForm: false,
       selectedProveedor: null,
       newProveedor: {
         ID: "",
-        INE: "",
         Nombre: "",
         Email: "",
         Celular: "",
@@ -99,7 +88,7 @@ export default {
   computed: {
     filteredProveedores() {
       return this.proveedores.filter((proveedor) =>
-        proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+        proveedor.Nombre && proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
@@ -116,7 +105,6 @@ export default {
     clearForm() {
       this.newProveedor = {
         ID: "",
-        INE: "",
         Nombre: "",
         Email: "",
         Celular: "",
@@ -128,10 +116,26 @@ export default {
         const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
         if (index !== -1) {
           this.proveedores[index] = { ...this.selectedProveedor };
+          axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.selectedProveedor)
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+            });
         }
       } else {
-        this.newProveedor.ID = this.proveedores.length + 1;
-        this.proveedores.push({ ...this.newProveedor });
+        const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].ID + 1 : 1;
+        this.newProveedor.ID = newId;
+
+        axios.post('https://api-5iey.onrender.com/providers', this.newProveedor)
+          .then(response => {
+            console.log(response.data);
+            this.proveedores.push(response.data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
       this.hideForm();
     },
@@ -144,16 +148,35 @@ export default {
       const index = this.proveedores.findIndex(proveedor => proveedor.ID === proveedorId);
       if (index !== -1) {
         this.proveedores.splice(index, 1);
+        axios.delete(`https://api-5iey.onrender.com/providers/${proveedorId}`)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
       }
     },
     filterProveedores() {
-      // Puedes implementar lógica adicional para filtrar si es necesario
+    },
+    fetchProviders() {
+      axios.get('https://api-5iey.onrender.com/providers')
+        .then(response => {
+          console.log(response.data);
+          this.proveedores = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
   },
+  mounted() {
+    this.fetchProviders();
+  },
 };
-</script> 
-    
-  <style scoped>
+</script>
+
+<style scoped>
   
 .search-bar {
     width: 300px;
@@ -352,4 +375,3 @@ color: white;
 
 
   </style>
-  

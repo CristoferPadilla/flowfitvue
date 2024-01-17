@@ -7,10 +7,9 @@
   </div>
   <div class="product-list">
     <div class="product-card" v-for="product in filteredProducts" :key="product.ID">
-      <img :src="product.Imagen" alt="Product Image" class="product-image" />
       <div class="product-details">
         <h3 class="product-Nombre">{{ product.Nombre }}</h3>
-        <p class="product-Precio">{{ product.Precio }} MX</p>
+        <p class="product-Precio">{{ formatCurrency(product.Precio) }} MX</p>
         <button @click="openModal(product)" class="btn">Comprar</button>
       </div>
     </div>
@@ -29,58 +28,24 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  Nombre: "ProductList",
+  name: "ProductList",
   data() {
     return {
-      products: [
-        {
-          ID: 2,
-          Nombre: "Proteina",
-          Precio: 200,
-          Imagen: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&wIDth=&format=jpeg",
-        },
-
-        {
-          ID: 3,
-          Nombre: "Guantes Gym",
-          Precio: 150,
-          Imagen: "https://http2.mlstatic.com/D_NQ_NP_2X_875091-MLM72146633751_102023-F.webp",
-        },   
-        
-        {
-          ID: 4,
-          Nombre: "Calcetines",
-          Precio: 10,
-          Imagen: "https://down-mx.img.susercontent.com/file/4eb85f6d31a197b9f8deba558f9b849f",
-        },
-
-        {
-          ID: 5,
-          Nombre: "Muñequeras",
-          Precio: 300,
-          Imagen: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&wIDth=&format=jpeg",
-        },
-
-        {
-          ID: 6,
-          Nombre: "Paquete de proteina",
-          Precio: 800,
-          Imagen: "https://gnc.com.mx/media/catalog/product/1/4/141603410-on-gold-standard-100-isolate-van-2-91-lbs.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=&wIDth=&format=jpeg",
-        },
-
-      ],
+      products: [],
       searchTerm: "",
       isModalOpen: false,
-      selectedProduct: null,   
-     };
+      selectedProduct: null,
+    };
   },
   computed: {
     filteredProducts() {
       return this.products.filter((product) =>
         product.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
-    }
+    },
   },
   methods: {
     openModal(product) {
@@ -93,16 +58,31 @@ export default {
     },
     checkout() {
       alert("Pago exitoso. Gracias por su compra.");
-      this.closeModal(); 
+      this.closeModal();
     },
     formatCurrency(value) {
       return `$${value.toFixed(2)}`;
     },
-  }
+    fetchProducts() {
+      axios
+        .get("https://api-5iey.onrender.com/products")
+        .then((response) => {
+          console.log(response.data);
+          this.products = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchProducts();
+  },
 };
 </script>
 
-<style scoped>.modal {
+<style scoped>
+.modal {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -110,7 +90,7 @@ export default {
   z-index: 999;
   top: 0;
   left: 0;
-  wIDth: 100%;
+  width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -135,11 +115,10 @@ export default {
 .product-card {
   background-color: #55a5ff;
   padding: 10px;
-  border: 1px solID #ccc;
+  border: 1px solid #ccc;
   border-radius: 5px;
   margin: 10px;
-  padding: 10px;
-  wIDth: 200px;
+  width: 200px;
 }
 
 .product-details {
@@ -147,7 +126,7 @@ export default {
 }
 
 .product-image {
-  wIDth: 100%;
+  width: 100%;
   height: auto;
   border-radius: 5px;
 }
@@ -179,12 +158,11 @@ button {
   cursor: pointer;
 }
 
-
 .search-bar input {
   border: none;
   outline: none;
   background: none;
-  wIDth: auto;
+  width: auto;
   color: black;
   font-size: 18px;
   line-height: 40px;
@@ -194,13 +172,15 @@ button {
 .search-icon {
   padding-left: 10px;
 }
-.btn{
+
+.btn {
   background-color: #3498db;
   color: #fff;
   border: none;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
+
 .product-Nombre {
   font-size: 1.2em;
   margin-bottom: 5px;

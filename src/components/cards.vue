@@ -10,7 +10,7 @@
                 </svg>        
                             </div>
               <div class="card-content">
-                <p class="card-number">2</p>
+                <p class="card-number">{{ porVencer }}</p>
                 <p class="card-label">Por vencer</p>
               </div>
           </div>
@@ -21,7 +21,7 @@
                 </svg> 
               </div>
               <div class="card-content">
-                <p class="card-number">30</p>
+                <p class="card-number">{{ miembros }}</p>
                 <p class="card-label">Miembros</p>
               </div>
           </div>
@@ -33,7 +33,7 @@
                 </svg>
               </div>
               <div class="card-content">
-                <p class="card-number">3</p>
+                <p class="card-number">{{ miembrosNuevos }}</p>
                 <p class="card-label">Miembros nuevos</p>
               </div>
           </div>
@@ -47,6 +47,27 @@ import '@/css/style.css'
 
 export default {
 name: 'CardApp',
+data() {
+  return {
+    porVencer: 0,
+    miembros: 0,
+    miembrosNuevos: 0
+  };
+},
+mounted() {
+  this.fetchMembers();
+},
+methods: {
+  async fetchMembers() {
+    try {
+      const response = await fetch('https://api-5iey.onrender.com/members');
+      const data = await response.json();
+      this.miembros = data.length;
+      this.porVencer = data.filter(member => member.vencimiento === true).length;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
 };
 </script>
-

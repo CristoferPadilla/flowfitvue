@@ -1,8 +1,3 @@
-
-Aquí tienes el código completo con la funcionalidad de búsqueda:
-
-html
-Copy code
 <template>
   <div id="content">
     <div class="d-flex justify-content-center align-items-center flex-column">
@@ -35,7 +30,7 @@ Copy code
             <td>{{ user.Nombre }}</td>
             <td>{{ user.Email }}</td>
             <td>{{ user.Celular }}</td>
-            <td>{{ user.MebresiaAsignada }}</td>
+            <td>{{ user.MembresiaAsignada }}</td>
             <td>{{ user.FechaRegistro }}</td>
             <td>{{ user.FechaFinalizacion }}</td>
             <td>
@@ -63,11 +58,9 @@ Copy code
           </div>
           <div class="form-group">
             <label for="membresiaAsignada">Membresía Asignada:</label>
-            <select v-model="newUser.MebresiaAsignada" class="form-control" required>
+            <select v-model="newUser.MembresiaAsignada" class="form-control" required>
               <option value="" disabled selected>Selecciona una membresía</option>
-              <option value="Individual">Individual</option>
-              <option value="Pareja">Pareja</option>
-              <option value="Familiar">Familiar</option>
+              <option v-for="membership in memberships" :key="membership.ID" :value="membership.Titulo">{{ membership.Titulo }}</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
@@ -79,37 +72,26 @@ Copy code
 </template>
 
 <script>
-import "@/css/style.css";
+import axios from 'axios';
 
 export default {
-  name: "addMembers",
-  components: {},
+  name: "crudMember",
   data() {
     return {
       showForm: false,
-      users: [
-        {
-          ID: "1234567890123450",
-          Nombre: "Usuario 1",
-          Email: "usuario1@example.com",
-          Celular: "123-456-7890",
-          MebresiaAsignada: "Pareja",
-          FechaRegistro: "2023-01-01",
-          FechaFinalizacion: "2023-02-01",
-        },
-        // ... otros usuarios ...
-      ],
+      users: [],
       newUser: {
         ID: "",
         Nombre: "",
         Email: "",
         Celular: "",
-        MebresiaAsignada: "",
+        MembresiaAsignada: "",
         FechaRegistro: "",
         FechaFinalizacion: "",
       },
       selectedUser: null,
       searchTerm: "",
+      memberships: [],
     };
   },
   computed: {
@@ -128,27 +110,42 @@ export default {
       this.resetForm();
     },
     saveUser() {
-      if (this.selectedUser) {
-        const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
-        if (index !== -1) {
-          this.users.splice(index, 1, { ...this.newUser });
-        }
-      } else {
-        const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
-        this.newUser.ID = nextId;
+  if (this.selectedUser) {
+    const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
+    if (index !== -1) {
+      this.$set(this.users, index, { ...this.newUser });
+      axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  } else {
+    const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
+    this.newUser.ID = nextId;
 
-        const currentDate = new Date();
-        this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
+    const currentDate = new Date();
+    this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
 
-        const endDate = new Date(currentDate);
-        endDate.setMonth(endDate.getMonth() + 1);
-        this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
+    const endDate = new Date(currentDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
 
-        this.users.push({ ...this.newUser });
-      }
-      this.showForm = false;
-      this.resetForm();
-    },
+    axios.post('https://api-5iey.onrender.com/members', this.newUser)
+      .then(response => {
+        console.log(response.data);
+        this.fetchMembers();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  this.showForm = false;
+  this.resetForm();
+},
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
@@ -163,19 +160,38 @@ export default {
         Nombre: "",
         Email: "",
         Celular: "",
-        MebresiaAsignada: "",
+        MembresiaAsignada: "",
         FechaRegistro: "",
         FechaFinalizacion: "",
       };
       this.selectedUser = null;
     },
-    filterUsers() {
-      // Este método se ejecutará cada vez que el usuario escriba en el campo de búsqueda
+    fetchMembers() {
+      axios.get('https://api-5iey.onrender.com/members')
+        .then(response => {
+          this.users = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
+    fetchMemberships() {
+      axios.get('https://api-5iey.onrender.com/memberships')
+        .then(response => {
+          this.memberships = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchMembers();
+    this.fetchMemberships();
   },
 };
 </script>
-  
+
 <style scoped >
 .bton {
   margin-left: 120%;
@@ -201,7 +217,7 @@ export default {
   text-align: left;
   padding: 8px;
   color: beige;
-  font-size: 75%;
+  font-size: 70%;
   font-family: Arial, Helvetica, sans-serif;
 
 }
