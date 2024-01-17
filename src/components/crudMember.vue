@@ -9,7 +9,7 @@
         </div>
         <div class="bton">
           <button @click="showAddForm" class="btn btn-success">Nuevo miembro</button>
-        </div>
+        </div>x
       </div>
       <table class="table-crud">
         <thead>
@@ -59,8 +59,7 @@
           <div class="form-group">
             <label for="membresiaAsignada">Membresía Asignada:</label>
             <select v-model="newUser.MembresiaAsignada" class="form-control" required>
-              <option value="" disabled selected>Selecciona una membresía</option>
-              <option v-for="membership in memberships" :key="membership.ID" :value="membership.Titulo">{{ membership.Titulo }}</option>
+              <option v-for="membership in memberships" :key="membership.ID" :value="membership.ID">{{ membership.Titulo }}</option>
             </select>
           </div>
           <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
@@ -110,42 +109,43 @@ export default {
       this.resetForm();
     },
     saveUser() {
-  if (this.selectedUser) {
-    const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
-    if (index !== -1) {
-      this.$set(this.users, index, { ...this.newUser });
-      axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser)
-        .then(response => {
-          console.log(response.data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-  } else {
-    const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
-    this.newUser.ID = nextId;
+      if (this.selectedUser) {
+        const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
+        if (index !== -1) {
+          this.$set(this.users, index, { ...this.newUser });
+          axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser)
+            .then(response => {
+              console.log('Usuario actualizado en el servidor:', response.data);
+            })
+            .catch(error => {
+              console.error('Error al actualizar usuario en el servidor:', error);
+            });
+        }
+      } else {
+        const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
+        this.newUser.ID = nextId;
 
-    const currentDate = new Date();
-    this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
+        const currentDate = new Date();
+        this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
 
-    const endDate = new Date(currentDate);
-    endDate.setMonth(endDate.getMonth() + 1);
-    this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
+        const endDate = new Date(currentDate);
+        endDate.setMonth(endDate.getMonth() + 1);
+        this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
 
-    axios.post('https://api-5iey.onrender.com/members', this.newUser)
-      .then(response => {
-        console.log(response.data);
-        this.fetchMembers();
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
+        axios.post('https://api-5iey.onrender.com/members', this.newUser)
+          .then(response => {
+            console.log('Usuario agregado en el servidor:', response.data);
+            this.fetchMembers();  
+          })
+          .catch(error => {
+            console.error('Error al agregar usuario en el servidor:', error.response.data);
+          });
+      }
 
-  this.showForm = false;
-  this.resetForm();
-},
+      this.showForm = false;
+      this.resetForm();
+    },
+
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
@@ -192,16 +192,15 @@ export default {
 };
 </script>
 
-<style scoped >
+<style scoped>
 .bton {
   margin-left: 120%;
   padding: auto;
 }
-.btn{
+.btn {
   font-size: 75%;
   margin: 10px;
   font-family: Arial, Helvetica, sans-serif;
-
 }
 
 .table-crud {
@@ -219,17 +218,15 @@ export default {
   color: beige;
   font-size: 70%;
   font-family: Arial, Helvetica, sans-serif;
-
 }
 
 .table-crud tr:nth-child(even) {
-  background-color: transparent !important
+  background-color: transparent !important;
 }
 
 .table-crud th {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
-
 }
 
 .d-row {
@@ -280,6 +277,7 @@ export default {
   margin-left: 10px;
   cursor: pointer;
 }
+
 .add-form {
   position: fixed;
   top: 50%;
@@ -290,6 +288,7 @@ export default {
   border-radius: 5px;
   text-align: center;
 }
+
 .form-group {
   margin-bottom: 1rem;
 }
@@ -315,6 +314,7 @@ export default {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+
 label {
   display: inline-block;
   margin-bottom: 0.5rem;

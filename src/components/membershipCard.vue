@@ -12,16 +12,15 @@
         <div class="card-body">
           <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
           <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
-          <p style="color: #000000" class="card-number">{{ item.Precio }}</p>
-          <button @click="editItem(index)" class="btn btn-warning">Editar</button>
-          <button @click="removeItem(index)" class="btn btn-danger">Eliminar</button>
+          <p style="color: #000000" class="card-number">$ {{ item.Precio }} MX</p>
+          <button @click="editItem(item.ID)" class="btn btn-warning">Editar</button>
+          <button @click="removeItem(item.ID)" class="btn btn-danger">Eliminar</button>
         </div>
       </div>
     </div>
 
-    <!-- Formulario de agregar -->
     <div v-if="showAddForm" class="add-form">
-      <h3>Agregar Membresía</h3>
+      <h3>{{ newItem.ID ? 'Editar Membresía' : 'Agregar Membresía' }}</h3>
       <form @submit.prevent="addItem">
         <div class="form-group">
           <label for="Titulo">Título:</label>
@@ -39,7 +38,7 @@
             <span class="input-group-text">MXN</span>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary">Agregar</button>
+        <button type="submit" class="btn btn-primary">{{ newItem.ID ? 'Guardar' : 'Agregar' }}</button>
         <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
       </form>
     </div>
@@ -82,16 +81,31 @@ export default {
       this.showAddForm = false;
     },
     addItem() {
-  const formattedPrice = `$${this.newItem.Precio} MXN`;
-  this.items.push({
-    ID: this.items.length + 1,
-    Titulo: this.newItem.Titulo,
-    Descripcion: this.newItem.Descripcion,
-    Precio: formattedPrice,
-  });
-  this.newItem = { ID: "", Titulo: "", Descripcion: "", Precio: "" };
-  this.hideForm();
-},
+      if (this.newItem.ID) {
+        axios.put(`https://api-5iey.onrender.com/memberships/${this.newItem.ID}`, this.newItem)
+          .then(response => {
+            console.log('Membresía actualizada en el servidor:', response.data);
+            const index = this.items.findIndex(item => item.ID === this.newItem.ID);
+            if (index !== -1) {
+              this.$set(this.items, index, { ...this.newItem });
+            }
+            this.hideForm();
+          })
+          .catch(error => {
+            console.error('Error al actualizar membresía en el servidor:', error);
+          });
+      } else {
+        axios.post('https://api-5iey.onrender.com/memberships', this.newItem)
+          .then(response => {
+            console.log('Membresía agregada en el servidor:', response.data);
+            this.items.push({ ...this.newItem, ID: response.data.ID });
+            this.hideForm();
+          })
+          .catch(error => {
+            console.error('Error al agregar membresía en el servidor:', error);
+          });
+      }
+    },
     editItem(index) {
       this.newItem = { ...this.items[index] };
       this.showAddForm = true;
