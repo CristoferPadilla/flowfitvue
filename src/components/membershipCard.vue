@@ -49,13 +49,22 @@
         <input v-model="newItem.Descripcion" type="text" class="form-control" required />
       </div>
       <div class="form-group">
-        <label for="price">Precio:</label>
-        <div class="input-group">
-          <span class="input-group-text">$</span>
-          <input v-model="newItem.Precio" type="text" class="form-control" required />
-          <span class="input-group-text">MXN</span>
-        </div>
-      </div>
+  <label for="price">Precio:</label>
+  <div class="input-group">
+    <span class="input-group-text">$</span>
+    <input
+      v-model="newItem.Precio"
+      type="text"
+      class="form-control"
+      required
+      pattern="[0-9]+([.][0-9]+)?"  
+      title="Ingrese un número válido" 
+      oninput="validity.valid||(value='');" 
+    />
+    <span class="input-group-text">MXN</span>
+  </div>
+  </div>
+
       <button type="submit" class="btn btn-primary">
         {{ newItem.ID ? "Guardar" : "Agregar" }}
       </button>
@@ -86,7 +95,7 @@ export default {
     };
   },
   computed: {
-    
+
     hasMorePages() {
       return this.currentPage * this.pageSize < this.filteredItems.length;
     },
@@ -310,12 +319,13 @@ export default {
 }
 
 .pagination button {
-  margin: 0 5px;
-  padding: 5px 10px;
+  margin: 0 15px;
+  padding: 3px 10px;
   cursor: pointer;
   font-size: 14px;
+  border-radius: 50px;
+ 
 }
-
 .pagination span {
   margin: 0 5px;
   font-size: 14px;

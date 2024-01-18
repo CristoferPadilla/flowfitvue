@@ -150,6 +150,27 @@ export default {
     },
   },
   methods: {
+
+    isValidNumber(value) {
+    return /^\d+(\.\d{1,2})?$/.test(value);
+  },
+
+  validateNumberInput() {
+    if (!this.isValidNumber(this.newProduct.Cantidad)) {
+      // Muestra un mensaje de error o realiza la acción adecuada
+      // Ejemplo: alert("Cantidad debe ser un número válido");
+      return false;
+    }
+
+    if (!this.isValidNumber(this.newProduct.Precio)) {
+      // Muestra un mensaje de error o realiza la acción adecuada
+      // Ejemplo: alert("Precio debe ser un número válido");
+      return false;
+    }
+
+    return true;
+  },
+
     showAddProductForm() {
       this.showForm = true;
       this.selectedProduct = null;
@@ -171,6 +192,9 @@ export default {
       };
     },
     saveProduct() {
+      if (!this.validateNumberInput()) {
+      return;
+    } // No continúes si la validación no pasa
       if (this.selectedProduct) {
         const index = this.products.findIndex(
           (product) => product.ID === this.selectedProduct.ID

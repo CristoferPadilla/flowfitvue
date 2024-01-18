@@ -401,14 +401,17 @@ label {
 }
 
 .pagination button {
-  margin: 0 5px;
-  padding: 5px 10px;
+  margin: 0 15px;
+  padding: 3px 10px;
   cursor: pointer;
   font-size: 14px;
+  border-radius: 50px;
+ 
 }
 
 .pagination span {
   margin: 0 5px;
   font-size: 14px;
+  
   }
 </style>

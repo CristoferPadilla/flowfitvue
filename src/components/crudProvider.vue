@@ -211,6 +211,14 @@ export default {
 </script>
 
 <style scoped>
+.pagination button {
+  margin: 0 15px;
+  padding: 3px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 50px;
+ 
+}
   
 .search-bar {
     width: 300px;
