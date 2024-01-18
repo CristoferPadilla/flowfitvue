@@ -4,7 +4,7 @@
     <div class="user-picture">
       <img src="../assets/dani.jpg" alt="" class="user-picture">
     </div>
-    <div class="nav-user-name">Daniela Santoyo</div>
+    <div class="nav-user-name">{{ usuario }}</div> 
     <router-link to="/menu" class="nav-link">
       <img src="../assets/house-fill.svg" alt="Ejercicio Icon" class="nav-icon" />
       Menu 
@@ -56,8 +56,18 @@
 import "@/css/style.css";
 export default {
   name: "AppNavbar",
+  data() {
+    return {
+      usuario: "", 
+    };
+  },
   methods:{
-    
+    handleLoginSuccess(usuario) {
+      this.usuario = usuario;
+    },
+  },
+  mounted() {
+    this.$emit('login-success', 'Nombre de usuario');
   }
 };
 </script>

@@ -15,32 +15,75 @@
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
 
-    <UserLogin v-if="isLoggedIn" :usu="usuario" />
+    <UserLogin v-if="isLoggedIn" :usuario="usuario" @login-success="handleLoginSuccess" />
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
-  name: 'UserLogin',
+  name: 'LoginScreen',
+  components: {
+    UserLogin: {
+      props: ['usuario'],
+      template: `
+        <div>
+          <p>Welcome, {{ usuario }}!</p>
+          <button @click="logout">Logout</button>
+        </div>
+      `,
+      methods: {
+        logout() {
+          this.$emit('logout');
+        }
+      }
+    }
+  },
   setup() {
     const usuario = ref('');
     const contrasena = ref('');
     const router = useRouter();
+    const { emit } = getCurrentInstance();
 
-    const iniciarSesion = () => {
+    const iniciarSesion = async () => {
       if (usuario.value.length === 0 || contrasena.value.length === 0) {
         alert("Complete Los Datos Faltantes!!");
       } else {
-        if (usuario.value === "DaniSantoyoyo" && contrasena.value === "123") {
-          router.push('/menu');
-        } else {
-          alert("Error De Usuario y/o Contraseña!!");
-          usuario.value = "";
-          contrasena.value = "";
-          document.getElementById("txtusu").focus();
+        try {
+          const response = await fetch('https://api-5iey.onrender.com/auth/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              username: usuario.value,
+              password: contrasena.value
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const token = data.accessToken;
+            localStorage.setItem('token', token);
+
+            emit('login-success', usuario.value, token);
+
+            router.push('/menu');
+            console.log(data);
+            console.log('Token a almacenar:', token);
+            console.log('Nombre de usuario', usuario.value);
+
+          } else {
+            alert("Error De Usuario y/o Contraseña!!");
+            usuario.value = "";
+            contrasena.value = "";
+            document.getElementById("txtusu").focus();
+          }
+        } catch (error) {
+          console.error(error);
+          alert("An error occurred while logging in. Please try again later.");
         }
       }
     };
@@ -53,9 +96,9 @@ export default {
   }
 };
 </script>
-<style>
+
+<style scoped>
 body{
-  background-color: black;
+  background-color: #000000;
 }
 </style>
-

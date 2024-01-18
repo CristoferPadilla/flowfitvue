@@ -41,6 +41,8 @@ export default {
       searchTerm: "",
       isModalOpen: false,
       selectedProduct: null,
+      token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
+
     };
   },
   computed: {
@@ -68,7 +70,11 @@ export default {
     },
     fetchProducts() {
       axios
-        .get("https://api-5iey.onrender.com/products")
+        .get("https://api-5iey.onrender.com/products", {
+          headers: {
+            Authorization: `Bearer ${this.token}`, // Add the token to the request headers
+          },
+        })
         .then((response) => {
           console.log(response.data);
           this.products = response.data;

@@ -83,6 +83,7 @@ export default {
         Direccion: "",
       },
       searchTerm: "",
+      token: localStorage.getItem('token') || '', 
     };
   },
   computed: {
@@ -116,7 +117,11 @@ export default {
         const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
         if (index !== -1) {
           this.proveedores[index] = { ...this.selectedProveedor };
-          axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.selectedProveedor)
+          axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.selectedProveedor, { 
+            headers: { 
+              Authorization: `Bearer ${this.token}` }
+             }
+             )
             .then(response => {
               console.log(response.data);
             })
@@ -128,7 +133,12 @@ export default {
         const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].ID + 1 : 1;
         this.newProveedor.ID = newId;
 
-        axios.post('https://api-5iey.onrender.com/providers', this.newProveedor)
+        axios.post('https://api-5iey.onrender.com/providers', this.newProveedor, {
+           headers: {
+             Authorization: `Bearer ${this.token}`
+             } 
+            }
+            )
           .then(response => {
             console.log(response.data);
             this.proveedores.push(response.data);
@@ -148,7 +158,7 @@ export default {
       const index = this.proveedores.findIndex(proveedor => proveedor.ID === proveedorId);
       if (index !== -1) {
         this.proveedores.splice(index, 1);
-        axios.delete(`https://api-5iey.onrender.com/providers/${proveedorId}`)
+        axios.delete(`https://api-5iey.onrender.com/providers/${proveedorId}`, { headers: { Authorization: `Bearer ${this.token}` } })
           .then(response => {
             console.log(response.data);
           })
@@ -160,7 +170,7 @@ export default {
     filterProveedores() {
     },
     fetchProviders() {
-      axios.get('https://api-5iey.onrender.com/providers')
+      axios.get('https://api-5iey.onrender.com/providers', { headers: { Authorization: `Bearer ${this.token}` } })
         .then(response => {
           console.log(response.data);
           this.proveedores = response.data;

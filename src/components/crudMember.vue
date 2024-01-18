@@ -91,6 +91,8 @@ export default {
       selectedUser: null,
       searchTerm: "",
       memberships: [],
+      token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
+
     };
   },
   computed: {
@@ -113,7 +115,11 @@ export default {
         const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
         if (index !== -1) {
           this.$set(this.users, index, { ...this.newUser });
-          axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser)
+          axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser, {
+            headers: {
+              Authorization: `Bearer ${this.token}` // Add Authorization header with the token
+            }
+          })
             .then(response => {
               console.log('Usuario actualizado en el servidor:', response.data);
             })
@@ -132,7 +138,11 @@ export default {
         endDate.setMonth(endDate.getMonth() + 1);
         this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
 
-        axios.post('https://api-5iey.onrender.com/members', this.newUser)
+        axios.post('https://api-5iey.onrender.com/members', this.newUser, {
+          headers: {
+            Authorization: `Bearer ${this.token}` // Add Authorization header with the token
+          }
+        })
           .then(response => {
             console.log('Usuario agregado en el servidor:', response.data);
             this.fetchMembers();  
@@ -167,7 +177,11 @@ export default {
       this.selectedUser = null;
     },
     fetchMembers() {
-      axios.get('https://api-5iey.onrender.com/members')
+      axios.get('https://api-5iey.onrender.com/members', {
+        headers: {
+          Authorization: `Bearer ${this.token}` // Add Authorization header with the token
+        }
+      })
         .then(response => {
           this.users = response.data;
         })
@@ -176,7 +190,11 @@ export default {
         });
     },
     fetchMemberships() {
-      axios.get('https://api-5iey.onrender.com/memberships')
+      axios.get('https://api-5iey.onrender.com/memberships', {
+        headers: {
+          Authorization: `Bearer ${this.token}` // Add Authorization header with the token
+        }
+      })
         .then(response => {
           this.memberships = response.data;
         })

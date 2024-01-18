@@ -21,7 +21,7 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th>Precio</th>
+            <th>Precio</th> 
             <th>Cantidad</th>
             <th>Categoría</th>
             <th>Proveedor</th>
@@ -120,6 +120,7 @@ export default {
       selectedProduct: null,
       searchTerm: "",
       providers: [],
+      token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
     };
   },
   computed: {
@@ -157,7 +158,11 @@ export default {
         );
         if (index !== -1) {
           this.products.splice(index, 1, { ...this.newProduct });
-          axios.put(`https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`, this.newProduct)
+          axios.put(`https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`, this.newProduct, {
+            headers: {
+              Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+            },
+          })
             .then(response => {
               console.log('Producto actualizado en el servidor:', response.data);
             })
@@ -168,7 +173,11 @@ export default {
       } else {
         this.newProduct.ID = (Math.random() * 100000).toFixed(0); 
         this.products.push({ ...this.newProduct });
-        axios.post('https://api-5iey.onrender.com/products', this.newProduct)
+        axios.post('https://api-5iey.onrender.com/products', this.newProduct, {
+          headers: {
+            Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+          },
+        })
           .then(response => {
             console.log('Producto agregado en el servidor:', response.data);
           })
@@ -192,7 +201,11 @@ export default {
     filterProducts() {
     },
     fetchProducts() {
-      axios.get('https://api-5iey.onrender.com/products')
+      axios.get('https://api-5iey.onrender.com/products', {
+        headers: {
+          Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+        },
+      })
         .then(response => {
           console.log(response.data);  
           this.products = response.data;
@@ -202,7 +215,11 @@ export default {
         });
     },
     fetchProviders() {
-      axios.get('https://api-5iey.onrender.com/providers')
+      axios.get('https://api-5iey.onrender.com/providers', {
+        headers: {
+          Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+        },
+      })
         .then(response => {
           console.log(response.data);  
           this.providers = response.data;

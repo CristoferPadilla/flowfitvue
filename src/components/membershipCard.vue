@@ -3,50 +3,50 @@
     <h3 class="title">Membresias</h3>
     <div class="Container-row">
       <div class="search-bar">
-      <div class="search-icon">🔍</div>
-      <input v-model="searchTerm" placeholder="Buscar membresía" />
-    </div>
-    <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
+        <div class="search-icon">🔍</div>
+        <input v-model="searchTerm" placeholder="Buscar membresía" />
+      </div>
+      <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
     </div>
   </div>
 
-    <div class="container-card">
-      <div v-for="item in filteredItems" :key="item.ID" class="card">
-        <div class="card-body">
-          <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
-          <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
-          <p style="color: #000000" class="card-number">$ {{ item.Precio }} MX</p>
-          <button @click="editItem(item.ID)" class="btn btn-warning">Editar</button>
-          <button @click="removeItem(item.ID)" class="btn btn-danger">Eliminar</button>
-        </div>
+  <div class="container-card">
+    <div v-for="item in filteredItems" :key="item.ID" class="card">
+      <div class="card-body">
+        <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
+        <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
+        <p style="color: #000000" class="card-number">$ {{ item.Precio }} MX</p>
+        <button @click="editItem(item.ID)" class="btn btn-warning">Editar</button>
+        <button @click="removeItem(item.ID)" class="btn btn-danger">Eliminar</button>
       </div>
     </div>
+  </div>
 
-    <div v-if="showAddForm" class="add-form">
-      <h3>{{ newItem.ID ? 'Editar Membresía' : 'Agregar Membresía' }}</h3>
-      <form @submit.prevent="addItem">
-        <div class="form-group">
-          <label for="Titulo">Título:</label>
-          <input v-model="newItem.Titulo" type="text" class="form-control" required />
+  <div v-if="showAddForm" class="add-form">
+    <h3>{{ newItem.ID ? 'Editar Membresía' : 'Agregar Membresía' }}</h3>
+    <form @submit.prevent="addItem">
+      <div class="form-group">
+        <label for="Titulo">Título:</label>
+        <input v-model="newItem.Titulo" type="text" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="description">Descripción:</label>
+        <input v-model="newItem.Descripcion" type="text" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="price">Precio:</label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+          <input v-model="newItem.Precio" type="text" class="form-control" required />
+          <span class="input-group-text">MXN</span>
         </div>
-        <div class="form-group">
-          <label for="description">Descripción:</label>
-          <input v-model="newItem.Descripcion" type="text" class="form-control" required />
-        </div>
-        <div class="form-group">
-          <label for="price">Precio:</label>
-          <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input v-model="newItem.Precio" type="text" class="form-control" required />
-            <span class="input-group-text">MXN</span>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">
-          {{ newItem.ID ? 'Guardar' : 'Agregar' }}
-        </button>
-        <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
-      </form>
-    </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        {{ newItem.ID ? 'Guardar' : 'Agregar' }}
+      </button>
+      <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -65,6 +65,7 @@ export default {
         Precio: "",
       },
       searchTerm: "",
+      token: localStorage.getItem('token') || '', 
     };
   },
   computed: {
@@ -86,7 +87,11 @@ export default {
     },
     addItem() {
       if (this.newItem.ID) {
-        axios.put(`https://api-5iey.onrender.com/memberships/${this.newItem.ID}`, this.newItem)
+        axios.put(`https://api-5iey.onrender.com/memberships/${this.newItem.ID}`, this.newItem, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
           .then(response => {
             console.log('Membresía actualizada en el servidor:', response.data);
             const index = this.items.findIndex(item => item.ID === this.newItem.ID);
@@ -99,7 +104,11 @@ export default {
             console.error('Error al actualizar membresía en el servidor:', error);
           });
       } else {
-        axios.post('https://api-5iey.onrender.com/memberships', this.newItem)
+        axios.post('https://api-5iey.onrender.com/memberships', this.newItem, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
           .then(response => {
             console.log('Membresía agregada en el servidor:', response.data);
             this.items.push({ ...this.newItem, ID: response.data.ID });
@@ -116,7 +125,11 @@ export default {
     },
     fetchMemberships() {
       axios
-        .get("https://api-5iey.onrender.com/memberships")
+        .get("https://api-5iey.onrender.com/memberships", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
         .then((response) => {
           console.log(response.data);
           this.items = response.data;
