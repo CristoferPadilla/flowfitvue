@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <form @submit.prevent="iniciarSesion" class="bg-white p-4 rounded-lg" style="background-color: black; margin: 140px auto; padding: 20px; border-radius: 50px; width: 50%; text-align: center; display: grid; place-items: center;">
+    <form @submit.prevent="iniciarSesion" class="bg-white p-4 rounded-lg" style="">
       <div class="text-center mb-4">
         <h1 class="text-dark font-fantasy" style="color: black; text-align: center; font-family: fantasy; padding-bottom: 30px; font-size: 80px;">FLOWFIT</h1>
       </div>
@@ -22,6 +22,7 @@
 <script>
 import { ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'LoginScreen',
@@ -67,6 +68,7 @@ export default {
             const data = await response.json();
             const token = data.accessToken;
             localStorage.setItem('token', token);
+            this.mockLogin();
 
             emit('login-success', usuario.value, token);
 
@@ -89,16 +91,35 @@ export default {
     };
 
     return {
+      ...mapActions(),
       iniciarSesion,
       usuario,
       contrasena
     };
+    
   }
 };
 </script>
 
 <style scoped>
-body{
-  background-color: #000000;
+.container {
+  /* Estilos para el contenedor */
 }
+
+.form-label {
+  /* Estilos para las etiquetas del formulario */
+}
+
+.form-control {
+  /* Estilos para los campos de formulario */
+}
+
+.btn-primary {
+  /* Estilos para el botón de login */
+}
+.bg-white{
+  background-color: black; margin: 140px auto; padding: 20px; border-radius: 50px; width: 50%; text-align: center; display: grid; place-items: center
+}
+
 </style>
+
