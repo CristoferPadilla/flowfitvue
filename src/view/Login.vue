@@ -23,6 +23,8 @@
 import { ref, getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import { mapActions } from 'vuex';
+import { useStore } from 'vuex';
+
 
 export default {
   name: 'LoginScreen',
@@ -47,6 +49,8 @@ export default {
     const contrasena = ref('');
     const router = useRouter();
     const { emit } = getCurrentInstance();
+    const store = useStore(); 
+
 
     const iniciarSesion = async () => {
       if (usuario.value.length === 0 || contrasena.value.length === 0) {
@@ -68,8 +72,8 @@ export default {
             const data = await response.json();
             const token = data.accessToken;
             localStorage.setItem('token', token);
-            this.mockLogin();
-
+            store.dispatch('mockLogin');
+            store.commit('setToken', token);
             emit('login-success', usuario.value, token);
 
             router.push('/menu');
@@ -102,21 +106,6 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  /* Estilos para el contenedor */
-}
-
-.form-label {
-  /* Estilos para las etiquetas del formulario */
-}
-
-.form-control {
-  /* Estilos para los campos de formulario */
-}
-
-.btn-primary {
-  /* Estilos para el botón de login */
-}
 .bg-white{
   background-color: black; margin: 140px auto; padding: 20px; border-radius: 50px; width: 50%; text-align: center; display: grid; place-items: center
 }

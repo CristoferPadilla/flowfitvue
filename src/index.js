@@ -1,22 +1,28 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+// index.js
+import { createStore } from 'vuex';
 
-Vue.use(Vuex)
-
-export default new Vuex.Store({
+export default createStore({
   state: {
+    loggedIn: false,
+    token: null,
   },
-  toggedIn: false,
   mutations: {
-    loggedIn (state) {
-      state.loggedIn = true
-    }
+    setLoggedIn(state, value) {
+      state.loggedIn = value;
+    },
+    setToken(state, token) {
+      state.token = token;
+    },
   },
   actions: {
-    mockLogin (context) {
-      setTimeout(function () {
-        context.commit('loggedIn')
-      }, 1000)
-    }
-  }
-})
+    mockLogin({ commit }) {
+      setTimeout(() => {
+        commit('setLoggedIn', true);
+      }, 1000);
+    },
+    logout({ commit }) {
+      commit('setLoggedIn', false);
+      commit('setToken', null);
+    },
+  },
+});

@@ -10,8 +10,6 @@
       path: '/menu',
       name: 'MenuApp',
       component: ()=> import(/* webpackChunk*/'./view/menu.vue'),
-      meta: {requiresAuth: true}
-
     },
     {
       path: '/members',
@@ -77,14 +75,17 @@
   });
 
   router.beforeEach((to, from, next) => {
-    if(to.matched.some(route => route.metar.requiresAuth)){
-      const authUser = JSON.parse(window.localStorage.getItem('authUser'))
-      if(authUser && authUser.accessToken){
-        next()
-      }else{
-        next({name: 'LoginApp'})
+    if (to.matched.some(route => route.meta.requiresAuth)) {
+      const accessToken = localStorage.getItem('token');
+      if (accessToken) {
+        next();
+      } else {
+        next({ name: 'LoginApp' });
       }
+    } else {
+      next();
     }
   });
+  
 
   export default router;
