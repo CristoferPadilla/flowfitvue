@@ -1,15 +1,22 @@
 <template>
   <div class="container-pt-fixed">
     <h2 class="title">Productos</h2>
+    
     <div class="controls">
       <div class="search-bar">
         <div class="search-icon">🔍</div>
         <input v-model="searchTerm" placeholder="Buscar producto" />
       </div>
+      <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+      <span>{{ currentPage }}</span>
+      <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProducts.length">Siguiente</button>
+    </div>
+      <div class="pagination">
     </div>
   </div>
+  
   <div class="product-list">
-    <div class="product-card" v-for="product in filteredProducts" :key="product.ID">
+    <div class="product-card" v-for="product in paginatedProducts" :key="product.ID">
       <div class="product-details">
         <h3 class="product-Nombre">{{ product.Nombre }}</h3>
         <p class="product-Precio">{{ formatCurrency(product.Precio) }} MX</p>
@@ -28,6 +35,9 @@
       </div>
     </div>
   </div>
+
+  <!-- paginación -->
+ 
 </template>
 
 <script>
@@ -41,8 +51,9 @@ export default {
       searchTerm: "",
       isModalOpen: false,
       selectedProduct: null,
-      token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
-
+      token: localStorage.getItem('token') || '',
+      currentPage: 1,
+      pageSize: 5,
     };
   },
   computed: {
@@ -50,6 +61,11 @@ export default {
       return this.products.filter((product) =>
         product.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+    },
+    paginatedProducts() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredProducts.slice(startIndex, endIndex);
     },
   },
   methods: {
@@ -72,7 +88,7 @@ export default {
       axios
         .get("https://api-5iey.onrender.com/products", {
           headers: {
-            Authorization: `Bearer ${this.token}`, // Add the token to the request headers
+            Authorization: `Bearer ${this.token}`,
           },
         })
         .then((response) => {
@@ -82,6 +98,16 @@ export default {
         .catch((error) => {
           console.error(error);
         });
+    },
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredProducts.length) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
     },
   },
   mounted() {

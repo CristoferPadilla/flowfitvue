@@ -11,6 +11,12 @@
           <button @click="showAddForm" class="btn btn-success">Nuevo proveedor</button>
         </div>
       </div>
+      <!-- Paginación -->
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <span>{{ currentPage }}</span>
+        <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProveedores.length">Siguiente</button>
+      </div>
       <table class="table-crud">
         <thead>
           <tr>
@@ -82,8 +88,11 @@ export default {
         Celular: "",
         Direccion: "",
       },
+      
       searchTerm: "",
-      token: localStorage.getItem('token') || '', 
+      token: localStorage.getItem('token') || '',
+      currentPage: 1,
+      pageSize: 7, 
     };
   },
   computed: {
@@ -91,6 +100,11 @@ export default {
       return this.proveedores.filter((proveedor) =>
         proveedor.Nombre && proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+    },
+    paginatedProveedores() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredProveedores.slice(startIndex, endIndex);
     },
   },
   methods: {
@@ -178,6 +192,16 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    },
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredProveedores.length) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
     },
   },
   mounted() {

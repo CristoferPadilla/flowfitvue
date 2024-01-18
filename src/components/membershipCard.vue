@@ -6,24 +6,39 @@
         <div class="search-icon">🔍</div>
         <input v-model="searchTerm" placeholder="Buscar membresía" />
       </div>
-      <button @click="showForm" class="btn btn-success" style="margin-top: 20px;">Agregar</button>
+      <button @click="showForm" class="btn btn-success" style="margin-top: 20px">
+        Agregar
+      </button>
+      <!-- paginación -->
+
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <span>{{ currentPage }}</span>
+        <button @click="nextPage" :disabled="!hasMorePages">Siguiente</button>
+      </div>
+
+      <!-- termina paginacion -->
     </div>
   </div>
 
   <div class="container-card">
-    <div v-for="item in filteredItems" :key="item.ID" class="card">
+    <div v-for="item in paginatedItems" :key="item.ID" class="card">
       <div class="card-body">
         <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
         <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
         <p style="color: #000000" class="card-number">$ {{ item.Precio }} MX</p>
-        <button @click="editItem(item.ID)" class="btn btn-warning">Editar</button>
-        <button @click="removeItem(item.ID)" class="btn btn-danger">Eliminar</button>
+        <button @click="editItem(item.ID)" class="btn btn-warning">
+          Editar
+        </button>
+        <button @click="deleteMembership(item.ID)" class="btn btn-danger">
+          Eliminar
+        </button>
       </div>
     </div>
   </div>
 
   <div v-if="showAddForm" class="add-form">
-    <h3>{{ newItem.ID ? 'Editar Membresía' : 'Agregar Membresía' }}</h3>
+    <h3>{{ newItem.ID ? "Editar Membresía" : "Agregar Membresía" }}</h3>
     <form @submit.prevent="addItem">
       <div class="form-group">
         <label for="Titulo">Título:</label>
@@ -42,7 +57,7 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary">
-        {{ newItem.ID ? 'Guardar' : 'Agregar' }}
+        {{ newItem.ID ? "Guardar" : "Agregar" }}
       </button>
       <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
     </form>
@@ -65,62 +80,111 @@ export default {
         Precio: "",
       },
       searchTerm: "",
-      token: localStorage.getItem('token') || '', 
+      token: localStorage.getItem("token") || "",
+      currentPage: 1,
+      pageSize: 4,
     };
   },
   computed: {
+    
+    hasMorePages() {
+      return this.currentPage * this.pageSize < this.filteredItems.length;
+    },
+  
     filteredItems() {
-      return this.items.filter((item) =>
-        item.Titulo && item.Titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
+      return this.items.filter(
+        (item) =>
+          item.Titulo &&
+          item.Titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+    },
+    paginatedItems() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredItems.slice(startIndex, endIndex);
     },
   },
   methods: {
-    removeItem(index) {
-      this.items.splice(index, 1);
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredItems.length) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+    deleteMembership(id) {
+      axios
+        .delete(`https://api-5iey.onrender.com/memberships/${id}`, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Membresía eliminada en el servidor:", response.data);
+          this.fetchMemberships(); // Recargar las membresías después de la eliminación
+        })
+        .catch((error) => {
+          console.error("Error al eliminar membresía en el servidor:", error);
+        });
     },
     showForm() {
       this.showAddForm = true;
+      this.newItem = {
+        // Limpiar newItem al abrir el formulario
+        ID: "",
+        Titulo: "",
+        Descripcion: "",
+        Precio: "",
+      };
     },
     hideForm() {
       this.showAddForm = false;
     },
     addItem() {
       if (this.newItem.ID) {
-        axios.put(`https://api-5iey.onrender.com/memberships/${this.newItem.ID}`, this.newItem, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-          .then(response => {
-            console.log('Membresía actualizada en el servidor:', response.data);
-            const index = this.items.findIndex(item => item.ID === this.newItem.ID);
-            if (index !== -1) {
-              this.$set(this.items, index, { ...this.newItem });
+        axios
+          .put(
+            `https://api-5iey.onrender.com/memberships/${this.newItem.ID}`,
+            this.newItem,
+            {
+              headers: {
+                Authorization: `Bearer ${this.token}`,
+              },
             }
+          )
+          .then((response) => {
+            console.log("Membresía actualizada en el servidor:", response.data);
+            this.fetchMemberships(); // Recargar las membresías después de la actualización
             this.hideForm();
           })
-          .catch(error => {
-            console.error('Error al actualizar membresía en el servidor:', error);
+          .catch((error) => {
+            console.error(
+              "Error al actualizar membresía en el servidor:",
+              error
+            );
           });
       } else {
-        axios.post('https://api-5iey.onrender.com/memberships', this.newItem, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-          .then(response => {
-            console.log('Membresía agregada en el servidor:', response.data);
-            this.items.push({ ...this.newItem, ID: response.data.ID });
+        axios
+          .post("https://api-5iey.onrender.com/memberships", this.newItem, {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          })
+          .then((response) => {
+            console.log("Membresía agregada en el servidor:", response.data);
+            this.fetchMemberships(); // Recargar las membresías después de la adición
             this.hideForm();
           })
-          .catch(error => {
-            console.error('Error al agregar membresía en el servidor:', error);
+          .catch((error) => {
+            console.error("Error al agregar membresía en el servidor:", error);
           });
       }
     },
-    editItem(index) {
-      this.newItem = { ...this.items[index] };
+    editItem(item) {
+      this.newItem = { ...item };
       this.showAddForm = true;
     },
     fetchMemberships() {
@@ -146,12 +210,14 @@ export default {
 </script>
 
 <style scoped>
-.form-control{
+.form-control {
   margin-bottom: 30px;
 }
-.btn{
+
+.btn {
   margin-right: 5%;
 }
+
 .container-card {
   display: flex;
   justify-content: space-around;
@@ -186,7 +252,6 @@ export default {
   text-align: center;
   width: 35%;
   height: 70%;
-
 }
 
 .card-Titulo {
@@ -207,30 +272,52 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .search-bar input {
-  border:none; 
-  outline:none; 
-  background:none; 
-  width:auto; 
-  color:black; 
-  font-size :18px; 
-  line-height :40px; 
-  padding :0 10px ;
+  border: none;
+  outline: none;
+  background: none;
+  width: auto;
+  color: black;
+  font-size: 18px;
+  line-height: 40px;
+  padding: 0 10px;
 }
-.search-icon{
-  padding-left :10px ;
+
+.search-icon {
+  padding-left: 10px;
 }
-.Container-row{
+
+.Container-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 }
-.container-pt-fixed{
+
+.container-pt-fixed {
   justify-content: center;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
 
+.pagination {
+  margin-top: -90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination span {
+  margin: 0 5px;
+  font-size: 14px;
 }
 </style>

@@ -11,6 +11,17 @@
           <button @click="showAddForm" class="btn btn-success">Nuevo miembro</button>
         </div>
       </div>
+      
+      <!-- paginacion -->
+
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <span>{{ currentPage }}</span>
+        <button @click="nextPage" :disabled="currentPage * pageSize >= filteredUsers.length">Siguiente</button>
+      </div>
+
+      <!-- tabla -->
+      
       <table class="table-crud">
         <thead>
           <tr>
@@ -25,7 +36,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in filteredUsers" :key="user.ID">
+          <tr v-for="user in paginatedUsers" :key="user.ID">
             <td>{{ user.ID }}</td>
             <td>{{ user.Nombre }}</td>
             <td>{{ user.Email }}</td>
@@ -92,7 +103,8 @@ export default {
       searchTerm: "",
       memberships: [],
       token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
-
+      currentPage: 1,
+      pageSize: 7,
     };
   },
   computed: {
@@ -101,8 +113,15 @@ export default {
         user.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
+    paginatedUsers() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredUsers.slice(startIndex, endIndex);
+    },
   },
   methods: {
+ 
+
     showAddForm() {
       this.showForm = true;
     },
@@ -145,7 +164,7 @@ export default {
         })
           .then(response => {
             console.log('Usuario agregado en el servidor:', response.data);
-            this.fetchMembers();  
+            this.fetchMembers();
           })
           .catch(error => {
             console.error('Error al agregar usuario en el servidor:', error.response.data);
@@ -159,11 +178,34 @@ export default {
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
-      this.showAddForm();
+      this.showAddForm();  // Agrega esta línea para mostrar el formulario de edición
     },
+
     deleteUser(id) {
-      this.users = this.users.filter((user) => user.ID !== id);
-    },
+  axios.delete(`https://api-5iey.onrender.com/members/${id}`, {
+    headers: {
+      Authorization: `Bearer ${this.token}`
+    }
+  })
+    .then(response => {
+      console.log('Usuario eliminado en el servidor:', response.data);
+
+      this.users = this.users.filter(user => user.ID !== id);
+      
+      const remainingUsers = this.filteredUsers.length;
+      
+      if ((this.currentPage - 1) * this.pageSize >= remainingUsers) {
+        this.currentPage = Math.max(1, this.currentPage - 1);
+      
+      }
+    })
+    .catch(error => {
+      console.error('Error al eliminar usuario en el servidor:', error);
+    });
+},
+
+
+
     resetForm() {
       this.newUser = {
         ID: "",
@@ -201,6 +243,18 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    },
+
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredUsers.length) {
+        this.currentPage++;
+      }
+    },
+
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
     },
   },
   mounted() {
@@ -338,4 +392,23 @@ label {
   margin-bottom: 0.5rem;
   font-weight: 600;
 }
+
+.pagination {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination span {
+  margin: 0 5px;
+  font-size: 14px;
+  }
 </style>

@@ -15,13 +15,23 @@
         </button>
       </div>
 
+      <!-- paginacion -->
+
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <span>{{ currentPage }}</span>
+        <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProducts.length">Siguiente</button>
+      </div>
+
+      <!-- tabla -->
+
       <table class="table-crud">
         <thead>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
-            <th>Precio</th> 
+            <th>Precio</th>
             <th>Cantidad</th>
             <th>Categoría</th>
             <th>Proveedor</th>
@@ -29,7 +39,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in filteredProducts" :key="product.ID">
+          <tr v-for="product in paginatedProducts" :key="product.ID">
             <td>{{ product.ID }}</td>
             <td>{{ product.Nombre }}</td>
             <td>{{ product.Descripcion }}</td>
@@ -44,6 +54,7 @@
           </tr>
         </tbody>
       </table>
+
 
       <div class="add-form-container" v-show="showForm">
         <div class="add-form">
@@ -120,7 +131,10 @@ export default {
       selectedProduct: null,
       searchTerm: "",
       providers: [],
-      token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
+      token: localStorage.getItem('token') || '',
+      currentPage: 1,
+      pageSize: 7
+      ,
     };
   },
   computed: {
@@ -128,6 +142,11 @@ export default {
       return this.products.filter((product) =>
         product.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
+    },
+    paginatedProducts() {
+      const startIndex = (this.currentPage - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      return this.filteredProducts.slice(startIndex, endIndex);
     },
   },
   methods: {
@@ -160,7 +179,7 @@ export default {
           this.products.splice(index, 1, { ...this.newProduct });
           axios.put(`https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`, this.newProduct, {
             headers: {
-              Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+              Authorization: `Bearer ${this.token}`,
             },
           })
             .then(response => {
@@ -171,11 +190,11 @@ export default {
             });
         }
       } else {
-        this.newProduct.ID = (Math.random() * 100000).toFixed(0); 
+        this.newProduct.ID = (Math.random() * 100000).toFixed(0);
         this.products.push({ ...this.newProduct });
         axios.post('https://api-5iey.onrender.com/products', this.newProduct, {
           headers: {
-            Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+            Authorization: `Bearer ${this.token}`,
           },
         })
           .then(response => {
@@ -199,34 +218,44 @@ export default {
       }
     },
     filterProducts() {
+},
+fetchProducts() {
+  axios.get('https://api-5iey.onrender.com/products', {
+    headers: {
+      Authorization: `Bearer ${this.token}`, // Include the token in the request headers
     },
-    fetchProducts() {
-      axios.get('https://api-5iey.onrender.com/products', {
-        headers: {
-          Authorization: `Bearer ${this.token}`, // Include the token in the request headers
-        },
-      })
-        .then(response => {
-          console.log(response.data);  
-          this.products = response.data;
-        })
-        .catch(error => {
-          console.error('Error al obtener datos de la API:', error);
-        });
+  })
+    .then(response => {
+      console.log(response.data);  
+      this.products = response.data;
+    })
+    .catch(error => {
+      console.error('Error al obtener datos de la API:', error);
+    });
+},
+fetchProviders() {
+  axios.get('https://api-5iey.onrender.com/providers', {
+    headers: {
+      Authorization: `Bearer ${this.token}`, // Include the token in the request headers
     },
-    fetchProviders() {
-      axios.get('https://api-5iey.onrender.com/providers', {
-        headers: {
-          Authorization: `Bearer ${this.token}`, // Include the token in the request headers
-        },
-      })
-        .then(response => {
-          console.log(response.data);  
-          this.providers = response.data;
-        })
-        .catch(error => {
-          console.error('Error al obtener proveedores de la API:', error);
-        });
+  })
+    .then(response => {
+      console.log(response.data);  
+      this.providers = response.data;
+    })
+    .catch(error => {
+      console.error('Error al obtener proveedores de la API:', error);
+    });
+},
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredProducts.length) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
     },
   },
   mounted() {
@@ -235,6 +264,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .search-bar {
@@ -338,5 +368,23 @@ export default {
 
 .text-center {
   text-align: center;
+}
+.pagination {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.pagination span {
+  margin: 0 5px;
+  font-size: 14px;
 }
 </style>
