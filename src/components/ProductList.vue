@@ -245,4 +245,24 @@ button {
   align-items: center;
   height: 100vh; 
 }
+.btn-light {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px; /* Puedes ajustar el relleno según tus preferencias */
+  border: none;
+  border-radius: 5px; /* Ajusta el radio de la esquina según tus preferencias */
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+
+.btn-light:hover {
+  background-color: white;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
 </style>
