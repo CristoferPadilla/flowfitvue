@@ -109,6 +109,9 @@ export default {
 .bg-white{
   background-color: black; margin: 140px auto; padding: 20px; border-radius: 50px; width: 50%; text-align: center; display: grid; place-items: center
 }
-
+body {
+  background-color: #0E0F13; 
+  font-style: italic white; 
+}
 </style>
 

@@ -13,9 +13,9 @@
       </div>
       <!-- Paginación -->
       <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <button @click="prevPage" :disabled="currentPage === 1" class="btn-light">Anterior</button>
         <span>{{ currentPage }}</span>
-        <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProveedores.length">Siguiente</button>
+        <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProveedores.length" class="btn-light">Siguiente</button>
       </div>
       <table class="table-crud">
         <thead>
@@ -329,7 +329,6 @@ color: white;
   display: flex;
   align-items: center;
 }
-
 .search-bar input {
   border: none;
   outline: none;
@@ -414,6 +413,24 @@ color: white;
   width: 100%;
   max-width: 600px;
 }
+.btn-light {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px; /* Puedes ajustar el relleno según tus preferencias */
+  border: none;
+  border-radius: 5px; /* Ajusta el radio de la esquina según tus preferencias */
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
 
+.btn-light:hover {
+  background-color: white;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
 
   </style>

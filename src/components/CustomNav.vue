@@ -1,6 +1,6 @@
 <template>
   <div class="app-navbar">
-    <div class="nav-title">Administador</div>
+    <div class="nav-title">Administrador</div>
     <div class="user-picture">
       <img src="../assets/dani.jpg" alt="" class="user-picture">
     </div>

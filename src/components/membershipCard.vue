@@ -12,9 +12,9 @@
       <!-- paginación -->
 
       <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+        <button @click="prevPage" :disabled="currentPage === 1" class="btn-light">Anterior</button>
         <span>{{ currentPage }}</span>
-        <button @click="nextPage" :disabled="!hasMorePages">Siguiente</button>
+        <button @click="nextPage" :disabled="!hasMorePages" class="btn-light">Siguiente</button>
       </div>
 
       <!-- termina paginacion -->
@@ -330,4 +330,24 @@ export default {
   margin: 0 5px;
   font-size: 14px;
 }
+.btn-light {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px; /* Puedes ajustar el relleno según tus preferencias */
+  border: none;
+  border-radius: 5px; /* Ajusta el radio de la esquina según tus preferencias */
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  transition-duration: 0.4s;
+}
+
+.btn-light:hover {
+  background-color: white;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+}
+
 </style>
