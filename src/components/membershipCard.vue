@@ -30,7 +30,7 @@
         <button @click="editItem(item.ID)" class="btn btn-warning">
           Editar
         </button>
-        <button @click="deleteMembership(item.ID)" class="btn btn-danger">
+        <button @click="confirmDelete(item.ID)" class="btn btn-danger">
           Eliminar
         </button>
       </div>
@@ -65,9 +65,9 @@
   </div>
   </div>
 
-      <button type="submit" class="btn btn-primary">
-        {{ newItem.ID ? "Guardar" : "Agregar" }}
-      </button>
+  <button @click="saveItem" class="btn btn-primary">
+    {{ isEditing ? "Guardar" : "Agregar" }}
+  </button>
       <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
     </form>
   </div>
@@ -92,6 +92,8 @@ export default {
       token: localStorage.getItem("token") || "",
       currentPage: 1,
       pageSize: 4,
+      isEditing: false,
+
     };
   },
   computed: {
@@ -124,21 +126,40 @@ export default {
         this.currentPage--;
       }
     },
+    resetForm() {
+    this.newItem = {
+      ID: "",
+      Titulo: "",
+      Descripcion: "",
+      Precio: "",
+    };
+    this.isEditing = false;
+    this.hideForm();
+  },
     deleteMembership(id) {
-      axios
-        .delete(`https://api-5iey.onrender.com/memberships/${id}`, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          console.log("Membresía eliminada en el servidor:", response.data);
-          this.fetchMemberships(); // Recargar las membresías después de la eliminación
-        })
-        .catch((error) => {
-          console.error("Error al eliminar membresía en el servidor:", error);
-        });
-    },
+  console.log('Intentando eliminar membresía con ID:', id);
+  axios
+    .delete(`https://api-5iey.onrender.com/memberships/${id}`, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+    .then((response) => {
+      console.log("Membresía eliminada en el servidor:", response.data);
+      this.fetchMemberships(); 
+    })
+    .catch((error) => {
+      console.error("Error al eliminar membresía en el servidor:", error);
+    });
+},
+
+    confirmDelete(id) {
+    const confirmed = window.confirm('¿Estás seguro de que deseas eliminar esta membresía?');
+
+    if (confirmed) {
+      this.deleteMembership(id);
+    }
+  },
     showForm() {
       this.showAddForm = true;
       this.newItem = {
@@ -192,10 +213,23 @@ export default {
           });
       }
     },
-    editItem(item) {
-      this.newItem = { ...item };
+    editItem(id) {
+    const membershipToEdit = this.items.find((item) => item.ID === id);
+
+    if (membershipToEdit) {
+      this.newItem = {
+        ID: membershipToEdit.ID,
+        Titulo: membershipToEdit.Titulo,
+        Descripcion: membershipToEdit.Descripcion,
+        Precio: membershipToEdit.Precio,
+      };
+
       this.showAddForm = true;
-    },
+      this.isEditing = true; // Nuevo indicador para saber que se está editando
+    } else {
+      console.error('No se encontró la membresía con el ID proporcionado:', id);
+    }
+  },
     fetchMemberships() {
       axios
         .get("https://api-5iey.onrender.com/memberships", {
@@ -214,6 +248,46 @@ export default {
   },
   mounted() {
     this.fetchMemberships();
+  },
+  saveItem() {
+    if (this.newItem.ID) {
+      axios
+        .put(
+          `https://api-5iey.onrender.com/memberships/${this.newItem.ID}`,
+          this.newItem,
+          {
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Membresía actualizada en el servidor:", response.data);
+          this.fetchMemberships(); // Recargar las membresías después de la actualización
+          this.hideForm();
+        })
+        .catch((error) => {
+          console.error(
+            "Error al actualizar membresía en el servidor:",
+            error
+          );
+        });
+    } else {
+      axios
+        .post("https://api-5iey.onrender.com/memberships", this.newItem, {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Membresía agregada en el servidor:", response.data);
+          this.fetchMemberships(); // Recargar las membresías después de la adición
+          this.hideForm();
+        })
+        .catch((error) => {
+          console.error("Error al agregar membresía en el servidor:", error);
+        });
+    }
   },
 };
 </script>

@@ -10,6 +10,8 @@
       path: '/menu',
       name: 'MenuApp',
       component: ()=> import(/* webpackChunk*/'./view/menu.vue'),
+      meta: {requiresAuth: true}
+
     },
     {
       path: '/members',
