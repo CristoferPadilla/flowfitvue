@@ -133,7 +133,7 @@ export default {
       providers: [],
       token: localStorage.getItem('token') || '',
       currentPage: 1,
-      pageSize: 7
+      pageSize: 6
       ,
     };
   },
@@ -236,11 +236,24 @@ export default {
       this.showForm = true;
     },
     deleteProduct(productID) {
-      const index = this.products.findIndex((product) => product.ID === productID);
-      if (index !== -1) {
-        this.products.splice(index, 1);
-      }
-    },
+    if (confirm("¿Estás seguro de que deseas eliminar este producto?")) {
+
+      axios.delete(`https://api-5iey.onrender.com/products/${productID}`, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+        .then(response => {
+          console.log('Producto eliminado en el servidor:', response.data);
+          this.fetchProducts();
+        })
+        .catch(error => {
+          console.error('Error al eliminar producto en el servidor:', error);
+        });
+        this.fetchProducts();
+
+    }
+  },
     filterProducts() {
 },
 fetchProducts() {
