@@ -7,9 +7,9 @@
         <div class="search-icon">🔍</div>
         <input v-model="searchTerm" placeholder="Buscar producto" />
       </div>
-      <button @click="prevPage" :disabled="currentPage === 1">Anterior</button>
+      <button @click="prevPage" :disabled="currentPage === 1" class="btn-light">Anterior</button>
       <span>{{ currentPage }}</span>
-      <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProducts.length">Siguiente</button>
+      <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProducts.length" class="btn-light">Siguiente</button>
     </div>
       <div class="pagination">
     </div>
@@ -78,9 +78,37 @@ export default {
       this.isModalOpen = false;
     },
     checkout() {
+  if (this.selectedProduct && this.selectedProduct.Cantidad > 0) {
+    // Obtener el producto actualizado con la nueva cantidad
+    const updatedProduct = {
+      ...this.selectedProduct,
+      Cantidad: this.selectedProduct.Cantidad - 1
+    };
+
+    // Hacer la solicitud PUT con el producto actualizado
+    axios.put(
+      `https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`,
+      updatedProduct,
+      {
+        headers: {
+          Authorization: `Bearer ${this.token}`
+        }
+      }
+    )
+    .then(response => {
+      console.log(response.data);
       alert("Pago exitoso. Gracias por su compra.");
       this.closeModal();
-    },
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Hubo un error al procesar el pago. Por favor, inténtelo de nuevo.");
+    });
+  } else {
+    alert("El producto no está disponible.");
+    this.closeModal();
+  }
+},
     formatCurrency(value) {
       return `$${value.toFixed(2)}`;
     },
