@@ -9,7 +9,6 @@
       <button @click="showForm" class="btn btn-success" style="margin-top: 20px">
         Agregar
       </button>
-      <!-- paginación -->
 
       <div class="pagination">
         <button @click="prevPage" :disabled="currentPage === 1" class="btn-light">Anterior</button>
@@ -17,7 +16,6 @@
         <button @click="nextPage" :disabled="!hasMorePages" class="btn-light">Siguiente</button>
       </div>
 
-      <!-- termina paginacion -->
     </div>
   </div>
 

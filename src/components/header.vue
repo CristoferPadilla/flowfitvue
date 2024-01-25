@@ -16,9 +16,9 @@ export default {
     };
   },
   mounted() {
-    this.updateCurrentDate(); // Llama a la función para actualizar la fecha cuando se monta el componente
+    this.updateCurrentDate();
     setInterval(() => {
-      this.updateCurrentDate(); // Actualiza la fecha cada segundo (se puede ajustar el intervalo)
+      this.updateCurrentDate(); 
     }, 1000);
   },
   computed: {
@@ -30,7 +30,7 @@ export default {
     updateCurrentDate() {
       const options = { weekday: 'long', day: 'numeric', month: 'long' };
       const today = new Date();
-      this.currentDate = today.toLocaleDateString('es-ES', options); // Formatea la fecha según la localización
+      this.currentDate = today.toLocaleDateString('es-ES', options); 
     },
   },
 };

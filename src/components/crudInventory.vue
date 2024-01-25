@@ -191,12 +191,11 @@ export default {
     saveProduct() {
   if (!this.validateNumberInput()) {
     return;
-  } // No continúes si la validación no pasa
+  } 
 
-  // Obtén el proveedor seleccionado
+
   const selectedProvider = this.providers.find(provider => provider.ID === this.newProduct.Proveedor);
 
-  // Actualiza newProduct.Proveedor con el ID del proveedor seleccionado
   this.newProduct.Proveedor = selectedProvider ? selectedProvider.ID : null;
 
   if (this.selectedProduct) {
@@ -261,7 +260,7 @@ export default {
 fetchProducts() {
   axios.get('https://api-5iey.onrender.com/products', {
     headers: {
-      Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+      Authorization: `Bearer ${this.token}`, 
     },
   })
     .then(response => {
@@ -275,7 +274,7 @@ fetchProducts() {
 fetchProviders() {
   axios.get('https://api-5iey.onrender.com/providers', {
     headers: {
-      Authorization: `Bearer ${this.token}`, // Include the token in the request headers
+      Authorization: `Bearer ${this.token}`,
     },
   })
     .then(response => {

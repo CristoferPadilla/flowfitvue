@@ -79,13 +79,11 @@ export default {
     },
     checkout() {
   if (this.selectedProduct && this.selectedProduct.Cantidad > 0) {
-    // Obtener el producto actualizado con la nueva cantidad
     const updatedProduct = {
       ...this.selectedProduct,
       Cantidad: this.selectedProduct.Cantidad - 1
     };
 
-    // Hacer la solicitud PUT con el producto actualizado
     axios.put(
       `https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`,
       updatedProduct,

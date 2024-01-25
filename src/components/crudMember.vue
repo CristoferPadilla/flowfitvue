@@ -102,7 +102,7 @@ export default {
       selectedUser: null,
       searchTerm: "",
       memberships: [],
-      token: localStorage.getItem('token') || '', // Add token property and initialize it with the token stored in localStorage
+      token: localStorage.getItem('token') || '', 
       currentPage: 1,
       pageSize: 7,
     };
@@ -221,7 +221,7 @@ export default {
     fetchMembers() {
       axios.get('https://api-5iey.onrender.com/members', {
         headers: {
-          Authorization: `Bearer ${this.token}` // Add Authorization header with the token
+          Authorization: `Bearer ${this.token}` 
         }
       })
         .then(response => {
@@ -234,7 +234,7 @@ export default {
     fetchMemberships() {
       axios.get('https://api-5iey.onrender.com/memberships', {
         headers: {
-          Authorization: `Bearer ${this.token}` // Add Authorization header with the token
+          Authorization: `Bearer ${this.token}`
         }
       })
         .then(response => {
