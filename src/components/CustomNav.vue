@@ -33,7 +33,7 @@
       />
       Inventario
     </router-link>
-    <router-link to="/products" class="nav-link">
+    <router-link to="/shop" class="nav-link">
       <img
         src="../assets/shop.svg"
         alt="carrito icon"

@@ -53,9 +53,9 @@
 
     },
     {
-      path: '/shopcar',
-      name: 'shopcar',
-      component: ()=> import(/* webpackChunk*/ './view/checkout.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+      path: '/history',
+      name: 'historySellView',
+      component: ()=> import(/* webpackChunk*/ './view/history.vue'), //AQUI VA EL NOMBRE DE TU pantalla
       meta: {requiresAuth: true}
 
 
