@@ -34,7 +34,7 @@
             <th>Precio</th>
             <th>Cantidad</th>
             <th>Categoría</th>
-            <th>Proveedor</th>
+            <th>ID Proveedor</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -46,7 +46,7 @@
             <td>${{ product.Precio }} MXN</td>
             <td>{{ product.Cantidad }}</td>
             <td>{{ product.Categoria }}</td>
-            <td>{{ product.Proveedor }}</td>
+            <td>{{ product.ProveedorID }}</td>
             <td>
               <button @click="editProduct(product)" class="btn btn-warning btn-sm">Editar</button>
               <button @click="deleteProduct(product.ID)" class="btn btn-danger btn-sm">Eliminar</button>
@@ -92,9 +92,9 @@
                 </div>
                 <div class="form-group">
                   <label for="Proveedor">Proveedor:</label>
-                  <select v-model="newProduct.Proveedor" class="form-control" required>
+                  <select v-model="newProduct.ProveedorID" class="form-control" required>
                     <option value="" disabled selected>Selecciona un proveedor</option>
-                    <option v-for="provider in providers" :value="provider.Nombre" :key="provider.Nombre">{{ provider.Nombre }}</option>
+                    <option v-for="provider in providers" :value="provider.ID" :key="provider.ID">{{ provider.Nombre }}</option>
                   </select>
                 </div>
               </div>
@@ -157,14 +157,11 @@ export default {
 
   validateNumberInput() {
     if (!this.isValidNumber(this.newProduct.Cantidad)) {
-      // Muestra un mensaje de error o realiza la acción adecuada
-      // Ejemplo: alert("Cantidad debe ser un número válido");
       return false;
     }
 
     if (!this.isValidNumber(this.newProduct.Precio)) {
-      // Muestra un mensaje de error o realiza la acción adecuada
-      // Ejemplo: alert("Precio debe ser un número válido");
+
       return false;
     }
 
@@ -188,48 +185,53 @@ export default {
         Precio: "",
         Cantidad: "",
         Categoria: "",
-        Proveedor: "",
+        ProveedorID: "",  
       };
     },
     saveProduct() {
-      if (!this.validateNumberInput()) {
-      return;
-    } // No continúes si la validación no pasa
-      if (this.selectedProduct) {
-        const index = this.products.findIndex(
-          (product) => product.ID === this.selectedProduct.ID
-        );
-        if (index !== -1) {
-          this.products.splice(index, 1, { ...this.newProduct });
-          axios.put(`https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`, this.newProduct, {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-            },
-          })
-            .then(response => {
-              console.log('Producto actualizado en el servidor:', response.data);
-            })
-            .catch(error => {
-              console.error('Error al actualizar producto en el servidor:', error);
-            });
-        }
-      } else {
-        this.newProduct.ID = (Math.random() * 100000).toFixed(0);
-        this.products.push({ ...this.newProduct });
-        axios.post('https://api-5iey.onrender.com/products', this.newProduct, {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
+  if (!this.validateNumberInput()) {
+    return;
+  } // No continúes si la validación no pasa
+
+  // Obtén el proveedor seleccionado
+  const selectedProvider = this.providers.find(provider => provider.ID === this.newProduct.Proveedor);
+
+  // Actualiza newProduct.Proveedor con el ID del proveedor seleccionado
+  this.newProduct.Proveedor = selectedProvider ? selectedProvider.ID : null;
+
+  if (this.selectedProduct) {
+    const index = this.products.findIndex(product => product.ID === this.selectedProduct.ID);
+    if (index !== -1) {
+      this.products.splice(index, 1, { ...this.newProduct });
+      axios.put(`https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`, this.newProduct, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+        },
+      })
+        .then(response => {
+          console.log('Producto actualizado en el servidor:', response.data);
         })
-          .then(response => {
-            console.log('Producto agregado en el servidor:', response.data);
-          })
-          .catch(error => {
-            console.error('Error al agregar producto en el servidor:', error);
-          });
-      }
-      this.hideForm();
-    },
+        .catch(error => {
+          console.error('Error al actualizar producto en el servidor:', error);
+        });
+    }
+  } else {
+    this.newProduct.ID = (Math.random() * 100000).toFixed(0);
+    this.products.push({ ...this.newProduct });
+    axios.post('https://api-5iey.onrender.com/products', this.newProduct, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+      .then(response => {
+        console.log('Producto agregado en el servidor:', response.data);
+      })
+      .catch(error => {
+        console.error('Error al agregar producto en el servidor:', error);
+      });
+  }
+  this.hideForm();
+},
     editProduct(product) {
       this.selectedProduct = product;
       this.newProduct = { ...product };

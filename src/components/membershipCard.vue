@@ -91,7 +91,7 @@ export default {
       searchTerm: "",
       token: localStorage.getItem("token") || "",
       currentPage: 1,
-      pageSize: 4,
+      pageSize: 3,
       isEditing: false,
 
     };
