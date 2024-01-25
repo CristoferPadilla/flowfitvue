@@ -130,55 +130,55 @@ export default {
       this.resetForm();
     },
     saveUser() {
-      if (this.selectedUser) {
-        const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
-        if (index !== -1) {
-          this.$set(this.users, index, { ...this.newUser });
-          axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser, {
-            headers: {
-              Authorization: `Bearer ${this.token}` // Add Authorization header with the token
-            }
-          })
-            .then(response => {
-              console.log('Usuario actualizado en el servidor:', response.data);
-            })
-            .catch(error => {
-              console.error('Error al actualizar usuario en el servidor:', error);
-            });
+  if (this.selectedUser) {
+    const index = this.users.findIndex((user) => user.ID === this.selectedUser.ID);
+    if (index !== -1) {
+      this.users[index] = { ...this.newUser };
+      axios.put(`https://api-5iey.onrender.com/members/${this.selectedUser.ID}`, this.newUser, {
+        headers: {
+          Authorization: `Bearer ${this.token}`
         }
-      } else {
-        const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
-        this.newUser.ID = nextId;
-
-        const currentDate = new Date();
-        this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
-
-        const endDate = new Date(currentDate);
-        endDate.setMonth(endDate.getMonth() + 1);
-        this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
-
-        axios.post('https://api-5iey.onrender.com/members', this.newUser, {
-          headers: {
-            Authorization: `Bearer ${this.token}` // Add Authorization header with the token
-          }
+      })
+        .then(response => {
+          console.log('Usuario actualizado en el servidor:', response.data);
         })
-          .then(response => {
-            console.log('Usuario agregado en el servidor:', response.data);
-            this.fetchMembers();
-          })
-          .catch(error => {
-            console.error('Error al agregar usuario en el servidor:', error.response.data);
-          });
-      }
+        .catch(error => {
+          console.error('Error al actualizar usuario en el servidor:', error);
+        });
+    }
+  } else {
+    const nextId = this.users.length > 0 ? this.users[this.users.length - 1].ID + 1 : 1;
+    this.newUser.ID = nextId;
 
-      this.showForm = false;
-      this.resetForm();
-    },
+    const currentDate = new Date();
+    this.newUser.FechaRegistro = currentDate.toISOString().split('T')[0];
+
+    const endDate = new Date(currentDate);
+    endDate.setMonth(endDate.getMonth() + 1);
+    this.newUser.FechaFinalizacion = endDate.toISOString().split('T')[0];
+
+    axios.post('https://api-5iey.onrender.com/members', this.newUser, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
+      .then(response => {
+        console.log('Usuario agregado en el servidor:', response.data);
+        this.fetchMembers();
+      })
+      .catch(error => {
+        console.error('Error al agregar usuario en el servidor:', error.response.data);
+      });
+  }
+
+  this.showForm = false;
+  this.resetForm();
+},
 
     editUser(user) {
       this.selectedUser = user;
       this.newUser = { ...user };
-      this.showAddForm();  // Agrega esta línea para mostrar el formulario de edición
+      this.showAddForm();  
     },
 
     deleteUser(id) {

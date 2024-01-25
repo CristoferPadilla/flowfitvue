@@ -163,7 +163,6 @@ export default {
     showForm() {
       this.showAddForm = true;
       this.newItem = {
-        // Limpiar newItem al abrir el formulario
         ID: "",
         Titulo: "",
         Descripcion: "",
@@ -187,7 +186,7 @@ export default {
           )
           .then((response) => {
             console.log("Membresía actualizada en el servidor:", response.data);
-            this.fetchMemberships(); // Recargar las membresías después de la actualización
+            this.fetchMemberships();
             this.hideForm();
           })
           .catch((error) => {
@@ -205,7 +204,7 @@ export default {
           })
           .then((response) => {
             console.log("Membresía agregada en el servidor:", response.data);
-            this.fetchMemberships(); // Recargar las membresías después de la adición
+            this.fetchMemberships(); 
             this.hideForm();
           })
           .catch((error) => {
@@ -225,7 +224,7 @@ export default {
       };
 
       this.showAddForm = true;
-      this.isEditing = true; // Nuevo indicador para saber que se está editando
+      this.isEditing = true; 
     } else {
       console.error('No se encontró la membresía con el ID proporcionado:', id);
     }
@@ -263,7 +262,7 @@ export default {
         )
         .then((response) => {
           console.log("Membresía actualizada en el servidor:", response.data);
-          this.fetchMemberships(); // Recargar las membresías después de la actualización
+          this.fetchMemberships(); 
           this.hideForm();
         })
         .catch((error) => {
@@ -281,7 +280,7 @@ export default {
         })
         .then((response) => {
           console.log("Membresía agregada en el servidor:", response.data);
-          this.fetchMemberships(); // Recargar las membresías después de la adición
+          this.fetchMemberships();
           this.hideForm();
         })
         .catch((error) => {
