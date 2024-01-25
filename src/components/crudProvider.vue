@@ -92,7 +92,7 @@ export default {
       searchTerm: "",
       token: localStorage.getItem('token') || '',
       currentPage: 1,
-      pageSize: 7, 
+      pageSize: 6, 
     };
   },
   computed: {
@@ -127,42 +127,43 @@ export default {
       };
     },
     saveProveedor() {
-      if (this.selectedProveedor) {
-        const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
-        if (index !== -1) {
-          this.proveedores[index] = { ...this.selectedProveedor };
-          axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.selectedProveedor, { 
-            headers: { 
-              Authorization: `Bearer ${this.token}` }
-             }
-             )
-            .then(response => {
-              console.log(response.data);
-            })
-            .catch(error => {
-              console.error(error);
-            });
-        }
-      } else {
-        const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].ID + 1 : 1;
-        this.newProveedor.ID = newId;
+  if (this.selectedProveedor) {
+    const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
+    if (index !== -1) {
+      this.proveedores[index] = { ...this.selectedProveedor };
 
-        axios.post('https://api-5iey.onrender.com/providers', this.newProveedor, {
-           headers: {
-             Authorization: `Bearer ${this.token}`
-             } 
-            }
-            )
-          .then(response => {
-            console.log(response.data);
-            this.proveedores.push(response.data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      }
-      this.hideForm();
-    },
+      axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.newProveedor, { 
+        headers: { 
+          Authorization: `Bearer ${this.token}`
+        }
+      })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+  } else {
+    const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].ID + 1 : 1;
+    this.newProveedor.ID = newId;
+
+    axios.post('https://api-5iey.onrender.com/providers', this.newProveedor, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      } 
+    })
+    .then(response => {
+      console.log(response.data);
+      this.proveedores.push(response.data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
+
+  this.hideForm();
+},
     editProveedor(proveedor) {
       this.selectedProveedor = { ...proveedor };
       this.newProveedor = { ...proveedor };
