@@ -30,12 +30,12 @@
         </thead>
         <tbody>
           <tr v-for="proveedor in filteredProveedores" :key="proveedor.ID">
-            <td>{{ proveedor.ID }}</td>
-            <td>{{ proveedor.Nombre }}</td>
-            <td>{{ proveedor.Email }}</td>
-            <td>{{ proveedor.Celular }}</td>
-            <td>{{ proveedor.Direccion }}</td>
-            <td>
+            <td class="btn-border">{{ proveedor.ID }}</td>
+            <td class="btn-border">{{ proveedor.Nombre }}</td>
+            <td class="btn-border">{{ proveedor.Email }}</td>
+            <td class="btn-border">{{ proveedor.Celular }}</td>
+            <td class="btn-border">{{ proveedor.Direccion }}</td>
+            <td class="btn-border">
               <button @click="editProveedor(proveedor)" class="btn btn-warning btn-sm">Editar</button>
               <button @click="deleteProveedor(proveedor.ID)" class="btn btn-danger btn-sm">Eliminar</button>
             </td>
@@ -220,10 +220,12 @@ export default {
   border-radius: 50px;
  
 }
-  
+.btn-border{
+  border-bottom: 1px solid white;
+}
 .search-bar {
-    width: 300px;
-    height: 40px;
+  width: 200px;
+  height: 30px;
     background-color: white;
     border-radius: 20px;
     display: flex;
@@ -235,19 +237,20 @@ export default {
     background:none; 
     width:auto; 
     color:black; 
-    font-size :18px; 
+    font-size :12px; 
     line-height :40px; 
     padding :0 10px ;
 }
 .search-icon{
     padding-left :10px ;
 }
-.table-crud{
-width: 95%;
-border-collapse: collapse;
-border: 1px solid #ddd;
-font-size: 75%;
-font-family: Arial, Helvetica, sans-serif;
+.table-crud {
+  padding-top: 5%;
+  width: 95%;
+  border-bottom: #ced4da 2px solid;
+  border-collapse: collapse;
+  font-size: 75%;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .table-crud th, .table-crud td {
@@ -286,9 +289,10 @@ color: white;
 }
 
 .table-crud {
+  padding-top: 5%;
   width: 95%;
+  border-bottom: #ced4da 2px solid;
   border-collapse: collapse;
-  border: 1px solid #ddd;
   font-size: 75%;
   font-family: Arial, Helvetica, sans-serif;
 }

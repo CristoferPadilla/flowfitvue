@@ -42,6 +42,8 @@
 
 <script>
 import axios from "axios";
+import jwt from 'jsonwebtoken';
+
 
 export default {
   name: "ProductList",
@@ -78,35 +80,61 @@ export default {
       this.isModalOpen = false;
     },
     checkout() {
-  if (this.selectedProduct && this.selectedProduct.Cantidad > 0) {
-    const updatedProduct = {
-      ...this.selectedProduct,
-      Cantidad: this.selectedProduct.Cantidad - 1
-    };
+      if (this.selectedProduct && this.selectedProduct.Cantidad > 0) {
+        const updatedProduct = {
+          ...this.selectedProduct,
+          Cantidad: this.selectedProduct.Cantidad - 1
+        };
 
-    axios.put(
-      `https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`,
-      updatedProduct,
-      {
-        headers: {
-          Authorization: `Bearer ${this.token}`
-        }
+        axios
+          .put(
+            `https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`,
+            updatedProduct,
+            {
+              headers: {
+                Authorization: `Bearer ${this.token}`
+              }
+            }
+          )
+          .then(response => {
+            console.log(response.data);
+            const decodedToken = jwt.decode(this.token);
+
+            if (decodedToken) {
+              const saleData = {
+                id_producto: this.selectedProduct.ID,
+                cantidad: 1,
+                precio_venta: this.selectedProduct.Precio,
+                id_usuario: decodedToken.id 
+              };
+
+              axios.post('https://api-5iey.onrender.com/sales_history', saleData, {
+                headers: {
+                  Authorization: `Bearer ${this.token}`
+                }
+              })
+              .then(saleResponse => {
+                console.log(saleResponse.data);
+                alert("Pago exitoso. Gracias por su compra.");
+                this.closeModal();
+              })
+              .catch(saleError => {
+                console.error(saleError);
+                alert("Hubo un error al registrar la compra. Por favor, inténtelo de nuevo.");
+              });
+            } else {
+              console.error('Token no válido o no contiene la información del usuario');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+            alert("Hubo un error al procesar el pago. Por favor, inténtelo de nuevo.");
+          });
+      } else {
+        alert("El producto no está disponible.");
+        this.closeModal();
       }
-    )
-    .then(response => {
-      console.log(response.data);
-      alert("Pago exitoso. Gracias por su compra.");
-      this.closeModal();
-    })
-    .catch(error => {
-      console.error(error);
-      alert("Hubo un error al procesar el pago. Por favor, inténtelo de nuevo.");
-    });
-  } else {
-    alert("El producto no está disponible.");
-    this.closeModal();
-  }
-},
+    },
     formatCurrency(value) {
       return `$${value.toFixed(2)}`;
     },
@@ -221,8 +249,8 @@ button {
   cursor: pointer;
 }
 .search-bar {
-  width: 300px;
-  height: 40px;
+  width: 200px;
+  height: 30px;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -234,7 +262,7 @@ button {
   background:none; 
   width:auto; 
   color:black; 
-  font-size :18px; 
+  font-size :12px; 
   line-height :40px; 
   padding :0 10px ;
 }

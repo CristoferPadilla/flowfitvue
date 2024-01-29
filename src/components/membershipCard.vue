@@ -345,8 +345,8 @@ export default {
 }
 
 .search-bar {
-  width: 300px;
-  height: 40px;
+  width: 200px;
+  height: 30px;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -359,7 +359,7 @@ export default {
   background: none;
   width: auto;
   color: black;
-  font-size: 18px;
+  font-size: 12px;
   line-height: 40px;
   padding: 0 10px;
 }

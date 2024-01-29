@@ -37,14 +37,14 @@
         </thead>
         <tbody>
           <tr v-for="user in paginatedUsers" :key="user.ID">
-            <td>{{ user.ID }}</td>
-            <td>{{ user.Nombre }}</td>
-            <td>{{ user.Email }}</td>
-            <td>{{ user.Celular }}</td>
-            <td>{{ user.MembresiaAsignada }}</td>
-            <td>{{ user.FechaRegistro }}</td>
-            <td>{{ user.FechaFinalizacion }}</td>
-            <td>
+            <td class="btn-border">{{ user.ID }}</td>
+            <td class="btn-border">{{ user.Nombre }}</td>
+            <td class="btn-border">{{ user.Email }}</td>
+            <td class="btn-border">{{ user.Celular }}</td>
+            <td class="btn-border">{{ user.MembresiaAsignada }}</td>
+            <td class="btn-border">{{ user.FechaRegistro }}</td>
+            <td class="btn-border">{{ user.FechaFinalizacion }}</td>
+            <td class="btn-border">
               <button @click="editUser(user)" class="btn btn-warning btn-sm">Editar</button>
               <button @click="deleteUser(user.ID)" class="btn btn-danger btn-sm">Eliminar</button>
             </td>
@@ -104,7 +104,7 @@ export default {
       memberships: [],
       token: localStorage.getItem('token') || '', 
       currentPage: 1,
-      pageSize: 7,
+      pageSize: 6,
     };
   },
   computed: {
@@ -269,6 +269,9 @@ export default {
   margin-left: 120%;
   padding: auto;
 }
+.btn-border{
+  border-bottom: 1px solid white;
+}
 .btn {
   font-size: 75%;
   margin: 10px;
@@ -276,9 +279,10 @@ export default {
 }
 
 .table-crud {
+  padding-top: 5%;
   width: 95%;
+  border-bottom: #ced4da 2px solid;
   border-collapse: collapse;
-  border: 1px solid #ddd;
   font-size: 75%;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -312,8 +316,8 @@ export default {
 }
 
 .search-bar {
-  width: 300px;
-  height: 40px;
+  width: 200px;
+  height: 30px;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -326,7 +330,7 @@ export default {
   background: none;
   width: auto;
   color: black;
-  font-size: 18px;
+  font-size: 12px;
   line-height: 40px;
   padding: 0 10px;
 }

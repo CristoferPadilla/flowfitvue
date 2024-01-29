@@ -40,14 +40,14 @@
         </thead>
         <tbody>
           <tr v-for="product in paginatedProducts" :key="product.ID">
-            <td>{{ product.ID }}</td>
-            <td>{{ product.Nombre }}</td>
-            <td>{{ product.Descripcion }}</td>
-            <td>${{ product.Precio }} MXN</td>
-            <td>{{ product.Cantidad }}</td>
-            <td>{{ product.Categoria }}</td>
-            <td>{{ product.ProveedorID }}</td>
-            <td>
+            <td class="btn-border">{{ product.ID }}</td>
+            <td class="btn-border">{{ product.Nombre }}</td>
+            <td class="btn-border">{{ product.Descripcion }}</td>
+            <td class="btn-border">${{ product.Precio }} MXN</td>
+            <td class="btn-border">{{ product.Cantidad }}</td>
+            <td class="btn-border">{{ product.Categoria }}</td>
+            <td class="btn-border">{{ product.ProveedorID }}</td>
+            <td class="btn-border">
               <button @click="editProduct(product)" class="btn btn-warning btn-sm">Editar</button>
               <button @click="deleteProduct(product.ID)" class="btn btn-danger btn-sm">Eliminar</button>
             </td>
@@ -305,9 +305,12 @@ fetchProviders() {
 
 
 <style scoped>
+.btn-border{
+  border-bottom: 1px solid white;
+}
 .search-bar {
-  width: 300px;
-  height: 40px;
+  width: 200px;
+  height: 30px;
   background-color: white;
   border-radius: 20px;
   display: flex;
@@ -320,7 +323,7 @@ fetchProviders() {
   background: none;
   width: auto;
   color: black;
-  font-size: 18px;
+  font-size: 12px;
   line-height: 40px;
   padding: 0 10px;
 }
@@ -330,9 +333,10 @@ fetchProviders() {
 }
 
 .table-crud {
+  padding-top: 5%;
   width: 95%;
+  border-bottom: #ced4da 2px solid;
   border-collapse: collapse;
-  border: 1px solid #ddd;
   font-size: 75%;
   font-family: Arial, Helvetica, sans-serif;
 }
