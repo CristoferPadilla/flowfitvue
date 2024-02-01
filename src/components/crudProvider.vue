@@ -46,7 +46,7 @@
     <div class="add-form-container" v-show="showForm">
       <div v-show="showForm" class="add-form" style="width: 70%">
         <h3>{{ selectedProveedor ? 'Editar proveedor' : 'Agregar proveedor' }}</h3>
-        <form @submit.prevent="saveProveedor" class="form-container">
+        <form @submit.prevent="saveProveedor" class="form-container" enctype="multipart/form-data">
           <div class="form-group">
           </div>
           <div class="form-group">
@@ -64,6 +64,10 @@
           <div class="form-group">
             <label for="direction">Dirección:</label>
             <input v-model="newProveedor.address" type="text" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label for="image_path">Imagen de proveedor:</label>
+            <input type="file" @change="handleFileChange" accept="image/*" />
           </div>
           <button type="submit" class="btn btn-primary">{{ selectedProveedor ? 'Guardar' : 'Agregar' }}</button>
           <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
@@ -87,6 +91,7 @@ export default {
         email: "",
         phone: "",
         address: "",
+        image_path: "",
       },
       
       searchTerm: "",
@@ -117,6 +122,12 @@ export default {
       this.showForm = false;
       this.clearForm();
     },
+    handleFileChange(event) {
+  const file = event.target.files[0];
+  if (file) {
+    this.newProveedor.image_path = file;
+  }
+},
     clearForm() {
       this.newProveedor = {
         id: "",
@@ -124,46 +135,54 @@ export default {
         email: "",
         phone: "",
         address: "",
+        image_path: "",
       };
     },
     saveProveedor() {
-  if (this.selectedProveedor) {
-    const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.id);
-    if (index !== -1) {
-      this.proveedores[index] = { ...this.selectedProveedor };
+  const formData = new FormData();
 
-      axios.put(`https://api-yrrd.onrender.com/providers/${this.selectedProveedor.id}`, this.newProveedor, { 
-        headers: { 
-          Authorization: `Bearer ${this.token}`
-        }
-      })
-      .then(response => {
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-    }
-  } else {
-    const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].id + 1 : 1;
-    this.newProveedor.id = newId;
+  formData.append('name', this.newProveedor.name || '');
+  formData.append('email', this.newProveedor.email || '');
+  formData.append('phone', this.newProveedor.phone || '');
+  formData.append('address', this.newProveedor.address || '');
 
-    axios.post('https://api-yrrd.onrender.com/providers', this.newProveedor, {
-      headers: {
-        Authorization: `Bearer ${this.token}`
-      } 
-    })
-    .then(response => {
-      console.log(response.data);
-      this.proveedores.push(response.data);
-    })
-    .catch(error => {
-      console.error(error);
-    });
+  if (this.newProveedor.image_path) {
+    formData.append('image_path', this.newProveedor.image_path);
   }
 
-  this.hideForm();
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${this.token}`,
+    },
+  };
+
+  if (this.selectedProveedor) {
+    axios
+      .put(`https://api-yrrd.onrender.com/providers/${this.selectedProveedor.id}`, formData, config)
+      .then((response) => {
+        console.log('Proveedor actualizado en el servidor:', response.data);
+        this.fetchProviders();
+      })
+      .catch((error) => {
+        console.error('Error al actualizar proveedor en el servidor:', error.response.data);
+      });
+  } else {
+    axios
+      .post('https://api-yrrd.onrender.com/providers', formData, config)
+      .then((response) => {
+        console.log('Proveedor agregado en el servidor:', response.data);
+        this.fetchProviders();
+      })
+      .catch((error) => {
+        console.error('Error al agregar proveedor en el servidor:', error.response.data);
+      });
+  }
+
+  this.showForm = false;
+  this.clearForm();
 },
+
     editProveedor(proveedor) {
       this.selectedProveedor = { ...proveedor };
       this.newProveedor = { ...proveedor };
