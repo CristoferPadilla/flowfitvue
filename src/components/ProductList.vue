@@ -16,10 +16,10 @@
   </div>
   
   <div class="product-list">
-    <div class="product-card" v-for="product in paginatedProducts" :key="product.ID">
+    <div class="product-card" v-for="product in paginatedProducts" :key="product.id">
       <div class="product-details">
-        <h3 class="product-Nombre">{{ product.Nombre }}</h3>
-        <p class="product-Precio">{{ formatCurrency(product.Precio) }} MX</p>
+        <h3 class="product-Nombre">{{ product.name }}</h3>
+        <p class="product-Precio">{{ formatCurrency(product.price ) }} MX</p>
         <button @click="openModal(product)" class="btn">Comprar</button>
       </div>
     </div>
@@ -27,8 +27,8 @@
 
   <div v-if="isModalOpen" class="modal">
     <div class="modal-content">
-      <h2>{{ selectedProduct.Nombre }}</h2>
-      <p>Precio: {{ formatCurrency(selectedProduct.Precio) }} MX</p>
+      <h2>{{ selectedProduct.name }}</h2>
+      <p>Precio: {{ formatCurrency(selectedProduct.price) }} MX</p>
       <div class="modal-buttons">
         <button @click="closeModal">Cancelar</button>
         <button @click="checkout">Confirmar pago</button>
@@ -60,7 +60,7 @@ export default {
   computed: {
     filteredProducts() {
       return this.products.filter((product) =>
-        product.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+        product.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
     paginatedProducts() {
@@ -79,15 +79,15 @@ export default {
       this.isModalOpen = false;
     },
     checkout() {
-  if (this.selectedProduct && this.selectedProduct.Cantidad > 0) {
+  if (this.selectedProduct && this.selectedProduct.quantity > 0) {
     const updatedProduct = {
       ...this.selectedProduct,
-      Cantidad: this.selectedProduct.Cantidad - 1
+      Cantidad: this.selectedProduct.quantity - 1
     };
 
     axios
       .put(
-        `https://api-5iey.onrender.com/products/${this.selectedProduct.ID}`,
+        `https://api-yrrd.onrender.com/products/${this.selectedProduct.id}`,
         updatedProduct,
         {
           headers: {
@@ -103,7 +103,7 @@ export default {
           precio_venta: this.selectedProduct.Precio,
           id_usuario: null};
 
-        axios.post('https://api-5iey.onrender.com/sales_history', saleData, {
+        axios.post('https://api-yrrd.onrender.com/sales_history', saleData, {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
@@ -127,12 +127,17 @@ export default {
     this.closeModal();
   }
 },
-    formatCurrency(value) {
-      return `$${value.toFixed(2)}`;
-    },
+formatCurrency(value) {
+  if (typeof value === 'number') {
+    return `$${value.toFixed(2)}`;
+  } else {
+    console.error(`Invalid value for formatting currency: ${value}`);
+    return '';
+  }
+},
     fetchProducts() {
       axios
-        .get("https://api-5iey.onrender.com/products", {
+        .get("https://api-yrrd.onrender.com/products", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },

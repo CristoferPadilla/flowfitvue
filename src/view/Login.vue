@@ -6,16 +6,16 @@
       </div>
       <div class="mb-3">
         <label for="txtusu" class="form-label"><strong>Username</strong></label>
-        <input type="text" id="txtusu" class="form-control" v-model="usuario" required>
+        <input type="text" id="txtusu" class="form-control" v-model="username" required>
       </div>
       <div class="mb-3">
         <label for="txtpas" class="form-label"><strong>Password</strong></label>
-        <input type="password" id="txtpas" class="form-control" v-model="contrasena" required>
+        <input type="password" id="txtpas" class="form-control" v-model="password" required>
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
 
-    <UserLogin v-if="isLoggedIn" :usuario="usuario" @login-success="handleLoginSuccess" />
+    <UserLogin v-if="isLoggedIn" :username="username" @login-success="handleLoginSuccess" />
   </div>
 </template>
 
@@ -30,10 +30,10 @@ export default {
   name: 'LoginScreen',
   components: {
     UserLogin: {
-      props: ['usuario'],
+      props: ['username'],
       template: `
         <div>
-          <p>Welcome, {{ usuario }}!</p>
+          <p>Welcome, {{ username }}!</p>
           <button @click="logout">Logout</button>
         </div>
       `,
@@ -45,26 +45,26 @@ export default {
     }
   },
   setup() {
-    const usuario = ref('');
-    const contrasena = ref('');
+    const username = ref('');
+    const password = ref('');
     const router = useRouter();
     const { emit } = getCurrentInstance();
     const store = useStore(); 
 
 
     const iniciarSesion = async () => {
-      if (usuario.value.length === 0 || contrasena.value.length === 0) {
+      if (username.value.length === 0 || password.value.length === 0) {
         alert("Complete Los Datos Faltantes!!");
       } else {
         try {
-          const response = await fetch('https://api-5iey.onrender.com/auth/login', {
+          const response = await fetch('https://api-yrrd.onrender.com/auth/login', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              username: usuario.value,
-              password: contrasena.value
+              username: username.value,
+              password: password.value
             })
           });
 
@@ -74,17 +74,17 @@ export default {
             localStorage.setItem('token', token);
             store.dispatch('mockLogin');
             store.commit('setToken', token);
-            emit('login-success', usuario.value, token);
+            emit('login-success', username.value, token);
 
             router.push('/menu');
             console.log(data);
             console.log('Token a almacenar:', token);
-            console.log('Nombre de usuario', usuario.value);
+            console.log('Nombre de username', username.value);
 
           } else {
-            alert("Error De Usuario y/o Contraseña!!");
-            usuario.value = "";
-            contrasena.value = "";
+            alert("Error De username y/o Contraseña!!");
+            username.value = "";
+            password.value = "";
             document.getElementById("txtusu").focus();
           }
         } catch (error) {
@@ -97,8 +97,8 @@ export default {
     return {
       ...mapActions(),
       iniciarSesion,
-      usuario,
-      contrasena
+      username,
+      password
     };
     
   }

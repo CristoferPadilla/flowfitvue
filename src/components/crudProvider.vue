@@ -29,15 +29,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="proveedor in filteredProveedores" :key="proveedor.ID">
-            <td class="btn-border">{{ proveedor.ID }}</td>
-            <td class="btn-border">{{ proveedor.Nombre }}</td>
-            <td class="btn-border">{{ proveedor.Email }}</td>
-            <td class="btn-border">{{ proveedor.Celular }}</td>
-            <td class="btn-border">{{ proveedor.Direccion }}</td>
+          <tr v-for="proveedor in filteredProveedores" :key="proveedor.id">
+            <td class="btn-border">{{ proveedor.id }}</td>
+            <td class="btn-border">{{ proveedor.name }}</td>
+            <td class="btn-border">{{ proveedor.email }}</td>
+            <td class="btn-border">{{ proveedor.phone }}</td>
+            <td class="btn-border">{{ proveedor.address }}</td>
             <td class="btn-border">
               <button @click="editProveedor(proveedor)" class="btn btn-warning btn-sm">Editar</button>
-              <button @click="deleteProveedor(proveedor.ID)" class="btn btn-danger btn-sm">Eliminar</button>
+              <button @click="deleteProveedor(proveedor.id)" class="btn btn-danger btn-sm">Eliminar</button>
             </td>
           </tr>
         </tbody>
@@ -51,19 +51,19 @@
           </div>
           <div class="form-group">
             <label for="name">Nombre:</label>
-            <input v-model="newProveedor.Nombre" type="text" class="form-control" required />
+            <input v-model="newProveedor.name" type="text" class="form-control" required />
           </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input v-model="newProveedor.Email" type="email" class="form-control" required />
+            <input v-model="newProveedor.email" type="email" class="form-control" required />
           </div>
           <div class="form-group">
             <label for="phone">Celular:</label>
-            <input v-model="newProveedor.Celular" type="text" class="form-control" required />
+            <input v-model="newProveedor.phone" type="text" class="form-control" required />
           </div>
           <div class="form-group">
             <label for="direction">Dirección:</label>
-            <input v-model="newProveedor.Direccion" type="text" class="form-control" required />
+            <input v-model="newProveedor.address" type="text" class="form-control" required />
           </div>
           <button type="submit" class="btn btn-primary">{{ selectedProveedor ? 'Guardar' : 'Agregar' }}</button>
           <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
@@ -82,11 +82,11 @@ export default {
       showForm: false,
       selectedProveedor: null,
       newProveedor: {
-        ID: "",
-        Nombre: "",
-        Email: "",
-        Celular: "",
-        Direccion: "",
+        id: "",
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
       },
       
       searchTerm: "",
@@ -98,7 +98,7 @@ export default {
   computed: {
     filteredProveedores() {
       return this.proveedores.filter((proveedor) =>
-        proveedor.Nombre && proveedor.Nombre.toLowerCase().includes(this.searchTerm.toLowerCase())
+        proveedor.name && proveedor.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
     paginatedProveedores() {
@@ -119,20 +119,20 @@ export default {
     },
     clearForm() {
       this.newProveedor = {
-        ID: "",
-        Nombre: "",
-        Email: "",
-        Celular: "",
-        Direccion: "",
+        id: "",
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
       };
     },
     saveProveedor() {
   if (this.selectedProveedor) {
-    const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.ID);
+    const index = this.proveedores.findIndex(proveedor => proveedor.ID === this.selectedProveedor.id);
     if (index !== -1) {
       this.proveedores[index] = { ...this.selectedProveedor };
 
-      axios.put(`https://api-5iey.onrender.com/providers/${this.selectedProveedor.ID}`, this.newProveedor, { 
+      axios.put(`https://api-yrrd.onrender.com/providers/${this.selectedProveedor.id}`, this.newProveedor, { 
         headers: { 
           Authorization: `Bearer ${this.token}`
         }
@@ -145,10 +145,10 @@ export default {
       });
     }
   } else {
-    const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].ID + 1 : 1;
-    this.newProveedor.ID = newId;
+    const newId = this.proveedores.length > 0 ? this.proveedores[this.proveedores.length - 1].id + 1 : 1;
+    this.newProveedor.id = newId;
 
-    axios.post('https://api-5iey.onrender.com/providers', this.newProveedor, {
+    axios.post('https://api-yrrd.onrender.com/providers', this.newProveedor, {
       headers: {
         Authorization: `Bearer ${this.token}`
       } 
@@ -170,10 +170,10 @@ export default {
       this.showForm = true;
     },
     deleteProveedor(proveedorId) {
-      const index = this.proveedores.findIndex(proveedor => proveedor.ID === proveedorId);
+      const index = this.proveedores.findIndex(proveedor => proveedor.id === proveedorId);
       if (index !== -1) {
         this.proveedores.splice(index, 1);
-        axios.delete(`https://api-5iey.onrender.com/providers/${proveedorId}`, { headers: { Authorization: `Bearer ${this.token}` } })
+        axios.delete(`https://api-yrrd.onrender.com/providers/${proveedorId}`, { headers: { Authorization: `Bearer ${this.token}` } })
           .then(response => {
             console.log(response.data);
           })
@@ -185,7 +185,7 @@ export default {
     filterProveedores() {
     },
     fetchProviders() {
-      axios.get('https://api-5iey.onrender.com/providers', { headers: { Authorization: `Bearer ${this.token}` } })
+      axios.get('https://api-yrrd.onrender.com/providers', { headers: { Authorization: `Bearer ${this.token}` } })
         .then(response => {
           console.log(response.data);
           this.proveedores = response.data;

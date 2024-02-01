@@ -61,7 +61,7 @@ methods: {
   async fetchMembers() {
     try {
       const token = localStorage.getItem('token'); 
-      const response = await fetch('https://api-5iey.onrender.com/members', {
+      const response = await fetch('https://api-yrrd.onrender.com/members', {
         headers: {
           Authorization: `Bearer ${token}` 
         }

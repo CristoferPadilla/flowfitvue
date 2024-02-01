@@ -20,15 +20,15 @@
   </div>
 
   <div class="container-card">
-    <div v-for="item in paginatedItems" :key="item.ID" class="card">
+    <div v-for="item in paginatedItems" :key="item.id" class="card">
       <div class="card-body">
-        <h5 style="color: #000000" class="card-Titulo">{{ item.Titulo }}</h5>
-        <p style="color: #000000" class="card-text">{{ item.Descripcion }}</p>
-        <p style="color: #000000" class="card-number">$ {{ item.Precio }} MX</p>
-        <button @click="editItem(item.ID)" class="btn btn-warning">
+        <h5 style="color: #000000" class="card-Titulo">{{ item.title }}</h5>
+        <p style="color: #000000" class="card-text">{{ item.description }}</p>
+        <p style="color: #000000" class="card-number">$ {{ item.price }} MX</p>
+        <button @click="editItem(item.id)" class="btn btn-warning">
           Editar
         </button>
-        <button @click="confirmDelete(item.ID)" class="btn btn-danger">
+        <button @click="confirmDelete(item.id)" class="btn btn-danger">
           Eliminar
         </button>
       </div>
@@ -36,22 +36,22 @@
   </div>
 
   <div v-if="showAddForm" class="add-form">
-    <h3>{{ newItem.ID ? "Editar Membresía" : "Agregar Membresía" }}</h3>
+    <h3>{{ newItem.id ? "Editar Membresía" : "Agregar Membresía" }}</h3>
     <form @submit.prevent="addItem">
       <div class="form-group">
         <label for="Titulo">Título:</label>
-        <input v-model="newItem.Titulo" type="text" class="form-control" required />
+        <input v-model="newItem.title" type="text" class="form-control" required />
       </div>
       <div class="form-group">
         <label for="description">Descripción:</label>
-        <input v-model="newItem.Descripcion" type="text" class="form-control" required />
+        <input v-model="newItem.description" type="text" class="form-control" required />
       </div>
       <div class="form-group">
   <label for="price">Precio:</label>
   <div class="input-group">
     <span class="input-group-text">$</span>
     <input
-      v-model="newItem.Precio"
+      v-model="newItem.price"
       type="text"
       class="form-control"
       required
@@ -81,10 +81,10 @@ export default {
       items: [],
       showAddForm: false,
       newItem: {
-        ID: "",
-        Titulo: "",
-        Descripcion: "",
-        Precio: "",
+        id: "",
+        title: "",
+        description: "",
+        price: "",
       },
       searchTerm: "",
       token: localStorage.getItem("token") || "",
@@ -103,8 +103,8 @@ export default {
     filteredItems() {
       return this.items.filter(
         (item) =>
-          item.Titulo &&
-          item.Titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
+          item.title &&
+          item.title.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
     paginatedItems() {
@@ -126,23 +126,23 @@ export default {
     },
     resetForm() {
     this.newItem = {
-      ID: "",
-      Titulo: "",
-      Descripcion: "",
-      Precio: "",
+       id: "",
+        title: "",
+        description: "",
+        price: "",
     };
     this.isEditing = false;
     this.hideForm();
   },
-    deleteMembership(id) {
-  console.log('Intentando eliminar membresía con ID:', id);
+  deleteMembership(id) {
   axios
-    .delete(`https://api-5iey.onrender.com/memberships/${id}`, {
+    .delete(`https://api-yrrd.onrender.com/memberships/${id}`, {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
     })
     .then((response) => {
+      console.log('Intentando eliminar membresía con ID:', id);
       console.log("Membresía eliminada en el servidor:", response.data);
       this.fetchMemberships(); 
     })
@@ -161,20 +161,20 @@ export default {
     showForm() {
       this.showAddForm = true;
       this.newItem = {
-        ID: "",
-        Titulo: "",
-        Descripcion: "",
-        Precio: "",
+        id: "",
+        title: "",
+        description: "",
+        price: "",
       };
     },
     hideForm() {
       this.showAddForm = false;
     },
     addItem() {
-      if (this.newItem.ID) {
+      if (this.newItem.id) {
         axios
           .put(
-            `https://api-5iey.onrender.com/memberships/${this.newItem.ID}`,
+            `https://api-yrrd.onrender.com/memberships/${this.newItem.id}`,
             this.newItem,
             {
               headers: {
@@ -195,7 +195,7 @@ export default {
           });
       } else {
         axios
-          .post("https://api-5iey.onrender.com/memberships", this.newItem, {
+          .post("https://api-yrrd.onrender.com/memberships", this.newItem, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
@@ -211,14 +211,14 @@ export default {
       }
     },
     editItem(id) {
-    const membershipToEdit = this.items.find((item) => item.ID === id);
+    const membershipToEdit = this.items.find((item) => item.id === id);
 
     if (membershipToEdit) {
       this.newItem = {
-        ID: membershipToEdit.ID,
-        Titulo: membershipToEdit.Titulo,
-        Descripcion: membershipToEdit.Descripcion,
-        Precio: membershipToEdit.Precio,
+        id: membershipToEdit.id,
+        title: membershipToEdit.title,
+        description: membershipToEdit.description,
+        price: membershipToEdit.price,
       };
 
       this.showAddForm = true;
@@ -229,7 +229,7 @@ export default {
   },
     fetchMemberships() {
       axios
-        .get("https://api-5iey.onrender.com/memberships", {
+        .get("https://api-yrrd.onrender.com/memberships", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -247,10 +247,10 @@ export default {
     this.fetchMemberships();
   },
   saveItem() {
-    if (this.newItem.ID) {
+    if (this.newItem.id) {
       axios
         .put(
-          `https://api-5iey.onrender.com/memberships/${this.newItem.ID}`,
+          `https://api-yrrd.onrender.com/memberships/${this.newItem.id}`,
           this.newItem,
           {
             headers: {
@@ -271,7 +271,7 @@ export default {
         });
     } else {
       axios
-        .post("https://api-5iey.onrender.com/memberships", this.newItem, {
+        .post("https://api-yrrd.onrender.com/memberships", this.newItem, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },

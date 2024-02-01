@@ -1,53 +1,109 @@
 <template>
     <section class="layout">
-        <div class="header">
-            <h1 class="title">Historial</h1>
+      <div class="header">
+        <h1 class="title">Historial</h1>
+      </div>
+      <div class="main">
+        <div class="tab-container">
+          <input type="radio" v-model="tab" name="tab" id="tab1" class="tab tab--1" value="tab--1" />
+          <label class="tab_label" for="tab1">Miembros</label>
+  
+          <input type="radio" v-model="tab" name="tab" id="tab2" class="tab tab--2" value="tab--2" />
+          <label class="tab_label" for="tab2" @click="fetchSalesHistory">Productos</label>
+  
+          <div class="indicator"></div>
         </div>
-        <div class="main">
-            <div class="tab-container">
-                <input type="radio" name="tab" id="tab1" class="tab tab--1" />
-                <label class="tab_label" for="tab1" style="color: rgb(0, 0, 0);" >Miembros</label>
-
-                <input type="radio" name="tab" id="tab2" class="tab tab--2" />
-                <label class="tab_label" for="tab2" @click="fetchMembers">Productos</label>
-
-                <div class="indicator"></div>
-            </div>
+        
+        <div v-if="tab === 'tab--2'">
+            <table class="table-crud">
+            <thead>
+              <tr>
+                <th style="font-size: 70%">ID</th>
+                <th style="font-size: 70%">ID Producto</th>
+                <th style="font-size: 70%">Cantidad</th>
+                <th style="font-size: 70%">Precio de Venta</th>
+                <th style="font-size: 70%">Fecha de Venta</th>
+                <th style="font-size: 70%">ID Usuario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="sale in salesHistory" :key="sale.id">
+                <td class="btn-border">{{ sale.id }}</td>
+                <td class="btn-border">{{ sale.id_producto }}</td>
+                <td class="btn-border">{{ sale.cantidad }}</td>
+                <td class="btn-border">{{ sale.precio_venta }}</td>
+                <td class="btn-border">{{ sale.fecha_venta }}</td>
+                <td class="btn-border">{{ sale.id_usuario }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </div>
     </section>
-</template>
+  </template>
 
-<script>
-import axios from 'axios';
-
-export default {
+  <script>
+  import axios from 'axios';
+  
+  export default {
     name: 'historyView',
     data() {
-        return {
-            token: localStorage.getItem('token') || '',
-            users: []
-        };
+      return {
+        token: localStorage.getItem('token') || '',
+        tab: 'tab--1',
+        indicatorPosition: '2px',
+        salesHistory: [],
+      };
     },
     methods: {
-        fetchMembers() {
-            axios.get('https://api-5iey.onrender.com/sales_history', {
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
-            })
-                .then(response => {
-                    console.log(response.data);
-                    this.users = response.data;
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
+      fetchSalesHistory() {
+        axios.get('https://api-5iey.onrender.com/sales_history', {
+          headers: {
+            Authorization: `Bearer ${this.token}`
+          }
+        })
+          .then(response => {
+            this.salesHistory = response.data;
+            this.tab = 'tab--2';
+            this.indicatorPosition = 'calc(130px + 2px)';
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
     }
-}
-</script>
+  }
+  </script>
 
 <style scoped>
+.table-crud {
+    padding-top: 5%;
+    width: 100%;
+    border-bottom: #ced4da 2px solid;
+    border-collapse: collapse;
+    font-size: 75%;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  .table-crud th,
+  .table-crud td {
+    text-align: left;
+    padding: 8px;
+    color: beige;
+    font-size: 75%;
+    font-family: Arial, Helvetica, sans-serif;
+  
+  }
+  
+  .table-crud tr:nth-child(even) {
+    background-color: transparent !important
+  }
+  
+  .table-crud th {
+    background-color: #4CAF50;
+    color: white;
+  
+  }
 .btn-border {
     border-bottom: 1px solid white;
 }
@@ -90,8 +146,6 @@ export default {
     align-items: flex-start;
     padding: 2px;
     background-color: #dadadb;
-    width: 100vw;
-    height: 100vh;
 }
 
 .indicator {
@@ -108,6 +162,7 @@ export default {
     border-radius: 7px;
     color: white;
     transition: all 0.2s ease-out;
+
 }
 
 .tab {
@@ -133,14 +188,20 @@ export default {
     font-size: 0.75rem;
     opacity: 0.6;
     cursor: pointer;
+    transition: color 0.2s ease-out;
+
 }
 
 .tab--1:checked ~ .indicator {
     left: 2px;
+    color: white;
+
 }
 
 .tab--2:checked ~ .indicator {
     left: calc(130px + 2px);
+    color: white;
+
 }
 
 .search-bar {

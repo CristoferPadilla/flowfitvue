@@ -28,7 +28,4 @@
     width: 100vw;
     height: 100vh;
   }
-  .tab-container{
-    
-  }
   </style>
