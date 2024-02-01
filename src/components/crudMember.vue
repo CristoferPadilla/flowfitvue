@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div id="content">
+    <div class="d-flex justify-content-center align-items-center flex-column">
+      <h2 class="title">Miembros</h2>
     <div class="d-row">
       <div class="search-bar">
         <div class="search-icon">🔍</div>
@@ -10,20 +12,15 @@
       </div>
     </div>
 
-    <!-- paginacion -->
 
     <div class="pagination">
       <button @click="prevPage" :disabled="currentPage === 1" class="btn-light">Anterior</button>
       <span>{{ currentPage }}</span>
       <button @click="nextPage" :disabled="currentPage * pageSize >= filteredUsers.length" class="btn-light">Siguiente</button>
     </div>
-
+</div>
     <!-- tabla -->
 
-    <table class="table-crud">
-      <thead>
-        <template>
-          <div>
             <table class="table-crud">
               <thead>
                 <tr>
@@ -53,14 +50,10 @@
                 </tr>
               </tbody>
             </table>
-          </div>
-        </template>
-      </thead>
-    </table>
-
+            
     <div v-show="showForm" class="add-form" style="width: 70%">
       <h3>{{ selectedUser ? 'Editar miembro' : 'Agregar miembro' }}</h3>
-      <form @submit.prevent="saveUser" class="form-container">
+      <form @submit.prevent="saveUser" class="form-container"  enctype="multipart/form-data">
         <div class="form-group">
           <label for="name">Nombre:</label>
           <input v-model="newUser.name" type="text" class="form-control" required />
@@ -74,7 +67,7 @@
           <input v-model="newUser.phone" type="text" class="form-control" required />
         </div>
         <div class="form-group">
-          <label for="membresiaAsignada">Membresía Asignada:</label>
+          <label for="assigned_membership">Membresía Asignada:</label>
           <select v-model="newUser.assigned_membership" class="form-control" required>
             <option v-for="membership in memberships" :key="membership.id" :value="membership.id">{{ membership.title }}</option>
           </select>
@@ -88,6 +81,10 @@
             <option value="12">1 año</option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="profile_picture">Imagen de perfil:</label>
+          <input type="file" @change="handleFileChange" accept="image/*" />
+        </div>
 
         <button type="submit" class="btn btn-primary">{{ selectedUser ? 'Guardar' : 'Agregar' }}</button>
         <button @click="hideForm" class="btn btn-secondary">Cancelar</button>
@@ -95,6 +92,7 @@
     </div>
   </div>
 </template>
+
   <script>
   import axios from 'axios';
 
@@ -113,7 +111,7 @@
           registration_date: "",
           end_date: "",
           is_active: "",
-          profile_picture: "",
+          profile_picture: '', 
         },
         selectedUser: null,
         searchTerm: "",
@@ -121,6 +119,7 @@
         token: localStorage.getItem('token') || '',
         currentPage: 1,
         pageSize: 6,
+
       };
     },
     computed: {
@@ -136,6 +135,10 @@
       },
     },
     methods: {
+      handleFileChange(event) {
+    const file = event.target.files[0];
+    this.newUser.profile_picture = file;
+  },
       showAddForm() {
         this.showForm = true;
       },
@@ -144,54 +147,65 @@
         this.resetForm();
       },
       saveUser() {
-        console.log('Request Payload:', this.newUser);
-        const currentDate = new Date();
+  const currentDate = new Date();
 
-        if (this.selectedUser) {
-          const index = this.users.findIndex((user) => user.id === this.selectedUser.id);
-          if (index !== -1) {
-            this.users[index] = { ...this.newUser };
-            axios
-              .put(`https://api-yrrd.onrender.com/members/${this.selectedUser.id}`, this.newUser, {
-                headers: {
-                  Authorization: `Bearer ${this.token}`,
-                },
-              })
-              .then((response) => {
-                console.log('Usuario actualizado en el servidor:', response.data);
-              })
-              .catch((error) => {
-                console.error('Error al actualizar usuario en el servidor:', error);
-              });
-          }
-        } else {
-          this.newUser.registration_date = currentDate.toISOString().split('T')[0];
+  const userData = {
+    name: this.newUser.name || null,
+    email: this.newUser.email || null,
+    phone: this.newUser.phone || null,
+    assigned_membership: this.newUser.assigned_membership || null,
+    end_date: this.newUser.end_date || null,
+  };
 
-          const selectedDuration = parseInt(this.newUser.end_date);
-          const endDate = new Date(currentDate);
-          endDate.setMonth(endDate.getMonth() + selectedDuration);
-          this.newUser.end_date = endDate.toISOString().split('T')[0];
-          this.newUser.is_active = endDate > currentDate ? 1 : 0;
-          this.newUser.assigned_membership = parseInt(this.newUser.assigned_membership);
 
-          axios
-            .post('https://api-yrrd.onrender.com/members', this.newUser, {
-              headers: {
-                Authorization: `Bearer ${this.token}`,
-              },
-            })
-            .then((response) => {
-              console.log('Usuario agregado en el servidor:', response.data);
-              this.fetchMembers();
-            })
-            .catch((error) => {
-              console.error('Error al agregar usuario en el servidor:', error.response.data);
-            });
-        }
+  if (this.newUser.profile_picture) {
+    userData.profile_picture = this.newUser.profile_picture;
+  }
 
-        this.showForm = false;
-        this.resetForm();
-      },
+  if (this.selectedUser) {
+    axios
+      .put(`https://api-yrrd.onrender.com/members/${this.selectedUser.id}`, userData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        console.log('Usuario actualizado en el servidor:', response.data);
+        this.fetchMembers();
+
+      })
+      .catch((error) => {
+        console.error('Error al actualizar usuario en el servidor:', error.response.data);
+      });
+  } else {
+    userData.registration_date = currentDate.toISOString().split('T')[0];
+    const selectedDuration = parseInt(this.newUser.end_date);
+    const endDate = new Date(currentDate);
+    endDate.setMonth(endDate.getMonth() + selectedDuration);
+    userData.end_date = endDate.toISOString().split('T')[0];
+    userData.is_active = endDate > currentDate ? 1 : 0;
+    userData.assigned_membership = parseInt(this.newUser.assigned_membership);
+
+    axios
+      .post('https://api-yrrd.onrender.com/members', userData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${this.token}`,
+        },
+      })
+      .then((response) => {
+        console.log('Usuario agregado en el servidor:', response.data);
+        this.fetchMembers();
+      })
+      .catch((error) => {
+        console.error('Error al agregar usuario en el servidor:', error.response.data);
+      });
+  }
+
+  this.showForm = false;
+  this.resetForm();
+},
 
       editUser(user) {
         this.selectedUser = user;
@@ -216,6 +230,8 @@
             if ((this.currentPage - 1) * this.pageSize >= remainingUsers) {
               this.currentPage = Math.max(1, this.currentPage - 1);
             }
+            this.fetchMembers();
+
           })
           .catch((error) => {
             console.error('Error al eliminar usuario en el servidor:', error);
@@ -246,6 +262,7 @@
           })
           .then((response) => {
             this.users = response.data;
+            console.log(response.data)
           })
           .catch((error) => {
             console.error(error);
@@ -287,145 +304,6 @@
   </script>
 
   <style scoped>
-        .bton {
-          margin-left: 120%;
-          padding: auto;
-        }
-        .btn-border{
-          border-bottom: 1px solid white;
-        }
-        .btn {
-          font-size: 75%;
-          margin: 10px;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .table-crud {
-          padding-top: 5%;
-          width: 95%;
-          border-bottom: #ced4da 2px solid;
-          border-collapse: collapse;
-          font-size: 75%;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .table-crud th,
-        .table-crud td {
-          text-align: left;
-          padding: 8px;
-          color: beige;
-          font-size: 70%;
-          font-family: Arial, Helvetica, sans-serif;
-        }
-
-        .table-crud tr:nth-child(even) {
-          background-color: transparent !important;
-        }
-
-        .table-crud th {
-          background-color: #4caf50;
-          color: white;
-        }
-
-
-        .d-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          width: 50%;
-          margin-right: 45%;
-          margin-bottom: 20px;
-        }
-
-        .search-bar {
-          width: 200px;
-          height: 30px;
-          background-color: white;
-          border-radius: 20px;
-          display: flex;
-          align-items: center;
-        }
-
-        .search-bar input {
-          border: none;
-          outline: none;
-          background: none;
-          width: auto;
-          color: black;
-          font-size: 12px;
-          line-height: 40px;
-          padding: 0 10px;
-        }
-
-        .search-icon {
-          padding-left: 10px;
-        }
-
-        .button-container button {
-          margin-left: 10px;
-          cursor: pointer;
-        }
-
-        .button-container {
-          margin-top: 10px;
-          display: flex;
-          justify-content: flex-end;
-        }
-
-        .button-container button {
-          margin-left: 10px;
-          cursor: pointer;
-        }
-
-        .add-form {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 5px;
-          text-align: center;
-        }
-
-        .form-group {
-          margin-bottom: 1rem;
-        }
-
-        .form-control {
-          display: block;
-          width: 100%;
-          padding: 0.375rem 0.75rem;
-          font-size: 1rem;
-          line-height: 1.5;
-          color: #495057;
-          background-color: #fff;
-          background-clip: padding-box;
-          border: 1px solid #ced4da;
-          border-radius: 0.25rem;
-          transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        .form-control:focus {
-          color: #495057;
-          background-color: #fff;
-          border-color: #80bdff;
-          outline: 0;
-          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        label {
-          display: inline-block;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
-        }
-
-        .pagination {
-          margin-top: 10px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
 
 .bton {
   margin-left: 120%;
