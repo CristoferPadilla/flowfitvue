@@ -58,7 +58,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in paginatedProducts" :key="product.id">
+            <tr v-for="product in filteredProducts" :key="product.id">
             <td class="btn-border">{{ product.id }}</td>
             <td class="btn-border">{{ product.name }}</td>
             <td class="btn-border">{{ product.description }}</td>
@@ -130,39 +130,19 @@
                 </div>
                 <div class="form-group">
                   <label for="category_id">Categoria:</label>
-                  <select
-                    v-model="newProduct.category_id"
-                    class="form-control"
-                    required
-                  >
-                    <option value="" disabled selected>
-                      Selecciona una categoria
-                    </option>
-                    <option
-                      v-for="categorie in categories"
-                      :value="categorie.id"
-                      :key="categorie.id"
-                    >
-                      {{ categorie.name }}
+                  <select v-model="newProduct.category_id" class="form-control" required>
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    <option v-for="category in categories" :value="category.id" :key="category.id">
+                      {{ category.name }}
                     </option>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="provider_id">Proveedor:</label>
                   <select
-                    v-model="newProduct.provider_id"
-                    class="form-control"
-                    required
-                  >
-                    <option value="" disabled selected>
-                      Select a provider
-                    </option>
-                    <option
-                      v-for="provider in providers"
-                      :value="provider.id"
-                      :key="provider.id"
-                    >
-                      {{ provider.name }}
+                   v-model="newProduct.provider_id" class="form-control" required >
+                    <option value="" disabled selected>  Select a provider</option>
+                    <option v-for="provider in providers" :value="provider.id" :key="provider.id" > {{ provider.name }}
                     </option>
                   </select>
                 </div>
@@ -195,6 +175,7 @@ export default {
     return {
       showForm: false,
       products: [],
+      categories: [],
       newProduct: {
         id: "",
         name: "",
@@ -412,19 +393,20 @@ export default {
       }
     },
     fetchCategories() {
-    axios
-      .get("https://api-yrrd.onrender.com/categories", {
-        headers: {
-          Authorization: `Bearer ${this.token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error getting categories from API:", error);
-      });
-  },
+  axios
+    .get("https://api-yrrd.onrender.com/categories", {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+    .then((response) => {
+      console.log(response.data);
+      this.categories = response.data; 
+    })
+    .catch((error) => {
+      console.error("Error getting categories from API:", error);
+    });
+},
   },
   mounted() {
     this.fetchProducts();
