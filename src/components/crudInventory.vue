@@ -58,7 +58,7 @@
           </tr>
         </thead>
         <tbody>
-            <tr v-for="product in filteredProducts" :key="product.id">
+          <tr v-for="product in filteredProducts" :key="product.id">
             <td class="btn-border">{{ product.id }}</td>
             <td class="btn-border">{{ product.name }}</td>
             <td class="btn-border">{{ product.description }}</td>
@@ -87,7 +87,7 @@
       <div class="add-form-container" v-show="showForm">
         <div class="add-form">
           <h3>{{ selectedProduct ? "Edit product" : "Add product" }}</h3>
-          <form @submit.prevent="saveProduct" class="form-container">
+          <form @submit.prevent="saveProduct" class="form-container"  enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
@@ -130,9 +130,19 @@
                 </div>
                 <div class="form-group">
                   <label for="category_id">Categoria:</label>
-                  <select v-model="newProduct.category_id" class="form-control" required>
-                    <option value="" disabled selected>Selecciona una categoría</option>
-                    <option v-for="category in categories" :value="category.id" :key="category.id">
+                  <select
+                    v-model="newProduct.category_id"
+                    class="form-control"
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Selecciona una categoría
+                    </option>
+                    <option
+                      v-for="category in categories"
+                      :value="category.id"
+                      :key="category.id"
+                    >
                       {{ category.name }}
                     </option>
                   </select>
@@ -140,14 +150,25 @@
                 <div class="form-group">
                   <label for="provider_id">Proveedor:</label>
                   <select
-                   v-model="newProduct.provider_id" class="form-control" required >
-                    <option value="" disabled selected>  Select a provider</option>
-                    <option v-for="provider in providers" :value="provider.id" :key="provider.id" > {{ provider.name }}
+                    v-model="newProduct.provider_id"
+                    class="form-control"
+                    required
+                  >
+                    <option value="" disabled selected>
+                      Select a provider
+                    </option>
+                    <option
+                      v-for="provider in providers"
+                      :value="provider.id"
+                      :key="provider.id"
+                    >
+                      {{ provider.name }}
                     </option>
                   </select>
                 </div>
                 <div class="form-group">
-                  <input type="file" @change="handleImageUpload" />
+                  <label for="image_path">Imagen del producto:</label>
+                  <input type="file" @change="handleFileChange" accept="image/*" />
                 </div>
               </div>
             </div>
@@ -184,7 +205,6 @@ export default {
         quantity: "",
         category_id: "",
         provider_id: "",
-        user_id: "",
         image_path: "",
       },
       selectedProduct: null,
@@ -208,12 +228,10 @@ export default {
     },
   },
   methods: {
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.newProduct.image_path = file;
-      }
-    },
+    handleFileChange(event) {
+    const file = event.target.files[0];
+    this.newProduct.image_path = file;
+  },
     isValidNumber(value) {
       return /^\d+(\.\d{1,2})?$/.test(value);
     },
@@ -241,98 +259,79 @@ export default {
     },
     clearProductForm() {
       this.newProduct = {
-        id: "",
-        name: "",
-        description: "",
-        price: "",
-        quantity: "",
-        category_id: "",
-        provider_id: "",
-        image_path: "",
+          id: "",
+          name: "",
+          description: "",
+          price: "",
+          quantity: "",
+          category_id: "",
+          provider_id: "",
+          image_path: "",
       };
     },
     saveProduct() {
-      if (!this.validateNumberInput()) {
-        return;
-      }
+  if (!this.validateNumberInput()) {
+    return;
+  }
 
-      const selectedProvider = this.providers.find(
-        (provider) => provider.id === this.newProduct.provider_id
-      );
-      this.newProduct.provider_id = selectedProvider
-        ? selectedProvider.id
-        : null;
+  const formData = {
+    name: this.newProduct.name || null,
+    description: this.newProduct.description || null,
+    price: this.newProduct.price || null,
+    quantity: this.newProduct.quantity || null,
+    category_id: this.newProduct.category_id || null,
+    provider_id: this.newProduct.provider_id || null,
+  };
 
-      const formData = new FormData();
-      formData.append("name", this.newProduct.name);
-      formData.append("description", this.newProduct.description);
-      formData.append("price", this.newProduct.price);
-      formData.append("quantity", this.newProduct.quantity);
-      formData.append("category_id", this.newProduct.category_id);
-      formData.append("provider_id", this.newProduct.provider_id);
-      formData.append("user_id", this.newProduct.user_id);
-      formData.append("image_path", this.newProduct.image_path);
+  if (this.newProduct.image_path) {
+    formData.image_path = this.newProduct.image_path;
+  }
 
       if (this.selectedProduct) {
-        const index = this.products.findIndex(
-          (product) => product.id === this.selectedProduct.id
-        );
-        if (index !== -1) {
-          this.products.splice(index, 1, { ...this.newProduct });
-          axios
-            .put(
-              `https://api-yrrd.onrender.com/products/${this.selectedProduct.id}`,
-              formData,
-              {
-                headers: {
-                  Authorization: `Bearer ${this.token}`,
-                  "Content-Type": "multipart/form-data",
-                },
-              }
-            )
-            .then((response) => {
-              console.log("Product updated on server:", response.data);
-            })
-            .catch((error) => {
-              console.error("Error updating product on server:", error);
-            });
-        }
-      } else {
-        this.newProduct.id = (Math.random() * 100000).toFixed(0);
-        this.products.push({ ...this.newProduct });
         axios
-          .post("https://api-yrrd.onrender.com/products", formData, {
-            headers: {
-              Authorization: `Bearer ${this.token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            console.log("Product added on server:", response.data);
-          })
-          .catch((error) => {
-            console.error("Error adding product on server:", error);
-            if (error.response) {
-              console.error(
-                "Server responded with status code:",
-                error.response.status
-              );
-              console.error("Error details:", error.response.data);
-            } else if (error.request) {
-              console.error("No response received from server.");
-            } else {
-              console.error("Error setting up the request:", error.message);
-            }
-          });
-      }
+  .put(`https://api-yrrd.onrender.com/products/${this.selectedProduct.id}`, formData, {
+    headers: {
+      'Authorization': `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
 
-      this.hideForm();
     },
+  })
+  .then((response) => {
+    if (response && response.data) {
+      console.log('Producto actualizado en el servidor:', response.data);
+      this.fetchProducts();
+    } else {
+      console.error('Error: La respuesta no tiene la estructura esperada');
+    }
+  })
+  .catch((error) => {
+    console.error('Error al actualizar producto en el servidor:', error.response.data);
+  });
+    
+  } else {
+    this.products.push({ ...this.newProduct });
+    axios
+      .post("https://api-yrrd.onrender.com/products", formData, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log("Product added on server:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error adding product on server:", error);
+      });
+  }
+
+  this.hideForm();
+},
     editProduct(product) {
-      this.selectedProduct = product;
-      this.newProduct = { ...product };
-      this.showForm = true;
-    },
+    this.selectedProduct = product;
+    this.newProduct = { ...product };
+    this.showForm = true;
+  },
     deleteProduct(productID) {
       if (confirm("Are you sure you want to delete this product?")) {
         axios
@@ -393,20 +392,20 @@ export default {
       }
     },
     fetchCategories() {
-  axios
-    .get("https://api-yrrd.onrender.com/categories", {
-      headers: {
-        Authorization: `Bearer ${this.token}`,
-      },
-    })
-    .then((response) => {
-      console.log(response.data);
-      this.categories = response.data; 
-    })
-    .catch((error) => {
-      console.error("Error getting categories from API:", error);
-    });
-},
+      axios
+        .get("https://api-yrrd.onrender.com/categories", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          this.categories = response.data;
+        })
+        .catch((error) => {
+          console.error("Error getting categories from API:", error);
+        });
+    },
   },
   mounted() {
     this.fetchProducts();
