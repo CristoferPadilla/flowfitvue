@@ -135,7 +135,7 @@ export default {
         email: "",
         phone: "",
         address: "",
-        image_path: "",
+        image_path: null, 
       };
     },
     saveProveedor() {
@@ -146,36 +146,40 @@ export default {
   formData.append('phone', this.newProveedor.phone || '');
   formData.append('address', this.newProveedor.address || '');
 
-  if (this.newProveedor.image_path) {
+  if (this.newProveedor.image_path && (!this.selectedProveedor || this.newProveedor.image_path !== this.selectedProveedor.image_path)) {
     formData.append('image_path', this.newProveedor.image_path);
-  }
-
+}
   const config = {
     headers: {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': `Bearer ${this.token}`,
+      Authorization: `Bearer ${this.token}`,
+      "Content-Type": 'multipart/form-data',
     },
   };
 
   if (this.selectedProveedor) {
-    axios
-      .put(`https://api-yrrd.onrender.com/providers/${this.selectedProveedor.id}`, formData, config)
+    axios.put(`https://api-yrrd.onrender.com/providers/${this.selectedProveedor.id}`, formData, config)
       .then((response) => {
         console.log('Proveedor actualizado en el servidor:', response.data);
         this.fetchProviders();
       })
       .catch((error) => {
-        console.error('Error al actualizar proveedor en el servidor:', error.response.data);
+        console.log('Error response:', error.response);
+        console.error('Error al actualizar proveedor en el servidor:', error);
       });
-  } else {
+  }else {
     axios
       .post('https://api-yrrd.onrender.com/providers', formData, config)
       .then((response) => {
         console.log('Proveedor agregado en el servidor:', response.data);
+        console.log("FormData:", formData);
         this.fetchProviders();
       })
       .catch((error) => {
         console.error('Error al agregar proveedor en el servidor:', error.response.data);
+        console.log("FormData:", formData);
+        console.log('Error response:', error.response); 
+
+
       });
   }
 

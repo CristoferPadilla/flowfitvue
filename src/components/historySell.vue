@@ -23,7 +23,6 @@
                 <th style="font-size: 70%">Cantidad</th>
                 <th style="font-size: 70%">Precio de Venta</th>
                 <th style="font-size: 70%">Fecha de Venta</th>
-                <th style="font-size: 70%">ID Usuario</th>
               </tr>
             </thead>
             <tbody>
@@ -33,7 +32,6 @@
                 <td class="btn-border">{{ sale.cantidad }}</td>
                 <td class="btn-border">{{ sale.precio_venta }}</td>
                 <td class="btn-border">{{ sale.fecha_venta }}</td>
-                <td class="btn-border">{{ sale.id_usuario }}</td>
               </tr>
             </tbody>
           </table>

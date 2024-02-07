@@ -17,9 +17,10 @@
   
   <div class="product-list">
     <div class="product-card" v-for="product in paginatedProducts" :key="product.id">
+      <img class="product-image" :src="product.image_path" :alt="product.image_path" />
       <div class="product-details">
         <h3 class="product-Nombre">{{ product.name }}</h3>
-        <p class="product-Precio">{{ formatCurrency(product.price ) }} MX</p>
+        <p class="product-Precio">{{ product.price }} MX</p>
         <button @click="openModal(product)" class="btn">Comprar</button>
       </div>
     </div>
@@ -28,7 +29,7 @@
   <div v-if="isModalOpen" class="modal">
     <div class="modal-content">
       <h2>{{ selectedProduct.name }}</h2>
-      <p>Precio: {{ formatCurrency(selectedProduct.price) }} MX</p>
+      <p>Precio: {{ selectedProduct.price}} MX</p>
       <div class="modal-buttons">
         <button @click="closeModal">Cancelar</button>
         <button @click="checkout">Confirmar pago</button>
@@ -97,11 +98,16 @@ export default {
       )
       .then(response => {
         console.log(response.data);
+        // Obtener la fecha actual en el formato deseado
+        const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+        // Datos de la venta incluyendo la fecha de venta
         const saleData = {
-          id_producto: this.selectedProduct.ID,
-          cantidad: 1, 
-          precio_venta: this.selectedProduct.Precio,
-          id_usuario: null};
+          product_id: this.selectedProduct.id,
+          quantity: 1,
+          sale_price: this.selectedProduct.price,
+          sale_date: currentDate // Agregar la fecha de venta
+        };
 
         axios.post('https://api-yrrd.onrender.com/sales_history', saleData, {
           headers: {
@@ -128,28 +134,29 @@ export default {
   }
 },
 formatCurrency(value) {
-  if (typeof value === 'number') {
+  if (typeof value === 'number' && !isNaN(value)) {
     return `$${value.toFixed(2)}`;
   } else {
     console.error(`Invalid value for formatting currency: ${value}`);
     return '';
   }
 },
-    fetchProducts() {
-      axios
-        .get("https://api-yrrd.onrender.com/products", {
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.products = response.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
+fetchProducts() {
+  axios
+    .get("https://api-yrrd.onrender.com/products", {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+      },
+    })
+    .then((response) => {
+      console.log(response.data);
+      this.products = response.data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+},
+
     nextPage() {
       if (this.currentPage * this.pageSize < this.filteredProducts.length) {
         this.currentPage++;
@@ -206,7 +213,7 @@ formatCurrency(value) {
   border-radius: 5px;
   box-shadow: #0a0257;
   margin: 10px;
-  width: 200px;
+  width: 300px; /* Ajustado para mayor espacio */
 }
 
 .product-details {

@@ -144,11 +144,11 @@ export default {
     .then((response) => {
       console.log('Intentando eliminar membresía con ID:', id);
       console.log("Membresía eliminada en el servidor:", response.data);
-      this.fetchMemberships(); // Fetch memberships after successful deletion
+      this.fetchMemberships(); 
     })
     .catch((error) => {
       console.error("Error al eliminar membresía en el servidor:", error.response.data);
-      // Add additional error handling or display an error message to the user
+      alert("La membresia no puede ser eliminada, ya que existe un cliente con esta membresia");
     });
 },
 
@@ -156,7 +156,7 @@ export default {
     const confirmed = window.confirm('¿Estás seguro de que deseas eliminar esta membresía?');
 
     if (confirmed) {
-      this.deleteMembership(id); // Call the deleteMembership method
+      this.deleteMembership(id); 
     }
   },
     showForm() {
