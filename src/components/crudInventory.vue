@@ -22,7 +22,6 @@
         </button>
       </div>
 
-      <!-- paginacion -->
 
       <div class="pagination">
         <button
@@ -42,8 +41,7 @@
         </button>
       </div>
 
-      <!-- tabla -->
-
+<br>
       <table class="table-crud">
         <thead>
           <tr>
@@ -59,7 +57,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in filteredProducts" :key="product.id">
+          <tr v-for="product in paginatedProducts" :key="product.id">
             <td class="btn-border">
               <img class="product-image" :src="product.image_path" :alt="product.name" />
             </td> 
@@ -216,7 +214,7 @@ export default {
       providers: [],
       token: localStorage.getItem("token") || "",
       currentPage: 1,
-      pageSize: 6,
+      pageSize: 5,
     };
   },
   computed: {

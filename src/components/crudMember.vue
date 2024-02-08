@@ -19,8 +19,7 @@
       <button @click="nextPage" :disabled="currentPage * pageSize >= filteredUsers.length" class="btn-light">Siguiente</button>
     </div>
 </div>
-    <!-- tabla -->
-
+<br>
             <table class="table-crud">
               <thead>
                 <tr>
@@ -122,7 +121,7 @@
         memberships: [],
         token: localStorage.getItem('token') || '',
         currentPage: 1,
-        pageSize: 6,
+        pageSize: 5,
 
       };
     },

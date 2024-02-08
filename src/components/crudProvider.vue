@@ -17,6 +17,7 @@
         <span>{{ currentPage }}</span>
         <button @click="nextPage" :disabled="currentPage * pageSize >= filteredProveedores.length" class="btn-light">Siguiente</button>
       </div>
+      <br>
       <table class="table-crud">
         <thead>
           <tr>
@@ -30,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="proveedor in filteredProveedores" :key="proveedor.id">
+          <tr v-for="proveedor in paginatedProveedores" :key="proveedor.id">
             <td class="btn-border">
               <img class="proveedor-image" :src="proveedor.image_path" :alt="proveedor.name" />
             </td>
@@ -101,7 +102,7 @@ export default {
       searchTerm: "",
       token: localStorage.getItem('token') || '',
       currentPage: 1,
-      pageSize: 6, 
+      pageSize: 5, 
     };
   },
   computed: {
