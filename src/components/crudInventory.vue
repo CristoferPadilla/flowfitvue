@@ -47,6 +47,7 @@
       <table class="table-crud">
         <thead>
           <tr>
+            <th>Imagen</th> 
             <th>ID</th>
             <th>Nombre</th>
             <th>Descripción</th>
@@ -59,6 +60,9 @@
         </thead>
         <tbody>
           <tr v-for="product in filteredProducts" :key="product.id">
+            <td class="btn-border">
+              <img class="product-image" :src="product.image_path" :alt="product.name" />
+            </td> 
             <td class="btn-border">{{ product.id }}</td>
             <td class="btn-border">{{ product.name }}</td>
             <td class="btn-border">{{ product.description }}</td>
@@ -559,4 +563,10 @@ export default {
   color: #4caf50;
   border: 1px solid #4caf50;
 }
+.product-image {
+  width: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
+  height: auto; /* Mantén la proporción de la imagen */
+  border-radius: 5px; /* Opcional: Agrega bordes redondeados */
+}
+
 </style>

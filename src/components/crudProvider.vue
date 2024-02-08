@@ -20,6 +20,7 @@
       <table class="table-crud">
         <thead>
           <tr>
+            <th style="font-size: 70%">Imagen</th>
             <th style="font-size: 70%">ID</th>
             <th style="font-size: 70%">Nombre</th>
             <th style="font-size: 70%">Email</th>
@@ -30,6 +31,9 @@
         </thead>
         <tbody>
           <tr v-for="proveedor in filteredProveedores" :key="proveedor.id">
+            <td class="btn-border">
+              <img class="proveedor-image" :src="proveedor.image_path" :alt="proveedor.name" />
+            </td>
             <td class="btn-border">{{ proveedor.id }}</td>
             <td class="btn-border">{{ proveedor.name }}</td>
             <td class="btn-border">{{ proveedor.email }}</td>
@@ -460,5 +464,9 @@ color: white;
   color: #4caf50;
   border: 1px solid #4caf50;
 }
-
+.proveedor-image {
+  width: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
+  height: auto; /* Mantén la proporción de la imagen */
+  border-radius: 5px; /* Opcional: Agrega bordes redondeados */
+}
   </style>

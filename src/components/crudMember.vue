@@ -24,6 +24,7 @@
             <table class="table-crud">
               <thead>
                 <tr>
+                  <th style="font-size: 70%">Imagen</th>
                   <th style="font-size: 70%">ID</th>
                   <th style="font-size: 70%">Nombre</th>
                   <th style="font-size: 70%">Email</th>
@@ -36,6 +37,9 @@
               </thead>
               <tbody>
                 <tr v-for="user in paginatedUsers" :key="user.id">
+                  <td class="btn-border">
+                    <img class="user-image" :src="user.profile_picture" :alt="user.name" />
+                  </td>
                   <td class="btn-border">{{ user.id }}</td>
                   <td class="btn-border">{{ user.name }}</td>
                   <td class="btn-border">{{ user.email }}</td>
@@ -478,4 +482,10 @@ label {
     color: #4caf50;
     border: 1px solid #4caf50;
   }
+  .user-image {
+    width: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
+    height: auto; /* Mantén la proporción de la imagen */
+    border-radius: 5px; /* Opcional: Agrega bordes redondeados */
+  }
+  
   </style>
