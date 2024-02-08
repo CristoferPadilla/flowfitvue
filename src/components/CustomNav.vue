@@ -2,43 +2,27 @@
   <div class="app-navbar">
     <div class="nav-title">Administrador</div>
     <div class="user-picture">
-      <img src="../assets/dani.jpg" alt="" class="user-picture">
+      <img src="../assets/dani.jpg" alt="" class="user-picture" />
     </div>
-    <div class="nav-user-name">{{ usuario }}</div> 
+    <div class="nav-user-name">{{ username }}</div>
     <router-link to="/menu" class="nav-link">
       <img src="../assets/house-fill.svg" alt="Ejercicio Icon" class="nav-icon" />
-      Menu 
+      Menu
     </router-link>
     <router-link to="/membership" class="nav-link">
-      <img
-        src="../assets/person-vcard-fill.svg"
-        alt="Membresias Icon"
-        class="nav-icon"
-      />
+      <img src="../assets/person-vcard-fill.svg" alt="Membresias Icon" class="nav-icon" />
       Membresias
     </router-link>
     <router-link to="/members" class="nav-link">
-      <img
-        src="../assets/people-fill.svg"
-        alt="Miembros Icon"
-        class="nav-icon"
-      />
+      <img src="../assets/people-fill.svg" alt="Miembros Icon" class="nav-icon" />
       Miembros
     </router-link>
     <router-link to="/inventory" class="nav-link">
-      <img
-        src="../assets/list-check.svg"
-        alt="inventario icon"
-        class="nav-log-out"
-      />
+      <img src="../assets/list-check.svg" alt="inventario icon" class="nav-log-out" />
       Inventario
     </router-link>
     <router-link to="/shop" class="nav-link">
-      <img
-        src="../assets/shop.svg"
-        alt="carrito icon"
-        class="nav-log-out"
-      />
+      <img src="../assets/shop.svg" alt="carrito icon" class="nav-log-out" />
       Venta
     </router-link>
     <router-link to="/" class="nav-link">
@@ -58,17 +42,12 @@ export default {
   name: "AppNavbar",
   data() {
     return {
-      usuario: "", 
+      username: "",
     };
   },
-  methods:{
-    handleLoginSuccess(usuario) {
-      this.usuario = usuario;
-    },
+  created() {
+    this.username = localStorage.getItem("user");
   },
-  mounted() {
-    this.$emit('login-success', 'Nombre de usuario');
-  }
 };
 </script>
 
