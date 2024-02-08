@@ -77,7 +77,7 @@
         </div>
         <div class="form-group">
           <label for="duraciónMembresia">Duración:</label>
-          <select v-model="newUser.end_date" class="form-control" required>
+          <select v-model="newUser.membership_duration" class="form-control" required>
             <option value="1">1 mes</option>
             <option value="3">3 meses</option>
             <option value="6">6 meses</option>
@@ -115,6 +115,7 @@
           end_date: "",
           is_active: "",
           profile_picture: '', 
+          membership_duration: "",
         },
         selectedUser: null,
         searchTerm: "",
@@ -157,7 +158,7 @@
     email: this.newUser.email || null,
     phone: this.newUser.phone || null,
     assigned_membership: this.newUser.assigned_membership || null,
-    end_date: this.newUser.end_date || null,
+    membership_duration: this.newUser.membership_duration || null,
   };
 
 
@@ -183,11 +184,6 @@
       });
   } else {
     userData.registration_date = currentDate.toISOString().split('T')[0];
-    const selectedDuration = parseInt(this.newUser.end_date);
-    const endDate = new Date(currentDate);
-    endDate.setMonth(endDate.getMonth() + selectedDuration);
-    userData.end_date = endDate.toISOString().split('T')[0];
-    userData.is_active = endDate > currentDate ? 1 : 0;
     userData.assigned_membership = parseInt(this.newUser.assigned_membership);
 
     axios
@@ -252,6 +248,7 @@
           end_date: "",
           is_active: "",
           profile_picture: "",
+          membership_duration: "",
         };
         this.selectedUser = null;
       },
