@@ -28,10 +28,10 @@
             <tbody>
               <tr v-for="sale in salesHistory" :key="sale.id">
                 <td class="btn-border">{{ sale.id }}</td>
-                <td class="btn-border">{{ sale.id_producto }}</td>
-                <td class="btn-border">{{ sale.cantidad }}</td>
-                <td class="btn-border">{{ sale.precio_venta }}</td>
-                <td class="btn-border">{{ sale.fecha_venta }}</td>
+                <td class="btn-border">{{ sale.product_id }}</td>
+                <td class="btn-border">{{ sale.quantity}}</td>
+                <td class="btn-border">{{ sale.sale_price }}</td>
+                <td class="btn-border">{{ sale.sale_date }}</td>
               </tr>
             </tbody>
           </table>
@@ -55,7 +55,7 @@
     },
     methods: {
       fetchSalesHistory() {
-        axios.get('https://api-5iey.onrender.com/sales_history', {
+        axios.get('https://api-yrrd.onrender.com/sales_history', {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
