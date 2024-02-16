@@ -68,6 +68,12 @@
 
 
     },
+    {
+      path: '/newMember',
+      name: 'newMemberView',
+      component: ()=> import(/* webpackChunk*/ './view/createmember.vue'), //AQUI VA EL NOMBRE DE TU pantalla
+
+    },
    
   ];
 

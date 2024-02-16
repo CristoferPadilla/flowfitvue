@@ -70,7 +70,7 @@ export default {
   methods: {
     fetchSalesHistory() {
       axios
-        .get("https://api-yrrd.onrender.com/sales_history", {
+        .get("https://api-zydf.onrender.com/sales_history", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },

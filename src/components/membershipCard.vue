@@ -136,7 +136,7 @@ export default {
   },
   deleteMembership(id) {
   axios
-    .delete(`https://api-yrrd.onrender.com/memberships/${id}`, {
+    .delete(`https://api-zydf.onrender.com/memberships/${id}`, {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },
@@ -175,7 +175,7 @@ export default {
       if (this.newItem.id) {
         axios
           .put(
-            `https://api-yrrd.onrender.com/memberships/${this.newItem.id}`,
+            `https://api-zydf.onrender.com/memberships/${this.newItem.id}`,
             this.newItem,
             {
               headers: {
@@ -196,7 +196,7 @@ export default {
           });
       } else {
         axios
-          .post("https://api-yrrd.onrender.com/memberships", this.newItem, {
+          .post("https://api-zydf.onrender.com/memberships", this.newItem, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
@@ -230,7 +230,7 @@ export default {
   },
     fetchMemberships() {
       axios
-        .get("https://api-yrrd.onrender.com/memberships", {
+        .get("https://api-zydf.onrender.com/memberships", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -251,7 +251,7 @@ export default {
     if (this.newItem.id) {
       axios
         .put(
-          `https://api-yrrd.onrender.com/memberships/${this.newItem.id}`,
+          `https://api-zydf.onrender.com/memberships/${this.newItem.id}`,
           this.newItem,
           {
             headers: {
@@ -272,7 +272,7 @@ export default {
         });
     } else {
       axios
-        .post("https://api-yrrd.onrender.com/memberships", this.newItem, {
+        .post("https://api-zydf.onrender.com/memberships", this.newItem, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },

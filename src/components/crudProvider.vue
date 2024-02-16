@@ -162,7 +162,7 @@ export default {
   };
 
   if (this.selectedProveedor) {
-    axios.put(`https://api-yrrd.onrender.com/providers/${this.selectedProveedor.id}`, formData, config)
+    axios.put(`https://api-zydf.onrender.com/providers/${this.selectedProveedor.id}`, formData, config)
       .then((response) => {
         console.log('Proveedor actualizado en el servidor:', response.data);
         this.fetchProviders();
@@ -173,7 +173,7 @@ export default {
       });
   }else {
     axios
-      .post('https://api-yrrd.onrender.com/providers', formData, config)
+      .post('https://api-zydf.onrender.com/providers', formData, config)
       .then((response) => {
         console.log('Proveedor agregado en el servidor:', response.data);
         console.log("FormData:", formData);
@@ -201,7 +201,7 @@ export default {
       const index = this.proveedores.findIndex(proveedor => proveedor.id === proveedorId);
       if (index !== -1) {
         this.proveedores.splice(index, 1);
-        axios.delete(`https://api-yrrd.onrender.com/providers/${proveedorId}`, { headers: { Authorization: `Bearer ${this.token}` } })
+        axios.delete(`https://api-zydf.onrender.com/providers/${proveedorId}`, { headers: { Authorization: `Bearer ${this.token}` } })
           .then(response => {
             console.log(response.data);
           })
@@ -213,7 +213,7 @@ export default {
     filterProveedores() {
     },
     fetchProviders() {
-      axios.get('https://api-yrrd.onrender.com/providers', { headers: { Authorization: `Bearer ${this.token}` } })
+      axios.get('https://api-zydf.onrender.com/providers', { headers: { Authorization: `Bearer ${this.token}` } })
         .then(response => {
           console.log(response.data);
           this.proveedores = response.data;

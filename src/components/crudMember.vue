@@ -47,20 +47,20 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in paginatedmembers" :key="user.id">
+        <tr v-for="member in paginatedmembers" :key="member.id">
           <td class="btn-border">
-            <img class="user-image" :src="user.profile_picture" :alt="user.name" />
+            <img class="member-image" :src="member.profile_picture" :alt="member.name" />
           </td>
-          <td class="btn-border">{{ user.id }}</td>
-          <td class="btn-border">{{ user.name }}</td>
-          <td class="btn-border">{{ user.email }}</td>
-          <td class="btn-border">{{ user.phone }}</td>
-          <td class="btn-border">{{ user.assigned_membership }}</td>
-          <td class="btn-border">{{ user.registration_date }}</td>
-          <td class="btn-border">{{ user.end_date }}</td>
+          <td class="btn-border">{{ member.id }}</td>
+          <td class="btn-border">{{ member.name }}</td>
+          <td class="btn-border">{{ member.email }}</td>
+          <td class="btn-border">{{ member.phone }}</td>
+          <td class="btn-border">{{ member.assigned_membership }}</td>
+          <td class="btn-border">{{ member.registration_date }}</td>
+          <td class="btn-border">{{ member.end_date }}</td>
           <td class="btn-border">
-            <button @click="editUser(user)" class="btn btn-warning btn-sm">Editar</button>
-            <button @click="deleteUser(user.id)" class="btn btn-danger btn-sm">
+            <button @click="editmember(member)" class="btn btn-warning btn-sm">Editar</button>
+            <button @click="deletemember(member.id)" class="btn btn-danger btn-sm">
               Eliminar
             </button>
           </td>
@@ -71,7 +71,7 @@
     <div v-show="showForm" class="add-form" style="width: 70%">
       <h3>{{ selectedMember ? "Editar miembro" : "Agregar miembro" }}</h3>
       <form
-        @submit.prevent="saveUser"
+        @submit.prevent="savemember"
         class="form-container"
         enctype="multipart/form-data"
       >
@@ -110,7 +110,7 @@
         </div>
         <div class="form-group">
           <label for="profile_picture">Imagen de perfil:</label>
-          <input type="file" @change="handleFileChange" accept="image/*" />
+          <input type="file" @change="handleFileChange" accept="image/*"/>
         </div>
 
         <button type="submit" class="btn btn-primary">
@@ -137,10 +137,7 @@ export default {
         email: "",
         phone: "",
         assigned_membership: "",
-        registration_date: "",
-        end_date: "",
-        is_active: "",
-        profile_picture: "",
+        profile_picture: null,
         membership_duration: "",
       },
       selectedMember: null,
@@ -153,8 +150,8 @@ export default {
   },
   computed: {
     filteredmembers() {
-      return this.members.filter((user) =>
-        user.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      return this.members.filter((member) =>
+        member.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
     paginatedmembers() {
@@ -164,90 +161,104 @@ export default {
     },
   },
   methods: {
+    savemember() {
+      if (this.selectedMember) {
+        this.updatemember();
+      } else {
+        this.addmember();
+      }
+    },
     handleFileChange(event) {
       const file = event.target.files[0];
-      this.newMember.profile_picture = file;
+      if (file) {
+        this.newMember.profile_picture = file;
+
+      }
+    },
+    addmember() {
+      const memberData = {
+        name: this.newMember.name,
+        email: this.newMember.email,
+        phone: this.newMember.phone,
+        assigned_membership: this.newMember.assigned_membership,
+        membership_duration: this.newMember.membership_duration,
+      };
+
+      if (this.newMember.profile_picture) {
+        memberData.profile_picture = this.newMember.profile_picture;
+      }
+      axios
+        .post("https://api-zydf.onrender.com/members", memberData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          console.log("Usuario agregado en el servidor:", response.data);
+          this.fetchMembers();
+          this.showForm = false;
+          this.resetForm();
+        })
+        .catch((error) => {
+          console.error("Error al agregar usuario en el servidor:", error.response.data);
+          console.log(memberData);
+        });
+    },
+    updatemember() {
+      const memberData = {
+        name: this.newMember.name,
+        email: this.newMember.email,
+        phone: this.newMember.phone,
+        assigned_membership: this.newMember.assigned_membership,
+        membership_duration: this.newMember.membership_duration,
+      };
+      if (this.newMember.profile_picture) {
+        memberData.profile_picture = this.newMember.profile_picture;
+      }
+
+      axios
+        .put(
+          `https://api-zydf.onrender.com/members/${this.selectedMember.id}`,
+          memberData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Usuario actualizado en el servidor:", response.data);
+          this.fetchMembers();
+          this.showForm = false;
+          this.resetForm();
+        })
+        .catch((error) => {
+          console.error(
+            "Error al actualizar usuario en el servidor:",
+            error.response.data
+          );
+        });
     },
     showAddForm() {
       this.showForm = true;
     },
     hideForm() {
       this.showForm = false;
-      this.resetForm();
-    },
-    saveUser() {
-      const currentDate = new Date();
-
-      const memberData = {
-        name: this.newMember.name || null,
-        email: this.newMember.email || null,
-        phone: this.newMember.phone || null,
-        assigned_membership: this.newMember.assigned_membership || null,
-        membership_duration: this.newMember.membership_duration || null,
-      };
-
-      if (this.newMember.profile_picture) {
-        memberData.profile_picture = this.newMember.profile_picture;
-      }
-
-      if (this.selectedMember) {
-        axios
-          .put(
-            `https://api-yrrd.onrender.com/members/${this.selectedMember.id}`,
-            memberData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${this.token}`,
-              },
-            }
-          )
-          .then((response) => {
-            console.log("Usuario actualizado en el servidor:", response.data);
-            this.fetchMembers();
-          })
-          .catch((error) => {
-            console.error(
-              "Error al actualizar usuario en el servidor:",
-              error.response.data
-            );
-          });
-      } else {
-        memberData.registration_date = currentDate.toISOString().split("T")[0];
-        memberData.assigned_membership = parseInt(this.newMember.assigned_membership);
-
-        axios
-          .post("https://api-yrrd.onrender.com/members", memberData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${this.token}`,
-            },
-          })
-          .then((response) => {
-            console.log("Usuario agregado en el servidor:", response.data);
-            this.fetchMembers();
-          })
-          .catch((error) => {
-            console.error(
-              "Error al agregar usuario en el servidor:",
-              error.response.data
-            );
-          });
-      }
-
-      this.showForm = false;
+      this.newMember.profile_picture = null;
       this.resetForm();
     },
 
-    editUser(user) {
-      this.selectedMember = user;
-      this.newMember = { ...user };
+    editmember(member) {
+      this.selectedMember = member;
+      this.newMember = { ...member };
       this.showAddForm();
     },
 
-    deleteUser(id) {
+    deletemember(id) {
       axios
-        .delete(`https://api-yrrd.onrender.com/members/${id}`, {
+        .delete(`https://api-zydf.onrender.com/members/${id}`, {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -255,7 +266,7 @@ export default {
         .then((response) => {
           console.log("Usuario eliminado en el servidor:", response.data);
 
-          this.members = this.members.filter((user) => user.id !== id);
+          this.members = this.members.filter((member) => member.id !== id);
 
           const remainingmembers = this.filteredmembers.length;
 
@@ -276,10 +287,7 @@ export default {
         email: "",
         phone: "",
         assigned_membership: "",
-        registration_date: "",
-        end_date: "",
-        is_active: "",
-        profile_picture: "",
+        profile_picture: null,
         membership_duration: "",
       };
       this.selectedMember = null;
@@ -287,7 +295,7 @@ export default {
 
     fetchMembers() {
       axios
-        .get("https://api-yrrd.onrender.com/members", {
+        .get("https://api-zydf.onrender.com/members", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -303,7 +311,7 @@ export default {
 
     fetchMemberships() {
       axios
-        .get("https://api-yrrd.onrender.com/memberships", {
+        .get("https://api-zydf.onrender.com/memberships", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -506,7 +514,7 @@ label {
   color: #4caf50;
   border: 1px solid #4caf50;
 }
-.user-image {
+.member-image {
   width: 60px; /* Ajusta el tamaño de la imagen según sea necesario */
   height: auto; /* Mantén la proporción de la imagen */
   border-radius: 5px; /* Opcional: Agrega bordes redondeados */

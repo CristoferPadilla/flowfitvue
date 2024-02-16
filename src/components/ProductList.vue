@@ -88,7 +88,7 @@ export default {
 
     axios
       .put(
-        `https://api-yrrd.onrender.com/products/${this.selectedProduct.id}`,
+        `https://api-zydf.onrender.com/products/${this.selectedProduct.id}`,
         updatedProduct,
         {
           headers: {
@@ -109,7 +109,7 @@ export default {
           sale_date: currentDate // Agregar la fecha de venta
         };
 
-        axios.post('https://api-yrrd.onrender.com/sales_history', saleData, {
+        axios.post('https://api-zydf.onrender.com/sales_history', saleData, {
           headers: {
             Authorization: `Bearer ${this.token}`
           }
@@ -143,7 +143,7 @@ formatCurrency(value) {
 },
 fetchProducts() {
   axios
-    .get("https://api-yrrd.onrender.com/products", {
+    .get("https://api-zydf.onrender.com/products", {
       headers: {
         Authorization: `Bearer ${this.token}`,
       },

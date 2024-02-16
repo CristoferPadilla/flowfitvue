@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-5">
+  <div class="container-mt-5">
     <form @submit.prevent="iniciarSesion" class="bg-white p-4 rounded-lg" style="">
       <div class="text-center mb-4">
         <h1
@@ -9,7 +9,7 @@
             text-align: center;
             font-family: fantasy;
             padding-bottom: 30px;
-            font-size: 80px;
+            font-size: 100px;
           "
         >
           FLOWFIT
@@ -29,7 +29,7 @@
           required
         />
       </div>
-      <button type="submit" class="btn btn-primary">Login</button>
+      <button type="submit" class="btn-btn-primary">Login</button>
     </form>
 
     <UserLogin
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import "@/css/style.css";
 import { ref, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
 import { mapActions } from "vuex";
@@ -79,7 +80,7 @@ export default {
         alert("Complete Los Datos Faltantes!!");
       } else {
         try {
-          const response = await fetch("https://api-yrrd.onrender.com/auth/login", {
+          const response = await fetch("https://api-zydf.onrender.com/auth/login", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -130,15 +131,33 @@ export default {
 .bg-white {
   background-color: black;
   margin: 140px auto;
-  padding: 20px;
   border-radius: 50px;
-  width: 50%;
+  width: 70%;
+  min-height: 30%;
+  min-width: 30%;
+  height: 70%;
   text-align: center;
   display: grid;
   place-items: center;
 }
-body {
-  background-color: #0e0f13;
-  font-style: italic white;
+.container-mt-5 {
+  width: 100vw;
+  display:table-column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+}
+.btn-btn-primary{
+  background-color: #000000;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 16px;
 }
 </style>

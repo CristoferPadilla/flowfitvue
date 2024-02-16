@@ -273,7 +273,7 @@ export default {
       if (this.selectedProduct) {
         axios
           .put(
-            `https://api-yrrd.onrender.com/products/${this.selectedProduct.id}`,
+            `https://api-zydf.onrender.com/products/${this.selectedProduct.id}`,
             formData,
             {
               headers: {
@@ -299,7 +299,7 @@ export default {
       } else {
         this.products.push({ ...this.newProduct });
         axios
-          .post("https://api-yrrd.onrender.com/products", formData, {
+          .post("https://api-zydf.onrender.com/products", formData, {
             headers: {
               Authorization: `Bearer ${this.token}`,
               "Content-Type": "multipart/form-data",
@@ -323,7 +323,7 @@ export default {
     deleteProduct(productID) {
       if (confirm("Are you sure you want to delete this product?")) {
         axios
-          .delete(`https://api-yrrd.onrender.com/products/${productID}`, {
+          .delete(`https://api-zydf.onrender.com/products/${productID}`, {
             headers: {
               Authorization: `Bearer ${this.token}`,
             },
@@ -341,7 +341,7 @@ export default {
     filterProducts() {},
     fetchProducts() {
       axios
-        .get("https://api-yrrd.onrender.com/products", {
+        .get("https://api-zydf.onrender.com/products", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -356,7 +356,7 @@ export default {
     },
     fetchProviders() {
       axios
-        .get("https://api-yrrd.onrender.com/providers", {
+        .get("https://api-zydf.onrender.com/providers", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
@@ -381,7 +381,7 @@ export default {
     },
     fetchCategories() {
       axios
-        .get("https://api-yrrd.onrender.com/categories", {
+        .get("https://api-zydf.onrender.com/categories", {
           headers: {
             Authorization: `Bearer ${this.token}`,
           },
