@@ -171,12 +171,16 @@
     },
     methods: {
       savemember() {
-        if (this.selectedMember) {
-          this.updatemember();
-        } else {
-          this.addmember();
-        }
-      },
+  const confirmMessage = this.selectedMember ? "¿Seguro que deseas guardar los cambios?" : "¿Estás seguro de que quieres agregar este miembro?";
+  
+  if (window.confirm(confirmMessage)) {
+    if (this.selectedMember) {
+      this.updatemember();
+    } else {
+      this.addmember();
+    }
+  }
+},
       handleFileChange(event) {
         const file = event.target.files[0];
         if (file) {
