@@ -81,53 +81,29 @@ export default {
     },
     checkout() {
   if (this.selectedProduct && this.selectedProduct.quantity > 0) {
-    const updatedProduct = {
-      ...this.selectedProduct,
-      Cantidad: this.selectedProduct.quantity - 1
+    const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+    const saleData = {
+      product_id: this.selectedProduct.id,
+      quantity: 1,
+      sale_price: this.selectedProduct.price,
+      sale_date: currentDate
     };
 
-    axios
-      .put(
-        `https://api-zydf.onrender.com/products/${this.selectedProduct.id}`,
-        updatedProduct,
-        {
-          headers: {
-            Authorization: `Bearer ${this.token}`
-          }
-        }
-      )
-      .then(response => {
-        console.log(response.data);
-        // Obtener la fecha actual en el formato deseado
-        const currentDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-
-        // Datos de la venta incluyendo la fecha de venta
-        const saleData = {
-          product_id: this.selectedProduct.id,
-          quantity: 1,
-          sale_price: this.selectedProduct.price,
-          sale_date: currentDate // Agregar la fecha de venta
-        };
-
-        axios.post('https://api-zydf.onrender.com/sales_history', saleData, {
-          headers: {
-            Authorization: `Bearer ${this.token}`
-          }
-        })
-        .then(saleResponse => {
-          console.log(saleResponse.data);
-          alert("Pago exitoso. Gracias por su compra.");
-          this.closeModal();
-        })
-        .catch(saleError => {
-          console.error(saleError);
-          alert("Hubo un error al registrar la compra. Por favor, inténtelo de nuevo.");
-        });
-      })
-      .catch(error => {
-        console.error(error);
-        alert("Hubo un error al procesar el pago. Por favor, inténtelo de nuevo.");
-      });
+    axios.post('https://api-zydf.onrender.com/sales_history', saleData, {
+      headers: {
+        Authorization: `Bearer ${this.token}`
+      }
+    })
+    .then(saleResponse => {
+      console.log(saleResponse.data);
+      alert("Pago exitoso. Gracias por su compra.");
+      this.closeModal();
+    })
+    .catch(saleError => {
+      console.error(saleError);
+      alert("Hubo un error al registrar la compra. Por favor, inténtelo de nuevo.");
+    });
   } else {
     alert("El producto no está disponible.");
     this.closeModal();

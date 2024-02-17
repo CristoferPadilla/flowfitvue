@@ -12,6 +12,7 @@
           id="tab1"
           class="tab tab--1"
           value="tab--1"
+          @click="resetIndicatorPosition"
         />
         <label class="tab_label" for="tab1">Miembros</label>
 
@@ -22,30 +23,54 @@
           id="tab2"
           class="tab tab--2"
           value="tab--2"
+          @click="fetchSalesHistory"
         />
-        <label class="tab_label" for="tab2" @click="fetchSalesHistory">Productos</label>
+        <label class="tab_label" for="tab2">Productos</label>
 
-        <div class="indicator"></div>
+        <div class="indicator" :style="{ left: indicatorPosition }"></div>
       </div>
 
+      <div v-if="tab === 'tab--1'">
+        <table class="table-crud">
+          <thead>
+            <tr>
+              <th>ID Venta</th>
+              <th>ID Membresía</th>
+              <th>Fecha de Compra</th>
+              <th>Usuario</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="membershipSale in membershipSales" :key="membershipSale.id">
+              <td>{{ membershipSale.id }}</td>
+              <td>{{ membershipSale.membership_id }}</td>
+              <td>{{ membershipSale.sale_date }}</td>
+              <td>{{ membershipSale.member_id }}</td>
+              <td>${{ membershipSale.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
       <div v-if="tab === 'tab--2'">
         <table class="table-crud">
           <thead>
             <tr>
-              <th style="font-size: 70%">ID Venta</th>
-              <th style="font-size: 70%">ID Producto</th>
-              <th style="font-size: 70%">Cantidad</th>
-              <th style="font-size: 70%">Precio de Venta</th>
-              <th style="font-size: 70%">Fecha de Venta</th>
+              <th>ID Venta</th>
+              <th>ID Producto</th>
+              <th>Cantidad</th>
+              <th>Precio de Venta</th>
+              <th>Fecha de Venta</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="sale in salesHistory" :key="sale.id">
-              <td class="btn-border">{{ sale.id }}</td>
-              <td class="btn-border">{{ sale.product_id }}</td>
-              <td class="btn-border">{{ sale.quantity }}</td>
-              <td class="btn-border">${{ sale.sale_price }}</td>
-              <td class="btn-border">{{ sale.sale_date }}</td>
+              <td>{{ sale.id }}</td>
+              <td>{{ sale.product_id }}</td>
+              <td>{{ sale.quantity }}</td>
+              <td>${{ sale.sale_price }}</td>
+              <td>{{ sale.sale_date }}</td>
             </tr>
           </tbody>
         </table>
@@ -65,6 +90,7 @@ export default {
       tab: "tab--1",
       indicatorPosition: "2px",
       salesHistory: [],
+      membershipSales: [],
     };
   },
   methods: {
@@ -84,17 +110,36 @@ export default {
           console.error(error);
         });
     },
+    fetchMembershipHistory() {
+      axios
+        .get("https://api-zydf.onrender.com/MembershipSale", {
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        })
+        .then((response) => {
+          this.membershipSales = response.data;
+          this.tab = "tab--1";
+          this.indicatorPosition = "2px"; // Restablecer la posición del indicador
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    resetIndicatorPosition() {
+      // Restablecer la posición del indicador al cambiar a la pestaña "Miembros"
+      this.indicatorPosition = "2px";
+    },
   },
 };
 </script>
 
 <style scoped>
 .table-crud {
-  padding-top: 5%;
   width: 100%;
-  border-bottom: #ced4da 2px solid;
   border-collapse: collapse;
   font-size: 75%;
+  background-color: aliceblue;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -102,52 +147,16 @@ export default {
 .table-crud td {
   text-align: left;
   padding: 8px;
-  color: beige;
-  font-size: 75%;
-  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 1px solid #ddd; /* Añadir borde inferior */
 }
 
-.table-crud tr:nth-child(even) {
-  background-color: transparent !important;
+.table-crud tr:last-child td {
+  border-bottom: none; /* Eliminar borde inferior en la última fila */
 }
 
 .table-crud th {
   background-color: #4caf50;
   color: white;
-}
-.btn-border {
-  border-bottom: 1px solid white;
-}
-
-.layout {
-  width: 100vw;
-  display: grid;
-  grid:
-    "header" auto
-    "main" 1fr
-    / 1fr;
-  gap: 8px;
-}
-
-.cnt-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 2px;
-  background-color: #dadadb;
-  border-radius: 9px;
-}
-
-.header {
-  grid-area: header;
-}
-
-.main {
-  grid-area: main;
-}
-
-.footer {
-  grid-area: footer;
 }
 
 .tab-container {
@@ -209,30 +218,5 @@ export default {
 .tab--2:checked ~ .indicator {
   left: calc(130px + 2px);
   color: white;
-}
-
-.search-bar {
-  width: 200px;
-  height: 30px;
-  background-color: white;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  position: absolute;
-}
-
-.search-bar input {
-  border: none;
-  outline: none;
-  background: none;
-  width: auto;
-  color: black;
-  font-size: 12px;
-  line-height: 40px;
-  padding: 0 10px;
-}
-
-.search-icon {
-  padding-left: 10px;
 }
 </style>
