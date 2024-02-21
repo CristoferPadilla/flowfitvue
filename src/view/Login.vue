@@ -135,7 +135,7 @@ export default {
   width: 70%;
   min-height: 30%;
   min-width: 30%;
-  height: 70%;
+  height: 80%;
   text-align: center;
   display: grid;
   place-items: center;
